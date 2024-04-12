@@ -1,0 +1,191 @@
+import statistics from '@stdlib/stats';
+import { std } from './stats';
+import { getUnique, getUniqueFromMatrix } from '../helper/unique';
+import { occurrencesOf } from '../helper/count';
+
+/**
+ * Chi-Squared Goodness-of-Fit Test
+ * @param {Array} data - The raw data (not counts!)
+ * @param {String} testAgainst - The expected counts, as a comma-separated string
+ * @param {*} alpha - The significance level
+ * @returns an object with pValue and testStatistic
+ */
+export const X2GOFTest = (data, testAgainst, alpha) => {
+    if (data != undefined && testAgainst != undefined && alpha != undefined) {
+        // Convert the raw data to counts
+        const unique = getUnique(data);
+        const obsCounts = unique.map((item) => occurrencesOf(data, item));
+
+        // Parse the expCounts string
+        const expCounts = testAgainst
+            .split(', ')
+            .map((item) => parseFloat(item));
+
+        // Validate the expected counts
+        if (obsCounts.length != expCounts.length) return null;
+
+        const result = statistics.chi2gof(obsCounts, expCounts, {
+            alpha: parseFloat(alpha)
+        });
+        return {
+            pValue: result.pValue,
+            testStatistic: result.statistic
+        };
+    }
+};
+
+/**
+ * Chi-Squared Independence Test
+ * @param {Array} data - The raw data (not counts!)
+ * @param {*} alpha - The significance level
+ * @returns an object with pValue and testStatistic
+ */
+export const X2IndTest = (data, alpha) => {
+    if (data != undefined && alpha != undefined) {
+        // Convert the raw data to counts
+        const unique = getUniqueFromMatrix(data);
+        let obsCounts = [];
+        for (let i = 0; i < data.length; i++) {
+            obsCounts.push(unique.map((item) => occurrencesOf(data[i], item)));
+        }
+
+        const result = statistics.chi2test(obsCounts, {
+            alpha: parseFloat(alpha)
+        });
+        return {
+            pValue: result.pValue,
+            testStatistic: result.statistic
+        };
+    }
+};
+
+/**
+ * 2-Sample T-Test
+ * @param {Array} data - The raw data for column 1
+ * @param {Array} data2 - The raw data for column 2
+ * @param {boolean} tails - True if two-tailed, otherwise false
+ * @param {*} alpha - The significance level
+ * @returns an object with pValue and testStatistic
+ */
+export const Samp2TTest = (data, data2, tails, alpha) => {
+    if (
+        data != undefined &&
+        data2 != undefined &&
+        tails != undefined &&
+        alpha != undefined
+    ) {
+        const result = statistics.ttest2(data, data2, {
+            alpha: parseFloat(alpha),
+            alternative: tails ? 'two-sided' : 'less'
+        });
+        return {
+            pValue: result.pValue,
+            testStatistic: result.statistic
+        };
+    }
+};
+
+/**
+ * Matched Pairs T-Test
+ * @param {Array} data - The raw data for column 1
+ * @param {Array} data2 - The raw data for column 2
+ * @param {boolean} tails - True if two-tailed, otherwise false
+ * @param {*} alpha - The significance level
+ * @returns an object with pValue and testStatistic
+ */
+export const MPTTest = (data, data2, tails, alpha) => {
+    if (
+        data != undefined &&
+        data2 != undefined &&
+        tails != undefined &&
+        alpha != undefined
+    ) {
+        const result = statistics.ttest(data, data2, {
+            alpha: parseFloat(alpha),
+            alternative: tails ? 'two-sided' : 'less'
+        });
+        return {
+            pValue: result.pValue,
+            testStatistic: result.statistic
+        };
+    }
+};
+
+/**
+ * 1-Sample T-Test
+ * @param {Array} data - The raw data
+ * @param {boolean} tails - True if two-tailed, otherwise false
+ * @param {*} alpha - The significance level
+ * @returns an object with pValue and testStatistic
+ */
+export const Samp1TTest = (data, testAgainst, tails, alpha) => {
+    if (
+        data != undefined &&
+        testAgainst != undefined &&
+        tails != undefined &&
+        alpha != undefined
+    ) {
+        const result = statistics.ttest(data, {
+            mu: parseFloat(testAgainst),
+            alpha: parseFloat(alpha),
+            alternative: tails ? 'two-sided' : 'less'
+        });
+        return {
+            pValue: result.pValue,
+            testStatistic: result.statistic
+        };
+    }
+    return null;
+};
+
+/**
+ * 2-Sample Z-Test
+ * @param {Array} data - The raw data for column 1
+ * @param {Array} data2 - The raw data for column 2
+ * @param {boolean} tails - True if two-tailed, otherwise false
+ * @param {*} alpha - The significance level
+ * @returns an object with pValue and testStatistic
+ */
+export const Samp2ZTest = (data, data2, tails, alpha) => {
+    if (
+        data != undefined &&
+        data2 != undefined &&
+        tails != undefined &&
+        alpha != undefined
+    ) {
+        const result = statistics.ztest2(data, data2, std(data), std(data2), {
+            alpha: parseFloat(alpha),
+            alternative: tails ? 'two-sided' : 'less'
+        });
+        return {
+            pValue: result.pValue,
+            testStatistic: result.statistic
+        };
+    }
+};
+
+/**
+ * 1-Sample Z-Test
+ * @param {Array} data - The raw data for column 1
+ * @param {boolean} tails - True if two-tailed, otherwise false
+ * @param {*} alpha - The significance level
+ * @returns an object with pValue and testStatistic
+ */
+export const Samp1ZTest = (data, testAgainst, tails, alpha) => {
+    if (
+        data != undefined &&
+        testAgainst != undefined &&
+        tails != undefined &&
+        alpha != undefined
+    ) {
+        const result = statistics.ztest(data, std(data), {
+            mu: parseFloat(testAgainst),
+            alpha: parseFloat(alpha),
+            alternative: tails ? 'two-sided' : 'less'
+        });
+        return {
+            pValue: result.pValue,
+            testStatistic: result.statistic
+        };
+    }
+};
