@@ -12,6 +12,7 @@ import { occurrencesOf } from '../helper/count';
  */
 export const X2GOFTest = (data, testAgainst, alpha) => {
   if (data != undefined && testAgainst != undefined && alpha != undefined) {
+    console.log(data);
     // Convert the raw data to counts
     const unique = getUnique(data);
     const obsCounts = unique.map((item) => occurrencesOf(data, item));
@@ -25,6 +26,7 @@ export const X2GOFTest = (data, testAgainst, alpha) => {
     const result = statistics.chi2gof(obsCounts, expCounts, {
       alpha: parseFloat(alpha)
     });
+
     return {
       pValue: result.pValue,
       testStatistic: result.statistic
