@@ -2,11 +2,15 @@
     to avoid it being too crowded.-->
 
 <script>
+  import { getUniqueFromMatrix } from './helper/unique';
+
   export let closeWin = () => {};
   export let testType;
 
   export let testAgainst = null;
   export let setTestAgainst = (testAgainst) => {};
+  export let source = null;
+  export let blocks;
   export let expCounts = null;
   export let setExpCounts = (expCounts) => {};
   export let h0 = null;
@@ -19,6 +23,14 @@
   export let setTails = (tails) => {};
   export let alpha = null;
   export let setAlpha = (alpha) => {};
+  $: vals =
+    source == null
+      ? []
+      : getUniqueFromMatrix(
+          blocks
+            .filter((b) => b.type == 'table' && b.title == source)
+            .map((b) => (b.hasHeaders ? b.content.slice(1) : b.content))[0]
+        );
 </script>
 
 <main>
@@ -39,7 +51,7 @@
   <!--Input for expected counts. Only for chi-squared GOF test.-->
   {#if testType == 'X2GOFTest'}
     <label for={testType + '-expCounts'}
-      >Expected Counts (Separate by Commas):</label
+      >Expected Counts (Separate by Commas, Must Have {vals.length} Items):</label
     >
     <input
       id={testType + '-expCounts'}

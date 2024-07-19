@@ -598,7 +598,9 @@
         testType={focus.testType}
         testAgainst={focus.testData.testAgainst}
         {setTestAgainst}
+        source={focus.sources}
         expCounts={focus.testData.expCounts}
+        {blocks}
         {setExpCounts}
         h0={focus.testData.h0}
         {setH0}
