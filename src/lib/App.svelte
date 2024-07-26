@@ -489,9 +489,9 @@
   };
 
   // Update the expected counts for X2 GOF
-  const setExpCounts = (expCounts) => {
+  const setExpCounts = (value) => {
     addToUndoStack(blocks);
-    focus.testData.expCounts = expCounts;
+    focus.testData.expCounts = value;
     blocks = blocks;
   };
 
@@ -601,6 +601,7 @@
         source={focus.sources}
         expCounts={focus.testData.expCounts}
         {blocks}
+        col={focus.col}
         {setExpCounts}
         h0={focus.testData.h0}
         {setH0}

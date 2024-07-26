@@ -2,7 +2,7 @@
     to avoid it being too crowded.-->
 
 <script>
-  import { getUniqueFromMatrix } from './helper/unique';
+  import { getUnique } from './helper/unique';
 
   export let closeWin = () => {};
   export let testType;
@@ -11,8 +11,9 @@
   export let setTestAgainst = (testAgainst) => {};
   export let source = null;
   export let blocks;
-  export let expCounts = null;
-  export let setExpCounts = (expCounts) => {};
+  export let col;
+  export let expCounts = [];
+  export let setExpCounts = (index, value) => {};
   export let h0 = null;
   export let setH0 = (h0) => {};
   export let ha = null;
@@ -23,14 +24,27 @@
   export let setTails = (tails) => {};
   export let alpha = null;
   export let setAlpha = (alpha) => {};
+  $: sourceTable = blocks.find((b) => b.type == 'table' && b.title == source);
+  $: hasHeaders = sourceTable.hasHeaders;
+  $: sourceTableContent = sourceTable.content;
+  $: colIndex = sourceTableContent[0].indexOf(col);
   $: vals =
     source == null
       ? []
-      : getUniqueFromMatrix(
-          blocks
-            .filter((b) => b.type == 'table' && b.title == source)
-            .map((b) => (b.hasHeaders ? b.content.slice(1) : b.content))[0]
-        );
+      : getUnique(
+          (hasHeaders ? sourceTableContent.slice(1) : sourceTableContent).map(
+            (item) => item[colIndex === -1 ? 0 : colIndex] ?? ''
+          )
+        ) ?? [];
+  $: if (vals.length > 0 && expCounts === null) {
+    expCounts = new Array(vals.length).fill(1);
+  }
+  $: if (expCounts.length < vals.length) {
+    expCounts = [
+      ...expCounts,
+      ...new Array(vals.length - expCounts.length).fill(1)
+    ];
+  }
 </script>
 
 <main>
@@ -50,14 +64,18 @@
   {/if}
   <!--Input for expected counts. Only for chi-squared GOF test.-->
   {#if testType == 'X2GOFTest'}
-    <label for={testType + '-expCounts'}
-      >Expected Counts (Separate by Commas, Must Have {vals.length} Items):</label
-    >
-    <input
-      id={testType + '-expCounts'}
-      bind:value={expCounts}
-      on:change={() => setExpCounts(expCounts)}
-    />
+    Expected Counts (should add up to {hasHeaders
+      ? sourceTableContent.length - 1
+      : sourceTableContent.length}): <br />
+    {#each vals as val, idx}
+      <label for={testType + `-expCounts${idx}`}>{val}:</label>
+      <input
+        id={testType + `-expCounts${idx}`}
+        bind:value={expCounts[idx]}
+        on:change={() => setExpCounts(expCounts)}
+      />
+      <br />
+    {/each}
     <br />
   {/if}
   <!--Inputs for hypotheses.-->

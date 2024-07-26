@@ -6,19 +6,18 @@ import { occurrencesOf } from '../helper/count';
 /**
  * Chi-Squared Goodness-of-Fit Test
  * @param {Array} data - The raw data (not counts!)
- * @param {String} testAgainst - The expected counts, as a comma-separated string
+ * @param {Array} testAgainst - The expected counts, as an array
  * @param {*} alpha - The significance level
  * @returns an object with pValue and testStatistic
  */
 export const X2GOFTest = (data, testAgainst, alpha) => {
   if (data != undefined && testAgainst != undefined && alpha != undefined) {
-    console.log(data);
     // Convert the raw data to counts
     const unique = getUnique(data);
     const obsCounts = unique.map((item) => occurrencesOf(data, item));
 
     // Parse the expCounts string
-    const expCounts = testAgainst.split(', ').map((item) => parseFloat(item));
+    const expCounts = testAgainst.map((item) => parseFloat(item));
 
     // Validate the expected counts
     if (obsCounts.length != expCounts.length) return null;
