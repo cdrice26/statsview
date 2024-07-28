@@ -51,9 +51,11 @@ export const X2IndTest = (data, alpha) => {
     const result = statistics.chi2test(obsCounts, {
       alpha: parseFloat(alpha)
     });
+
     return {
       pValue: result.pValue,
-      testStatistic: result.statistic
+      testStatistic: result.statistic,
+      expected: result?.expected
     };
   }
 };
