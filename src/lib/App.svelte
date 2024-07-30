@@ -454,30 +454,14 @@
         break;
       }
     }
+    for (let i = 0; i < blocks.length; i++) {
+      if (blocks[i]?.sources == focus?.title) blocks[i].sources = null;
+    }
     blocks = blocks;
   };
 
   // Setup a statistical test
   const setupTest = () => {
-    /*
-    if (focus.testData == undefined) focus.testData = {
-      testAgainst: null,
-      expCounts: null,
-      h0: null,
-      ha: null,
-      rand: null,
-      tails: null,
-      alpha: null
-    };
-    if (focus.testData.testAgainst == null) focus.testData.testAgainst = "Undefined Column";
-    if (focus.testData.expCounts == null) focus.testData.expCounts = "1, 2, 3, 4, 5";
-    if (focus.testData.h0 == null) focus.testData.h0 = "Null Hypothesis";
-    if (focus.testData.ha == null) focus.testData.ha = "Alt Hypothesis";
-    if (focus.testData.rand == null) focus.testData.rand = false;
-    if (focus.testData.tails == null) focus.testData.tails = false;
-    if (focus.testData.alpha == null) focus.testData.alpha = 0.05;
-    blocks = blocks;
-    */
     currentWin = true;
   };
 
