@@ -8,10 +8,10 @@ export const getData = (sourceTable, col, hasHeaders, type) => {
       if (sourceTable[0][i] == col) colNum = i;
     }
   } else {
-    colNum = parseInt(col.split(' ')[col.split(' ').length - 1]);
+    colNum = parseInt(col?.split(' ')[col?.split(' ').length - 1]);
   }
   // If we don't have said column, we can't take stats - return an empty list
-  if (colNum == -1) return [];
+  if (colNum == -1 || colNum == undefined || colNum == null) return [];
   // Put the values of the column into a list as numbers and return it
   let returnList = [];
   for (let i = 0; i < sourceTable.length; i++) {
