@@ -161,6 +161,7 @@
         type: 'chart',
         sources: null,
         col: null,
+        cols: null,
         content: null,
         settings: {
           types: []
@@ -405,6 +406,12 @@
     blocks = blocks;
   };
 
+  const setCols = (cols) => {
+    addToUndoStack(blocks);
+    focus.cols = cols;
+    blocks = blocks;
+  };
+
   // Move a block up
   const moveUp = () => {
     addToUndoStack(blocks);
@@ -563,6 +570,8 @@
     {setSource}
     col={focus.col}
     col2={focus.col2}
+    cols={focus.cols}
+    {setCols}
     {setCol}
     {blocks}
     {moveUp}

@@ -1,6 +1,7 @@
 <script>
   import Select from './Select.svelte';
   import ColumnSelect from './ColumnSelect.svelte';
+  import ColumnSelectMulti from './ColumnSelectMulti.svelte';
 
   export let source;
   export let setSource = (source) => {};
@@ -15,7 +16,9 @@
 
   export let col;
   export let col2;
+  export let cols;
   export let setCol = (col, num) => {};
+  export let setCols = (cols) => {};
 </script>
 
 <!--Source Dropdown-->
@@ -27,8 +30,16 @@
 </Select>
 
 <!--Column Dropdown-->
-{#if focus.sources != null}
-  {#if currentTable.dataType == 'Quantitative' || currentTable.dataType == 'Binary' || focus.testType == 'X2GOFTest'}
+{#if focus.sources !== null}
+  {#if focus.type === 'chart'}
+    <ColumnSelectMulti
+      selected={cols ?? []}
+      setter={setCols}
+      allCols={currentTable.content[0].map((col, idx) =>
+        currentTable.hasHeaders ? col : 'Column ' + idx
+      ) ?? []}
+    />
+  {:else if currentTable.dataType == 'Quantitative' || currentTable.dataType == 'Binary' || focus.testType == 'X2GOFTest'}
     <ColumnSelect value={col} setter={setCol} num="1">
       {#each currentTable.content[0] as title, index}
         <option value={currentTable.hasHeaders ? title : 'Column ' + index}

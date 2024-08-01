@@ -14,6 +14,8 @@
     "vite": "^4.4.5"
   },
   "dependencies": {
-    "@stdlib/stats": "^0.1.1"
+    "@stdlib/stats": "^0.1.1",
+    "plotly.js-dist": "^2.34.0",
+    "svelte-multiselect": "^10.3.0"
   }
 }
