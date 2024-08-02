@@ -1,20 +1,23 @@
 <script>
   import Select from './Select.svelte';
+  import TableTitleInput from './tableControls/TableTitleInput.svelte';
 
   export let setChartType = (chartType) => {};
+  export let title;
+  export let setChartTitle = (chartTitle) => {};
   export let chartType;
   export let dataType;
   export let xCol;
   $: currentTable = tableBlocks.filter(
     (table) => table.title == focus.sources
   )[0];
-
   export let focus;
   export let tableBlocks;
   export let setXCol = (xCol) => {};
 </script>
 
 <!--Chart Controls-->
+<TableTitleInput {title} setTitle={setChartTitle} />
 <Select value={chartType} setter={setChartType}>
   {#if dataType == 'Categorical' || dataType == 'Binary'}
     <option value="bar" selected>Bar Chart</option>

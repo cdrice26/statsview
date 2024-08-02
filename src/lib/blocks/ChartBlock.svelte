@@ -56,7 +56,7 @@
           : Object.entries(rotatedData).map((x) => ({
               x: x[1],
               name: x[0],
-              type: props.chartType
+              type: props.chartType ?? 'histogram'
             }))
         : sourceBlock?.dataType === 'Categorical' ||
             sourceBlock?.dataType === 'Binary'
@@ -66,7 +66,7 @@
                 (x) => occurrencesOf(d[1], x)
               ),
               name: d[0],
-              type: props.chartType,
+              type: props.chartType ?? 'bar',
               domain:
                 props.chartType === 'pie'
                   ? calculateRowAndColumn(
@@ -78,7 +78,7 @@
           : {};
 
     const layout = {
-      title: 'My Bar Chart',
+      title: props.title,
       height: 400,
       width: 850,
       grid: props.chartType === 'pie' ? calculateGridSize(data.length) : {}
@@ -97,7 +97,7 @@
   async function exportChart() {
     const imageOptions = {
       format: 'png',
-      width: 600,
+      width: 850,
       height: 400
     };
 

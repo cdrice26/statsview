@@ -164,6 +164,7 @@
         col: null,
         cols: null,
         content: null,
+        title: 'New Chart',
         xCol: null,
         settings: {
           types: []
@@ -289,6 +290,12 @@
   const setChartType = (chartType) => {
     addToUndoStack(blocks);
     focus.chartType = chartType;
+    blocks = blocks;
+  };
+
+  const setChartTitle = (title) => {
+    addToUndoStack(blocks);
+    focus.title = title;
     blocks = blocks;
   };
 
@@ -578,6 +585,7 @@
     {delRow}
     title={focus.title}
     {setTitle}
+    {setChartTitle}
     {getFromCSV}
     hasHeaders={focus.hasHeaders}
     {toggleHeaders}

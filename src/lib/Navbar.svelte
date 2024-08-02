@@ -54,6 +54,7 @@
   export let delRow = () => {};
   export let title;
   export let setTitle = (title) => {};
+  export let setChartTitle = (title) => {};
   let csvFiles;
   export let getFromCSV = (file) => {};
   export let hasHeaders;
@@ -159,10 +160,12 @@
         )[0]?.dataType}
         {chartType}
         {setChartType}
+        {setChartTitle}
         {xCol}
         {setXCol}
         {focus}
         {tableBlocks}
+        {title}
       />
     {/if}
 
