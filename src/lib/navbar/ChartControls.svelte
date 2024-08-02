@@ -22,10 +22,11 @@
   {:else if dataType == 'Quantitative'}
     <option value="histogram">Histogram</option>
     <option value="box">Boxplot</option>
-    <option value="Scatter">Scatter Plot</option>
+    <option value="scatter">Scatter Plot</option>
+    <option value="line">Line Chart</option>
   {/if}
 </Select>
-{#if chartType === 'Scatter'}
+{#if chartType === 'scatter' || chartType === 'line'}
   x:
   <Select value={xCol} setter={setXCol}>
     {#each currentTable.content[0].map( (col, idx) => (currentTable.hasHeaders ? col : 'Column ' + idx) ) ?? [] as title, index}
@@ -33,5 +34,6 @@
         >{currentTable.hasHeaders ? title : 'Column ' + index}</option
       >
     {/each}
+    <option value={null}>Index</option>
   </Select>
 {/if} |

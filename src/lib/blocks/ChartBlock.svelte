@@ -30,11 +30,19 @@
   const createChart = () => {
     const data =
       sourceBlock?.dataType === 'Quantitative'
-        ? Object.entries(rotatedData).map((x) => ({
-            x: x[1],
-            name: x[0],
-            type: props.chartType
-          }))
+        ? props.chartType === 'scatter' || props.chartType === 'line'
+          ? Object.entries(rotatedData).map((d) => ({
+              x: x,
+              y: d[1],
+              name: d[0],
+              type: 'scatter',
+              mode: props.chartType === 'line' ? 'lines' : 'markers'
+            }))
+          : Object.entries(rotatedData).map((x) => ({
+              x: x[1],
+              name: x[0],
+              type: props.chartType
+            }))
         : {};
 
     console.log(data);
