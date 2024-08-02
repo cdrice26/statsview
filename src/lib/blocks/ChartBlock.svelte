@@ -1,25 +1,37 @@
 <script>
   import Plotly from 'plotly.js-dist';
   import { getData } from '../stats/getData';
+  import { onMount } from 'svelte';
 
   export let props;
   export let tableBlocks;
   $: sourceBlock = tableBlocks.find((table) => table.title == props.sources);
   $: sourceData = sourceBlock?.content;
-  $: rotatedData = Object.fromEntries(
-    props?.cols?.map((col) => [
-      col,
-      getData(sourceData, col, sourceBlock?.hasHeaders, sourceBlock?.dataType)
-    ]) ?? []
-  );
+  $: rotatedData =
+    sourceData !== null && sourceData !== undefined
+      ? Object.fromEntries(
+          props?.cols?.map((col) => [
+            col,
+            getData(
+              sourceData,
+              col,
+              sourceBlock?.hasHeaders,
+              sourceBlock?.dataType
+            )
+          ]) ?? []
+        )
+      : null;
   $: x =
     props?.xCol != null
       ? getData(sourceData, props.xCol, sourceBlock?.hasHeaders, 'Quantitative')
       : null;
-  $: console.log(props);
   export let setFocus = (props) => {};
 
   let plotElement;
+
+  onMount(() => {
+    createChart();
+  });
 
   $: if (rotatedData || x || props.chartType) {
     if (plotElement) {
