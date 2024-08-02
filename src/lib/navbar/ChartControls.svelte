@@ -17,10 +17,10 @@
 <!--Chart Controls-->
 <Select value={chartType} setter={setChartType}>
   {#if dataType == 'Categorical' || dataType == 'Binary'}
-    <option value="Bar">Bar Chart</option>
-    <option value="Pie">Pie Chart</option>
+    <option value="bar" selected>Bar Chart</option>
+    <option value="pie">Pie Chart</option>
   {:else if dataType == 'Quantitative'}
-    <option value="histogram">Histogram</option>
+    <option value="histogram" selected>Histogram</option>
     <option value="box">Boxplot</option>
     <option value="scatter">Scatter Plot</option>
     <option value="line">Line Chart</option>

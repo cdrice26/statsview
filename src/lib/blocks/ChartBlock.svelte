@@ -2,6 +2,9 @@
   import Plotly from 'plotly.js-dist';
   import { getData } from '../stats/getData';
   import { onMount } from 'svelte';
+  import { getUnique } from '../helper/unique';
+  import { occurrencesOf } from '../helper/count';
+  import { calculateGridSize, calculateRowAndColumn } from '../helper/gridSize';
 
   export let props;
   export let tableBlocks;
@@ -55,14 +58,30 @@
               name: x[0],
               type: props.chartType
             }))
-        : {};
-
-    console.log(data);
+        : sourceBlock?.dataType === 'Categorical' ||
+            sourceBlock?.dataType === 'Binary'
+          ? Object.entries(rotatedData).map((d, idx) => ({
+              [props.chartType === 'pie' ? 'labels' : 'x']: getUnique(d[1]),
+              [props.chartType === 'pie' ? 'values' : 'y']: getUnique(d[1]).map(
+                (x) => occurrencesOf(d[1], x)
+              ),
+              name: d[0],
+              type: props.chartType,
+              domain:
+                props.chartType === 'pie'
+                  ? calculateRowAndColumn(
+                      idx,
+                      calculateGridSize(Object.keys(rotatedData).length).columns
+                    )
+                  : {}
+            }))
+          : {};
 
     const layout = {
       title: 'My Bar Chart',
       height: 400,
-      width: 850
+      width: 850,
+      grid: props.chartType === 'pie' ? calculateGridSize(data.length) : {}
     };
 
     if (plotElement !== undefined) {
