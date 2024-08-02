@@ -1,36 +1,58 @@
 <script>
   import Plotly from 'plotly.js-dist';
+  import { getData } from '../stats/getData';
 
   export let props;
   export let tableBlocks;
-  $: sourceBlock = tableBlocks.filter(
-    (table) => table.title == props.sources
-  )[0];
+  $: sourceBlock = tableBlocks.find((table) => table.title == props.sources);
   $: sourceData = sourceBlock?.content;
-  $: console.log(sourceData);
+  $: rotatedData = Object.fromEntries(
+    props?.cols?.map((col) => [
+      col,
+      getData(sourceData, col, sourceBlock?.hasHeaders, sourceBlock?.dataType)
+    ]) ?? []
+  );
+  $: x =
+    props?.xCol != null
+      ? getData(sourceData, props.xCol, sourceBlock?.hasHeaders, 'Quantitative')
+      : null;
+  $: console.log(props);
   export let setFocus = (props) => {};
 
   let plotElement;
 
-  $: if (plotElement) createChart();
+  $: if (rotatedData || x || props.chartType) {
+    if (plotElement) {
+      createChart();
+    }
+  }
 
   const createChart = () => {
-    const data = [
-      {
-        x: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-        y: [65, 59, 80, 81, 56, 55, 40],
-        type: 'bar'
-      }
-    ];
+    const data =
+      sourceBlock?.dataType === 'Quantitative'
+        ? Object.entries(rotatedData).map((x) => ({
+            x: x[1],
+            name: x[0],
+            type: props.chartType
+          }))
+        : {};
+
+    console.log(data);
 
     const layout = {
       title: 'My Bar Chart',
       height: 400,
-      width: 600
+      width: 850
     };
 
+    if (plotElement !== undefined) {
+      // Clean up any existing plot before creating a new one
+      // @ts-ignore
+      Plotly.purge(plotElement);
+    }
+
     // @ts-ignore
-    Plotly.newPlot(plotElement, data, layout);
+    Plotly.react(plotElement, data, layout);
   };
 
   async function exportChart() {

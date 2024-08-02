@@ -25,6 +25,8 @@
     background-color: white;
     padding: 3px;
     vertical-align: middle;
+    box-sizing: border-box;
+    height: 25px;
   }
   #titleInput:hover,
   #titleInput:focus {

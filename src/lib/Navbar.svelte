@@ -9,6 +9,7 @@
   import TableControls from './navbar/TableControls.svelte';
   import SourceControl from './navbar/SourceControl.svelte';
   import SwapControl from './navbar/SwapControl.svelte';
+  import ChartControls from './navbar/ChartControls.svelte';
 
   // This is a reference to the block the user is currently editing
   export let focus;
@@ -44,6 +45,9 @@
   export let statType;
   export let setStatType = (statType) => {};
 
+  export let chartType;
+  export let setChartType = (chartType) => {};
+
   export let addColumn = () => {};
   export let delColumn = () => {};
   export let addRow = () => {};
@@ -63,8 +67,10 @@
   export let col;
   export let col2;
   export let cols;
+  export let xCol;
   export let setCols = (cols) => {};
   export let setCol = (col, sourceNum) => {};
+  export let setXCol = (col) => {};
 
   export let moveUp = () => {};
   export let moveDown = () => {};
@@ -142,6 +148,21 @@
         {toggleHeaders}
         {dataType}
         {setDataType}
+      />
+    {/if}
+
+    <!--Chart Controls-->
+    {#if focus.type == 'chart'}
+      <ChartControls
+        dataType={tableBlocks.filter(
+          (blocks) => blocks.title == focus?.sources
+        )[0]?.dataType}
+        {chartType}
+        {setChartType}
+        {xCol}
+        {setXCol}
+        {focus}
+        {tableBlocks}
       />
     {/if}
 

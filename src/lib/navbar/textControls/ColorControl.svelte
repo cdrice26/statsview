@@ -9,5 +9,7 @@
 <style>
   input {
     vertical-align: middle;
+    box-sizing: border-box;
+    height: 25px;
   }
 </style>

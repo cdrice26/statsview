@@ -159,10 +159,12 @@
       {
         id: blocks.length,
         type: 'chart',
+        chartType: null,
         sources: null,
         col: null,
         cols: null,
         content: null,
+        xCol: null,
         settings: {
           types: []
         }
@@ -280,6 +282,13 @@
   const setTestType = (testType) => {
     addToUndoStack(blocks);
     focus.testType = testType;
+    blocks = blocks;
+  };
+
+  // Set type of chart
+  const setChartType = (chartType) => {
+    addToUndoStack(blocks);
+    focus.chartType = chartType;
     blocks = blocks;
   };
 
@@ -403,6 +412,12 @@
     addToUndoStack(blocks);
     if (sourceNum == 1) focus.col = col;
     else if (sourceNum == 2) focus.col2 = col;
+    blocks = blocks;
+  };
+
+  const setXCol = (col) => {
+    addToUndoStack(blocks);
+    focus.xCol = col;
     blocks = blocks;
   };
 
@@ -553,6 +568,8 @@
     {underline}
     testType={focus.testType}
     {setTestType}
+    chartType={focus.chartType}
+    {setChartType}
     statType={focus.statType}
     {setStatType}
     {addColumn}
@@ -571,6 +588,8 @@
     col={focus.col}
     col2={focus.col2}
     cols={focus.cols}
+    xCol={focus.xCol}
+    {setXCol}
     {setCols}
     {setCol}
     {blocks}
