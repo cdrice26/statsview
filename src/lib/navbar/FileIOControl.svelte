@@ -1,9 +1,9 @@
 <script>
-    import Button from './Button.svelte';
+  import Button from './Button.svelte';
 
-    export let load = () => {};
-    export let save = () => {};
-    export let exp = () => {};
+  export let load = () => {};
+  export let save = () => {};
+  export let exp = () => {};
 </script>
 
 <!--File I/O Control Butons-->

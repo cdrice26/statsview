@@ -90,10 +90,34 @@
   };
 
   // Save to proprietary .stv file
-  const save = () => {};
+  const save = () => {
+    if (blocks) {
+      const data = JSON.stringify(blocks);
+      const blob = new Blob([data], { type: 'application/json' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'report.stv';
+      a.click();
+    }
+  };
 
   // Load from .stv file
-  const load = () => {};
+  const load = () => {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.onchange = (e) => {
+      //@ts-ignore
+      const file = e.target.files[0];
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const text = e.target.result;
+        // @ts-ignore
+        blocks = JSON.parse(text);
+      };
+      reader.readAsText(file);
+    };
+    input.click();
+  };
 
   // Export to .docx
   const exp = () => {};
