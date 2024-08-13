@@ -4,10 +4,14 @@
   import TestSetup from './TestSetup.svelte';
   import Window from './Window.svelte';
 
-  // Store the blocks as an array.
+  /**
+   * The list of all blocks
+   */
   let blocks = [];
 
-  // Adjust the toolbar based on what is focused and store the correct block reference
+  /**
+   * Reference to the currently focused block
+   */
   let focus = {
     id: null,
     type: null,
@@ -30,17 +34,33 @@
       alpha: null
     }
   };
+
+  /**
+   * Set the focus
+   * @param props - the new focus
+   */
   const setFocus = (props) => (focus = props);
 
-  // Store which window is in use, if any
+  /**
+   * Reference to the current window
+   */
   let currentWin = null;
 
-  // Undo and Redo stacks store old versions of the blocks list.
+  /**
+   * Stack of history for use with undo
+   */
   let undoStack = [];
+
+  /**
+   * Stack of history for use with redo
+   */
   let redoStack = [];
 
-  // Function to add an instance of blocks to the undoStack. To save memory, the undoStack
-  // is limited to a length of 50.
+  /** Function to add an instance of blocks to the undoStack. To save memory, the undoStack
+   * is limited to a length of 50.
+   *
+   * @param instance - the instance to add
+   */
   const addToUndoStack = (instance) => {
     // If we undo something, then the redo actions make no sense. Get rid of them here.
     redoStack = [];
@@ -51,7 +71,12 @@
     }
   };
 
-  // Ditto for the redoStack
+  /**
+   * Function to add an instance of blocks to the redoStack. To save memory, the redoStack
+   * is limited to a length of 50.
+   *
+   * @param instance - the instance to add
+   */
   const addToRedoStack = (instance) => {
     redoStack = [structuredClone(instance), ...redoStack];
     if (redoStack.length > 50) {
@@ -59,13 +84,17 @@
     }
   };
 
-  // Force the blocks array to update and add it to the undo stack
+  /**
+   * Force an update to the blocks and add to the undo stack
+   */
   const forceUpdate = () => {
     addToUndoStack(blocks);
     blocks = blocks;
   };
 
-  // Undo last change to blocks
+  /**
+   * Undo last change to blocks
+   */
   const undo = () => {
     if (undoStack.length > 0) {
       addToRedoStack(blocks);
@@ -74,7 +103,9 @@
     }
   };
 
-  // Redo last change to blocks
+  /**
+   * Redo last change
+   */
   const redo = () => {
     if (redoStack.length > 0) {
       // First add the current setup to undoStack
@@ -89,7 +120,9 @@
     }
   };
 
-  // Save to proprietary .stv file
+  /**
+   * Save to .stv file
+   */
   const save = () => {
     if (blocks) {
       const data = JSON.stringify(blocks);
@@ -101,7 +134,9 @@
     }
   };
 
-  // Load from .stv file
+  /**
+   * Load from .stv file
+   */
   const load = () => {
     const input = document.createElement('input');
     input.type = 'file';
@@ -119,10 +154,14 @@
     input.click();
   };
 
-  // Export to .docx
+  /**
+   * Export to .docx
+   */
   const exp = () => {};
 
-  // The following functions create new elements to add to the document
+  /**
+   * Create a new text block
+   */
   const newText = () => {
     addToUndoStack(blocks);
     blocks = [
@@ -146,6 +185,9 @@
     ];
   };
 
+  /**
+   * Create a new table block
+   */
   const newTable = () => {
     addToUndoStack(blocks);
     blocks = [
@@ -176,6 +218,9 @@
     ];
   };
 
+  /**
+   * Create a new chart block
+   */
   const newChart = () => {
     addToUndoStack(blocks);
     blocks = [
@@ -197,6 +242,9 @@
     ];
   };
 
+  /**
+   * Create a new stat block
+   */
   const newStat = () => {
     addToUndoStack(blocks);
     blocks = [
@@ -221,6 +269,9 @@
     ];
   };
 
+  /**
+   * Create a new test block
+   */
   const newTest = () => {
     addToUndoStack(blocks);
     blocks = [
@@ -254,83 +305,126 @@
     ];
   };
 
-  // Change font
+  /**
+   * Change font
+   *
+   * @param font - the new font
+   */
   const setFont = (font) => {
     addToUndoStack(blocks);
     focus.settings.fontFamily = font;
     blocks = blocks;
   };
 
-  // Change font size
+  /**
+   * Change font size
+   *
+   * @param fontSize - the new font size
+   */
   const setFontSize = (fontSize) => {
     addToUndoStack(blocks);
     focus.settings.fontSize = fontSize;
     blocks = blocks;
   };
 
-  // Change color
+  /**
+   * Change font color
+   *
+   * @param color - the new font color
+   */
   const setColor = (color) => {
     addToUndoStack(blocks);
     focus.settings.color = color;
     blocks = blocks;
   };
 
-  // Change text align
+  /**
+   * Change text alignment
+   *
+   * @param align - the new text alignment
+   */
   const align = (align) => {
     addToUndoStack(blocks);
     focus.settings.textAlign = align;
     blocks = blocks;
   };
 
-  // Bold/unbold
+  /**
+   * Make text bold/not bold (toggle)
+   */
   const bold = () => {
     addToUndoStack(blocks);
     focus.settings.bold = !focus.settings.bold;
     blocks = blocks;
   };
 
-  // Italic/not italic
+  /**
+   * Make text italic/not italic (toggle)
+   */
   const italic = () => {
     addToUndoStack(blocks);
     focus.settings.italic = !focus.settings.italic;
     blocks = blocks;
   };
 
-  // Underline/not underline
+  /**
+   * Make text underline/not underline (toggle)
+   */
   const underline = () => {
     addToUndoStack(blocks);
     focus.settings.underline = !focus.settings.underline;
     blocks = blocks;
   };
 
-  // Set type of test
+  /**
+   * Set type of a test
+   *
+   * @param testType - the new test type
+   */
   const setTestType = (testType) => {
     addToUndoStack(blocks);
     focus.testType = testType;
     blocks = blocks;
   };
 
-  // Set type of chart
+  /**
+   * Set type of a chart
+   *
+   * @param chartType - the new chart type
+   */
   const setChartType = (chartType) => {
     addToUndoStack(blocks);
     focus.chartType = chartType;
     blocks = blocks;
   };
 
+  /**
+   * Set title of a chart
+   *
+   * @param title - the new chart title
+   */
   const setChartTitle = (title) => {
     addToUndoStack(blocks);
     focus.title = title;
     blocks = blocks;
   };
 
-  // Set type of stat
+  /**
+   * Set type of a stat
+   *
+   * @param statType - the new stat type
+   */
   const setStatType = (statType) => {
     addToUndoStack(blocks);
     focus.statType = statType;
     blocks = blocks;
   };
 
-  // Add column to table
+  /**
+   * Add column to table
+   *
+   * @param title - the new column title
+   */
   const addColumn = () => {
     addToUndoStack(blocks);
     for (let i = 0; i < focus.content.length; i++) {
@@ -339,7 +433,9 @@
     blocks = blocks;
   };
 
-  // Delete column from table
+  /**
+   * Delete last column from table
+   */
   const delColumn = () => {
     addToUndoStack(blocks);
     if (focus.content[0].length > 1) {
@@ -350,7 +446,9 @@
     }
   };
 
-  // Add row to table
+  /**
+   * Add row to table
+   */
   const addRow = () => {
     addToUndoStack(blocks);
     let newRow = [];
@@ -361,7 +459,9 @@
     blocks = blocks;
   };
 
-  // Delete row from table
+  /**
+   * Delete last row from table
+   */
   const delRow = () => {
     addToUndoStack(blocks);
     if (focus.content.length > 1) {
@@ -370,7 +470,11 @@
     }
   };
 
-  // Set title of table
+  /**
+   * Change title of table
+   *
+   * @param title - the new table title
+   */
   const setTitle = (title) => {
     addToUndoStack(blocks);
     const oldTitle =
@@ -384,7 +488,11 @@
     blocks = blocks;
   };
 
-  // Get table data from csv
+  /**
+   * Get data from csv file
+   *
+   * @param file - the csv file
+   */
   const getFromCSV = async (file) => {
     if (file) {
       const dataString = await file.text();
@@ -394,7 +502,11 @@
     }
   };
 
-  // Helper function to parse a csv file
+  /**
+   * Parse csv string
+   *
+   * @param str - the csv string
+   */
   const parseCSV = (str) => {
     // Split the string up into lines
     const lines = str.split('\n');
@@ -419,26 +531,43 @@
     return data;
   };
 
-  // Change settings regarding whether the top row of a table should be used as headers
+  /**
+   * Toggle whether the table has headers
+   *
+   * @param hasHeaders - whether the table should have headers
+   */
   const toggleHeaders = (hasHeaders) => {
     focus.hasHeaders = hasHeaders;
     blocks = blocks;
   };
 
-  // Set data type of a table
+  /**
+   * Set data type for statistical thing
+   *
+   * @param dataType - the new data type
+   */
   const setDataType = (dataType) => {
     focus.dataType = dataType;
     blocks = blocks;
   };
 
-  // Set data source for statistical thing
+  /**
+   * Set source table for statistical thing
+   *
+   * @param source - the new source table
+   */
   const setSource = (source) => {
     addToUndoStack(blocks);
     focus.sources = source;
     blocks = blocks;
   };
 
-  // Set column to use for statistical thing
+  /**
+   * Set source column for statistical thing
+   *
+   * @param col - the new column
+   * @param sourceNum - the column to change (1 or 2, if there's a second column)
+   */
   const setCol = (col, sourceNum) => {
     addToUndoStack(blocks);
     if (sourceNum == 1) focus.col = col;
@@ -446,19 +575,31 @@
     blocks = blocks;
   };
 
+  /**
+   * Set x column for chart
+   *
+   * @param col - the new x column
+   */
   const setXCol = (col) => {
     addToUndoStack(blocks);
     focus.xCol = col;
     blocks = blocks;
   };
 
+  /**
+   * Set columns for chart
+   *
+   * @param cols - the new columns
+   */
   const setCols = (cols) => {
     addToUndoStack(blocks);
     focus.cols = cols;
     blocks = blocks;
   };
 
-  // Move a block up
+  /**
+   * Move a block up one position
+   */
   const moveUp = () => {
     addToUndoStack(blocks);
     const id = focus.id;
@@ -476,7 +617,9 @@
     }
   };
 
-  // Move a block down
+  /**
+   * Move a block down one position
+   */
   const moveDown = () => {
     addToUndoStack(blocks);
     const id = focus.id;
@@ -494,7 +637,9 @@
     }
   };
 
-  // Delete a block
+  /**
+   * Delete a block
+   */
   const delBlock = () => {
     addToUndoStack(blocks);
     const id = focus.id;
@@ -513,61 +658,93 @@
     blocks = blocks;
   };
 
-  // Setup a statistical test
+  /**
+   * Show the test setup window
+   */
   const setupTest = () => {
     currentWin = true;
   };
 
-  // Update the value we are testing against
+  /**
+   * Update the value we are testing against
+   *
+   * @param testAgainst - the new value
+   */
   const setTestAgainst = (testAgainst) => {
     addToUndoStack(blocks);
     focus.testData.testAgainst = testAgainst;
     blocks = blocks;
   };
 
-  // Update the expected counts for X2 GOF
+  /**
+   * Update the expected counts for X2 GOF
+   *
+   * @param value - the new value
+   */
   const setExpCounts = (value) => {
     addToUndoStack(blocks);
     focus.testData.expCounts = value;
     blocks = blocks;
   };
 
-  // Update the null hypothesis
+  /**
+   * Update the null hypothesis
+   *
+   * @param h0 - the new value
+   */
   const setH0 = (h0) => {
     addToUndoStack(blocks);
     focus.testData.h0 = h0;
     blocks = blocks;
   };
 
-  // Update the alternative hypothesis
+  /**
+   * Update the alternative hypothesis
+   *
+   * @param ha - the new value
+   */
   const setHa = (ha) => {
     addToUndoStack(blocks);
     focus.testData.ha = ha;
     blocks = blocks;
   };
 
-  // Update the random condition
+  /**
+   * Update the boolean value representing whether the sample is random
+   *
+   * @param rand - the new value
+   */
   const setRand = (rand) => {
     addToUndoStack(blocks);
     focus.testData.rand = rand;
     blocks = blocks;
   };
 
-  // Update the tail status
+  /**
+   * Update the value representing the tails (left right or both)
+   *
+   * @param tails - the new value
+   */
   const setTails = (tails) => {
     addToUndoStack(blocks);
     focus.testData.tails = tails;
     blocks = blocks;
   };
 
-  // Update the significance level
+  /**
+   * Update the alpha (significance) value
+   *
+   * @param alpha - the new value
+   */
   const setAlpha = (alpha) => {
     addToUndoStack(blocks);
     focus.testData.alpha = alpha;
     blocks = blocks;
   };
 
-  // Close a window
+  /**
+   * Close the test setup window
+   */
   const closeWin = () => {
     currentWin = null;
   };
