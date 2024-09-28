@@ -79,11 +79,8 @@
 
   export let setupTest = () => {};
 
-  // List of all the blocks in the editor
-  export let blocks;
-
-  // List of only the table blocks in the editor
-  $: tableBlocks = blocks.filter((block) => block.type == 'table');
+  export let tableBlocks;
+  export let sourceTable;
 </script>
 
 <nav>
@@ -121,15 +118,13 @@
         {testType}
         {setTestType}
         {setupTest}
-        currentType={tableBlocks.filter(
-          (block) => block.title == focus.sources
-        )[0].dataType}
+        currentType={sourceTable?.dataType}
       />
     {/if}
 
     <!--Type Dropdown for Stats-->
     {#if focus.type == 'stat' && focus.sources !== null && focus.sources !== undefined}
-      {#if tableBlocks.filter((block) => block.title == focus.sources)[0].dataType == 'Quantitative'}
+      {#if sourceTable?.dataType == 'Quantitative'}
         <StatTypeDropdown {statType} {setStatType} />
       {/if}
     {/if}
@@ -155,16 +150,13 @@
     <!--Chart Controls-->
     {#if focus.type == 'chart'}
       <ChartControls
-        dataType={tableBlocks.filter(
-          (blocks) => blocks.title == focus?.sources
-        )[0]?.dataType}
+        dataType={sourceTable?.dataType}
         {chartType}
         {setChartType}
         {setChartTitle}
         {xCol}
         {setXCol}
-        {focus}
-        {tableBlocks}
+        {sourceTable}
         {title}
       />
     {/if}
@@ -175,6 +167,7 @@
         {source}
         {setSource}
         {tableBlocks}
+        {sourceTable}
         {focus}
         {col}
         {col2}

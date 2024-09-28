@@ -8,11 +8,7 @@
   export let chartType;
   export let dataType;
   export let xCol;
-  $: currentTable = tableBlocks.filter(
-    (table) => table.title == focus.sources
-  )[0];
-  export let focus;
-  export let tableBlocks;
+  export let sourceTable;
   export let setXCol = (xCol) => {};
 </script>
 
@@ -32,9 +28,9 @@
 {#if chartType === 'scatter' || chartType === 'line'}
   x:
   <Select value={xCol} setter={setXCol}>
-    {#each currentTable.content[0].map( (col, idx) => (currentTable.hasHeaders ? col : 'Column ' + idx) ) ?? [] as title, index}
-      <option value={currentTable.hasHeaders ? title : 'Column ' + index}
-        >{currentTable.hasHeaders ? title : 'Column ' + index}</option
+    {#each sourceTable.content[0].map( (col, idx) => (sourceTable.hasHeaders ? col : 'Column ' + idx) ) ?? [] as title, index}
+      <option value={sourceTable.hasHeaders ? title : 'Column ' + index}
+        >{sourceTable.hasHeaders ? title : 'Column ' + index}</option
       >
     {/each}
     <option value={null}>Index</option>

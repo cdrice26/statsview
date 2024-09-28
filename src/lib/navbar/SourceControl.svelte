@@ -7,10 +7,7 @@
   export let setSource = (source) => {};
 
   export let tableBlocks;
-
-  $: currentTable = tableBlocks.filter(
-    (table) => table.title == focus.sources
-  )[0];
+  export let sourceTable;
 
   export let focus;
 
@@ -35,15 +32,15 @@
     <ColumnSelectMulti
       selected={cols ?? []}
       setter={setCols}
-      allCols={currentTable.content[0].map((col, idx) =>
-        currentTable.hasHeaders ? col : 'Column ' + idx
+      allCols={sourceTable.content[0].map((col, idx) =>
+        sourceTable.hasHeaders ? col : 'Column ' + idx
       ) ?? []}
     />
-  {:else if currentTable.dataType == 'Quantitative' || currentTable.dataType == 'Binary' || focus.testType == 'X2GOFTest'}
+  {:else if sourceTable.dataType == 'Quantitative' || sourceTable.dataType == 'Binary' || focus.testType == 'X2GOFTest'}
     <ColumnSelect value={col} setter={setCol} num="1">
-      {#each currentTable.content[0] as title, index}
-        <option value={currentTable.hasHeaders ? title : 'Column ' + index}
-          >{currentTable.hasHeaders ? title : 'Column ' + index}</option
+      {#each sourceTable.content[0] as title, index}
+        <option value={sourceTable.hasHeaders ? title : 'Column ' + index}
+          >{sourceTable.hasHeaders ? title : 'Column ' + index}</option
         >
       {/each}
     </ColumnSelect>
@@ -52,9 +49,9 @@
     {#if focus.sources !== null && focus.sources !== undefined && focus.type == 'test' && focus.testType != null}
       {#if focus.testType.includes('2Samp') || focus.testType.includes('MP')}
         vs. <ColumnSelect value={col2} setter={setCol} num="2">
-          {#each currentTable.content[0] as title, index}
-            <option value={currentTable.hasHeaders ? title : 'Column ' + index}
-              >{currentTable.hasHeaders ? title : 'Column ' + index}</option
+          {#each sourceTable.content[0] as title, index}
+            <option value={sourceTable.hasHeaders ? title : 'Column ' + index}
+              >{sourceTable.hasHeaders ? title : 'Column ' + index}</option
             >
           {/each}
         </ColumnSelect>

@@ -45,10 +45,16 @@
    */
   $: focusedBlock = blocks.find((b) => b.id === focusedId) ?? nullFocus;
 
+  /**
+   * List of all table blocks
+   */
+  $: tableBlocks = blocks.filter((b) => b.type === 'table');
+
+  /**
+   * Reference to the source table of the focused block
+   */
   $: sourceTable =
-    blocks.find(
-      (b) => b.type === 'table' && b.title === focusedBlock?.sources
-    ) ?? null;
+    tableBlocks.find((b) => b.title === focusedBlock?.sources) ?? null;
 
   /**
    * Set the focus
@@ -887,7 +893,8 @@
 <main>
   <!--Render the navigation bar-->
   <Navbar
-    focus={focusedBlock ?? nullFocus}
+    focus={focusedBlock}
+    {sourceTable}
     {undo}
     {redo}
     {save}
@@ -935,7 +942,7 @@
     {setXCol}
     {setCols}
     {setCol}
-    {blocks}
+    {tableBlocks}
     {moveUp}
     {moveDown}
     {delBlock}
