@@ -35,8 +35,15 @@
     }
   };
 
+  /**
+   * Id of the currently focused block
+   */
   let focusedId = null;
-  $: focusedBlock = blocks.find((b) => b.id == focusedId) ?? nullFocus;
+
+  /**
+   * Reference to the currently focused block
+   */
+  $: focusedBlock = blocks.find((b) => b.id === focusedId) ?? nullFocus;
 
   /**
    * Set the focus
@@ -740,20 +747,16 @@
    */
   const delBlock = () => {
     addToUndoStack(blocks);
-    const id = focusedId;
-    for (let i = 0; i < blocks.length; i++) {
-      if (blocks[i].id == id) {
-        blocks.splice(i, 1);
-        for (let j = i; j < blocks.length; j++) {
-          blocks[j].id--;
-        }
-        break;
-      }
-    }
-    for (let i = 0; i < blocks.length; i++) {
-      if (blocks[i]?.sources == focusedBlock?.title) blocks[i].sources = null;
-    }
-    blocks = blocks;
+    blocks = blocks
+      .filter((block) => block.id != focusedId)
+      .map((block) => {
+        if (block.id > focusedId) block.id--;
+        return block;
+      })
+      .map((block) => {
+        if (block?.sources === focusedBlock?.title) block.sources = null;
+        return block;
+      });
   };
 
   /**
@@ -770,8 +773,12 @@
    */
   const setTestAgainst = (testAgainst) => {
     addToUndoStack(blocks);
-    focusedBlock.testData.testAgainst = testAgainst;
-    blocks = blocks;
+    blocks = blocks.map((block) => {
+      if (block.id == focusedId) {
+        block.testData.testAgainst = testAgainst;
+      }
+      return block;
+    });
   };
 
   /**
@@ -781,8 +788,12 @@
    */
   const setExpCounts = (value) => {
     addToUndoStack(blocks);
-    focusedBlock.testData.expCounts = value;
-    blocks = blocks;
+    blocks = blocks.map((block) => {
+      if (block.id == focusedId) {
+        block.testData.expCounts = value;
+      }
+      return block;
+    });
   };
 
   /**
@@ -792,8 +803,12 @@
    */
   const setH0 = (h0) => {
     addToUndoStack(blocks);
-    focusedBlock.testData.h0 = h0;
-    blocks = blocks;
+    blocks = blocks.map((block) => {
+      if (block.id == focusedId) {
+        block.testData.h0 = h0;
+      }
+      return block;
+    });
   };
 
   /**
@@ -803,8 +818,12 @@
    */
   const setHa = (ha) => {
     addToUndoStack(blocks);
-    focusedBlock.testData.ha = ha;
-    blocks = blocks;
+    blocks = blocks.map((block) => {
+      if (block.id == focusedId) {
+        block.testData.ha = ha;
+      }
+      return block;
+    });
   };
 
   /**
@@ -814,8 +833,12 @@
    */
   const setRand = (rand) => {
     addToUndoStack(blocks);
-    focusedBlock.testData.rand = rand;
-    blocks = blocks;
+    blocks = blocks.map((block) => {
+      if (block.id == focusedId) {
+        block.testData.rand = rand;
+      }
+      return block;
+    });
   };
 
   /**
@@ -825,8 +848,12 @@
    */
   const setTails = (tails) => {
     addToUndoStack(blocks);
-    focusedBlock.testData.tails = tails;
-    blocks = blocks;
+    blocks = blocks.map((block) => {
+      if (block.id == focusedId) {
+        block.testData.tails = tails;
+      }
+      return block;
+    });
   };
 
   /**
@@ -836,8 +863,12 @@
    */
   const setAlpha = (alpha) => {
     addToUndoStack(blocks);
-    focusedBlock.testData.alpha = alpha;
-    blocks = blocks;
+    blocks = blocks.map((block) => {
+      if (block.id == focusedId) {
+        block.testData.alpha = alpha;
+      }
+      return block;
+    });
   };
 
   /**
