@@ -45,6 +45,11 @@
    */
   $: focusedBlock = blocks.find((b) => b.id === focusedId) ?? nullFocus;
 
+  $: sourceTable =
+    blocks.find(
+      (b) => b.type === 'table' && b.title === focusedBlock?.sources
+    ) ?? null;
+
   /**
    * Set the focus
    * @param props - the new focus
@@ -950,7 +955,7 @@
         {setTestAgainst}
         source={focusedBlock.sources}
         expCounts={focusedBlock.testData.expCounts}
-        {blocks}
+        {sourceTable}
         col={focusedBlock.col}
         {setExpCounts}
         h0={focusedBlock.testData.h0}

@@ -10,7 +10,7 @@
   export let testAgainst = null;
   export let setTestAgainst = (testAgainst) => {};
   export let source = null;
-  export let blocks;
+  export let sourceTable;
   export let col;
   export let expCounts = [];
   export let setExpCounts = (index, value) => {};
@@ -24,18 +24,37 @@
   export let setTails = (tails) => {};
   export let alpha = null;
   export let setAlpha = (alpha) => {};
-  $: sourceTable = blocks.find((b) => b.type == 'table' && b.title == source);
+
+  /**
+   * Check if the source table has headers
+   */
   $: hasHeaders = sourceTable.hasHeaders;
+
+  /**
+   * Get the content of the source table
+   */
   $: sourceTableContent = sourceTable.content;
+
+  /**
+   * Get the index of the column we are testing
+   */
   $: colIndex = sourceTableContent[0].indexOf(col);
+
+  /**
+   * Get the unique values in the column we are testing (used only on X2 GOF tests)
+   */
   $: vals =
     source == null
       ? []
-      : getUnique(
+      : (getUnique(
           (hasHeaders ? sourceTableContent.slice(1) : sourceTableContent).map(
             (item) => item[colIndex === -1 ? 0 : colIndex] ?? ''
           )
-        ) ?? [];
+        ) ?? []);
+
+  /**
+   * Set the expected counts to be the same length as the unique values
+   */
   $: if (vals.length > 0 && expCounts === null) {
     expCounts = new Array(vals.length).fill(1);
   }
