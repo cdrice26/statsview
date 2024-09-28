@@ -10,9 +10,9 @@
   let blocks = [];
 
   /**
-   * Reference to the currently focused block
+   * Focus object for if nothing is focused
    */
-  let focus = {
+  let nullFocus = {
     id: null,
     type: null,
     settings: {
@@ -36,14 +36,13 @@
   };
 
   let focusedId = null;
-  $: focusedBlock = blocks.find((b) => b.id == focusedId);
+  $: focusedBlock = blocks.find((b) => b.id == focusedId) ?? nullFocus;
 
   /**
    * Set the focus
    * @param props - the new focus
    */
   const setFocus = (props) => {
-    focus = props;
     focusedId = props.id;
   };
 
@@ -318,7 +317,7 @@
   const setFont = (font) => {
     addToUndoStack(blocks);
     blocks = blocks.map((block) => {
-      if (block.id == focus.id) {
+      if (block.id == focusedId) {
         block.settings.fontFamily = font;
       }
       return block;
@@ -333,7 +332,7 @@
   const setFontSize = (fontSize) => {
     addToUndoStack(blocks);
     blocks = blocks.map((block) => {
-      if (block.id == focus.id) {
+      if (block.id == focusedId) {
         block.settings.fontSize = fontSize;
       }
       return block;
@@ -348,7 +347,7 @@
   const setColor = (color) => {
     addToUndoStack(blocks);
     blocks = blocks.map((block) => {
-      if (block.id == focus.id) {
+      if (block.id == focusedId) {
         block.settings.color = color;
       }
       return block;
@@ -363,7 +362,7 @@
   const align = (align) => {
     addToUndoStack(blocks);
     blocks = blocks.map((block) => {
-      if (block.id == focus.id) {
+      if (block.id == focusedId) {
         block.settings.textAlign = align;
       }
       return block;
@@ -376,7 +375,7 @@
   const bold = () => {
     addToUndoStack(blocks);
     blocks = blocks.map((block) => {
-      if (block.id == focus.id) {
+      if (block.id == focusedId) {
         block.settings.bold = !block.settings.bold;
       }
       return block;
@@ -389,7 +388,7 @@
   const italic = () => {
     addToUndoStack(blocks);
     blocks = blocks.map((block) => {
-      if (block.id == focus.id) {
+      if (block.id == focusedId) {
         block.settings.italic = !block.settings.italic;
       }
       return block;
@@ -402,7 +401,7 @@
   const underline = () => {
     addToUndoStack(blocks);
     blocks = blocks.map((block) => {
-      if (block.id == focus.id) {
+      if (block.id == focusedId) {
         block.settings.underline = !block.settings.underline;
       }
       return block;
@@ -417,7 +416,7 @@
   const setTestType = (testType) => {
     addToUndoStack(blocks);
     blocks = blocks.map((block) => {
-      if (block.id == focus.id) {
+      if (block.id == focusedId) {
         block.testType = testType;
       }
       return block;
@@ -432,7 +431,7 @@
   const setChartType = (chartType) => {
     addToUndoStack(blocks);
     blocks = blocks.map((block) => {
-      if (block.id == focus.id) {
+      if (block.id == focusedId) {
         block.chartType = chartType;
       }
       return block;
@@ -447,7 +446,7 @@
   const setChartTitle = (title) => {
     addToUndoStack(blocks);
     blocks = blocks.map((block) => {
-      if (block.id == focus.id) {
+      if (block.id == focusedId) {
         block.title = title;
       }
       return block;
@@ -462,7 +461,7 @@
   const setStatType = (statType) => {
     addToUndoStack(blocks);
     blocks = blocks.map((block) => {
-      if (block.id == focus.id) {
+      if (block.id == focusedId) {
         block.statType = statType;
       }
       return block;
@@ -477,7 +476,7 @@
   const addColumn = () => {
     addToUndoStack(blocks);
     blocks = blocks.map((block) => {
-      if (block.id == focus.id) {
+      if (block.id == focusedId) {
         block.content.forEach((row) => {
           row.push(0);
         });
@@ -493,7 +492,7 @@
     addToUndoStack(blocks);
     if (focusedBlock.content[0].length > 1) {
       blocks = blocks.map((block) => {
-        if (block.id == focus.id) {
+        if (block.id == focusedId) {
           block.content.forEach((row) => {
             row.pop();
           });
@@ -509,7 +508,7 @@
   const addRow = () => {
     addToUndoStack(blocks);
     blocks = blocks.map((block) => {
-      if (block.id == focus.id) {
+      if (block.id == focusedId) {
         block.content.push(new Array(block.content[0].length).fill(0));
       }
       return block;
@@ -521,9 +520,9 @@
    */
   const delRow = () => {
     addToUndoStack(blocks);
-    if (focus.content.length > 1) {
+    if (focusedBlock.content.length > 1) {
       blocks = blocks.map((block) => {
-        if (block.id == focus.id) {
+        if (block.id == focusedId) {
           block.content.pop();
         }
         return block;
@@ -542,10 +541,10 @@
       focusedBlock.title !== undefined
         ? focusedBlock.title
         : 'Table' + focusedBlock.id;
-    focus.title = title;
+    focusedBlock.title = title;
     blocks = blocks
       .map((block) => {
-        if (block.id == focus.id) {
+        if (block.id == focusedId) {
           block.title = title;
         }
         return block;
@@ -566,7 +565,7 @@
       const dataString = await file.text();
       const data = parseCSV(dataString);
       blocks = blocks.map((block) => {
-        if (block.id == focus.id) {
+        if (block.id == focusedId) {
           block.content = data;
         }
         return block;
@@ -611,7 +610,7 @@
   const toggleHeaders = (hasHeaders) => {
     addToUndoStack(blocks);
     blocks = blocks.map((block) => {
-      if (block.id == focus.id) {
+      if (block.id == focusedId) {
         block.hasHeaders = hasHeaders;
       }
       return block;
@@ -626,7 +625,7 @@
   const setDataType = (dataType) => {
     addToUndoStack(blocks);
     blocks = blocks.map((block) => {
-      if (block.id == focus.id) {
+      if (block.id == focusedId) {
         block.dataType = dataType;
       }
       return block;
@@ -641,7 +640,7 @@
   const setSource = (source) => {
     addToUndoStack(blocks);
     blocks = blocks.map((block) => {
-      if (block.id == focus.id) {
+      if (block.id == focusedId) {
         block.sources = source;
       }
       return block;
@@ -658,11 +657,11 @@
     addToUndoStack(blocks);
     if (sourceNum == 1)
       blocks = blocks.map((block) =>
-        block.id == focus.id ? { ...block, col: col } : block
+        block.id == focusedId ? { ...block, col: col } : block
       );
     else if (sourceNum == 2)
       blocks = blocks.map((block) =>
-        block.id == focus.id ? { ...block, col2: col } : block
+        block.id == focusedId ? { ...block, col2: col } : block
       );
   };
 
@@ -674,7 +673,7 @@
   const setXCol = (col) => {
     addToUndoStack(blocks);
     blocks = blocks.map((block) => {
-      if (block.id == focus.id) {
+      if (block.id == focusedId) {
         block.xCol = col;
       }
       return block;
@@ -689,7 +688,7 @@
   const setCols = (cols) => {
     addToUndoStack(blocks);
     blocks = blocks.map((block) => {
-      if (block.id == focus.id) {
+      if (block.id == focusedId) {
         block.cols = cols;
       }
       return block;
@@ -701,7 +700,7 @@
    */
   const moveUp = () => {
     addToUndoStack(blocks);
-    const id = focus.id;
+    const id = focusedId;
     if (id > 0) {
       for (let i = 0; i < blocks.length; i++) {
         if (blocks[i].id == id) {
@@ -721,7 +720,7 @@
    */
   const moveDown = () => {
     addToUndoStack(blocks);
-    const id = focus.id;
+    const id = focusedId;
     if (id < blocks.length - 1) {
       for (let i = 0; i < blocks.length; i++) {
         if (blocks[i].id == id) {
@@ -741,7 +740,7 @@
    */
   const delBlock = () => {
     addToUndoStack(blocks);
-    const id = focus.id;
+    const id = focusedId;
     for (let i = 0; i < blocks.length; i++) {
       if (blocks[i].id == id) {
         blocks.splice(i, 1);
@@ -752,7 +751,7 @@
       }
     }
     for (let i = 0; i < blocks.length; i++) {
-      if (blocks[i]?.sources == focus?.title) blocks[i].sources = null;
+      if (blocks[i]?.sources == focusedBlock?.title) blocks[i].sources = null;
     }
     blocks = blocks;
   };
@@ -771,7 +770,7 @@
    */
   const setTestAgainst = (testAgainst) => {
     addToUndoStack(blocks);
-    focus.testData.testAgainst = testAgainst;
+    focusedBlock.testData.testAgainst = testAgainst;
     blocks = blocks;
   };
 
@@ -782,7 +781,7 @@
    */
   const setExpCounts = (value) => {
     addToUndoStack(blocks);
-    focus.testData.expCounts = value;
+    focusedBlock.testData.expCounts = value;
     blocks = blocks;
   };
 
@@ -793,7 +792,7 @@
    */
   const setH0 = (h0) => {
     addToUndoStack(blocks);
-    focus.testData.h0 = h0;
+    focusedBlock.testData.h0 = h0;
     blocks = blocks;
   };
 
@@ -804,7 +803,7 @@
    */
   const setHa = (ha) => {
     addToUndoStack(blocks);
-    focus.testData.ha = ha;
+    focusedBlock.testData.ha = ha;
     blocks = blocks;
   };
 
@@ -815,7 +814,7 @@
    */
   const setRand = (rand) => {
     addToUndoStack(blocks);
-    focus.testData.rand = rand;
+    focusedBlock.testData.rand = rand;
     blocks = blocks;
   };
 
@@ -826,7 +825,7 @@
    */
   const setTails = (tails) => {
     addToUndoStack(blocks);
-    focus.testData.tails = tails;
+    focusedBlock.testData.tails = tails;
     blocks = blocks;
   };
 
@@ -837,7 +836,7 @@
    */
   const setAlpha = (alpha) => {
     addToUndoStack(blocks);
-    focus.testData.alpha = alpha;
+    focusedBlock.testData.alpha = alpha;
     blocks = blocks;
   };
 
@@ -852,7 +851,7 @@
 <main>
   <!--Render the navigation bar-->
   <Navbar
-    {focus}
+    focus={focusedBlock ?? nullFocus}
     {undo}
     {redo}
     {save}
@@ -863,40 +862,40 @@
     {newChart}
     {newStat}
     {newTest}
-    font={focus.settings.fontFamily}
+    font={focusedBlock.settings.fontFamily}
     {setFont}
-    fontSize={focus.settings.fontSize}
+    fontSize={focusedBlock.settings.fontSize}
     {setFontSize}
-    color={focus.settings.color}
+    color={focusedBlock.settings.color}
     {setColor}
     {align}
     {bold}
     {italic}
     {underline}
-    testType={focus.testType}
+    testType={focusedBlock.testType}
     {setTestType}
-    chartType={focus.chartType}
+    chartType={focusedBlock.chartType}
     {setChartType}
-    statType={focus.statType}
+    statType={focusedBlock.statType}
     {setStatType}
     {addColumn}
     {delColumn}
     {addRow}
     {delRow}
-    title={focus.title}
+    title={focusedBlock.title}
     {setTitle}
     {setChartTitle}
     {getFromCSV}
-    hasHeaders={focus.hasHeaders}
+    hasHeaders={focusedBlock.hasHeaders}
     {toggleHeaders}
-    dataType={focus.dataType}
+    dataType={focusedBlock.dataType}
     {setDataType}
-    source={focus.sources}
+    source={focusedBlock.sources}
     {setSource}
-    col={focus.col}
-    col2={focus.col2}
-    cols={focus.cols}
-    xCol={focus.xCol}
+    col={focusedBlock.col}
+    col2={focusedBlock.col2}
+    cols={focusedBlock.cols}
+    xCol={focusedBlock.xCol}
     {setXCol}
     {setCols}
     {setCol}
@@ -911,27 +910,27 @@
   <Page {blocks} {setFocus} {forceUpdate} />
 
   <!--Render the window, if there is one-->
-  {#if currentWin !== null && focus.testType !== undefined && focus.testType !== null}
+  {#if currentWin !== null && focusedBlock.testType !== undefined && focusedBlock.testType !== null}
     <Window>
       <TestSetup
         {closeWin}
-        testType={focus.testType}
-        testAgainst={focus.testData.testAgainst}
+        testType={focusedBlock.testType}
+        testAgainst={focusedBlock.testData.testAgainst}
         {setTestAgainst}
-        source={focus.sources}
-        expCounts={focus.testData.expCounts}
+        source={focusedBlock.sources}
+        expCounts={focusedBlock.testData.expCounts}
         {blocks}
-        col={focus.col}
+        col={focusedBlock.col}
         {setExpCounts}
-        h0={focus.testData.h0}
+        h0={focusedBlock.testData.h0}
         {setH0}
-        ha={focus.testData.ha}
+        ha={focusedBlock.testData.ha}
         {setHa}
-        rand={focus.testData.rand}
+        rand={focusedBlock.testData.rand}
         {setRand}
-        tails={focus.testData.tails}
+        tails={focusedBlock.testData.tails}
         {setTails}
-        alpha={focus.testData.alpha}
+        alpha={focusedBlock.testData.alpha}
         {setAlpha}
       />
     </Window>
