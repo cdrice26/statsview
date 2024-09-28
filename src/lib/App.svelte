@@ -91,11 +91,10 @@
   };
 
   /**
-   * Force an update to the blocks and add to the undo stack
+   * Force an update to the undo stack
    */
   const forceUpdate = () => {
     addToUndoStack(blocks);
-    blocks = blocks;
   };
 
   /**
