@@ -35,11 +35,17 @@
     }
   };
 
+  let focusedId = null;
+  $: focusedBlock = blocks.find((b) => b.id == focusedId);
+
   /**
    * Set the focus
    * @param props - the new focus
    */
-  const setFocus = (props) => (focus = props);
+  const setFocus = (props) => {
+    focus = props;
+    focusedId = props.id;
+  };
 
   /**
    * Reference to the current window
@@ -312,8 +318,12 @@
    */
   const setFont = (font) => {
     addToUndoStack(blocks);
-    focus.settings.fontFamily = font;
-    blocks = blocks;
+    blocks = blocks.map((block) => {
+      if (block.id == focus.id) {
+        block.settings.fontFamily = font;
+      }
+      return block;
+    });
   };
 
   /**
@@ -323,8 +333,12 @@
    */
   const setFontSize = (fontSize) => {
     addToUndoStack(blocks);
-    focus.settings.fontSize = fontSize;
-    blocks = blocks;
+    blocks = blocks.map((block) => {
+      if (block.id == focus.id) {
+        block.settings.fontSize = fontSize;
+      }
+      return block;
+    });
   };
 
   /**
@@ -334,8 +348,12 @@
    */
   const setColor = (color) => {
     addToUndoStack(blocks);
-    focus.settings.color = color;
-    blocks = blocks;
+    blocks = blocks.map((block) => {
+      if (block.id == focus.id) {
+        block.settings.color = color;
+      }
+      return block;
+    });
   };
 
   /**
@@ -345,8 +363,12 @@
    */
   const align = (align) => {
     addToUndoStack(blocks);
-    focus.settings.textAlign = align;
-    blocks = blocks;
+    blocks = blocks.map((block) => {
+      if (block.id == focus.id) {
+        block.settings.textAlign = align;
+      }
+      return block;
+    });
   };
 
   /**
@@ -354,8 +376,12 @@
    */
   const bold = () => {
     addToUndoStack(blocks);
-    focus.settings.bold = !focus.settings.bold;
-    blocks = blocks;
+    blocks = blocks.map((block) => {
+      if (block.id == focus.id) {
+        block.settings.bold = !block.settings.bold;
+      }
+      return block;
+    });
   };
 
   /**
@@ -363,8 +389,12 @@
    */
   const italic = () => {
     addToUndoStack(blocks);
-    focus.settings.italic = !focus.settings.italic;
-    blocks = blocks;
+    blocks = blocks.map((block) => {
+      if (block.id == focus.id) {
+        block.settings.italic = !block.settings.italic;
+      }
+      return block;
+    });
   };
 
   /**
@@ -372,8 +402,12 @@
    */
   const underline = () => {
     addToUndoStack(blocks);
-    focus.settings.underline = !focus.settings.underline;
-    blocks = blocks;
+    blocks = blocks.map((block) => {
+      if (block.id == focus.id) {
+        block.settings.underline = !block.settings.underline;
+      }
+      return block;
+    });
   };
 
   /**
@@ -383,8 +417,12 @@
    */
   const setTestType = (testType) => {
     addToUndoStack(blocks);
-    focus.testType = testType;
-    blocks = blocks;
+    blocks = blocks.map((block) => {
+      if (block.id == focus.id) {
+        block.testType = testType;
+      }
+      return block;
+    });
   };
 
   /**
@@ -394,8 +432,12 @@
    */
   const setChartType = (chartType) => {
     addToUndoStack(blocks);
-    focus.chartType = chartType;
-    blocks = blocks;
+    blocks = blocks.map((block) => {
+      if (block.id == focus.id) {
+        block.chartType = chartType;
+      }
+      return block;
+    });
   };
 
   /**
@@ -405,8 +447,12 @@
    */
   const setChartTitle = (title) => {
     addToUndoStack(blocks);
-    focus.title = title;
-    blocks = blocks;
+    blocks = blocks.map((block) => {
+      if (block.id == focus.id) {
+        block.title = title;
+      }
+      return block;
+    });
   };
 
   /**
@@ -416,8 +462,12 @@
    */
   const setStatType = (statType) => {
     addToUndoStack(blocks);
-    focus.statType = statType;
-    blocks = blocks;
+    blocks = blocks.map((block) => {
+      if (block.id == focus.id) {
+        block.statType = statType;
+      }
+      return block;
+    });
   };
 
   /**
@@ -427,10 +477,14 @@
    */
   const addColumn = () => {
     addToUndoStack(blocks);
-    for (let i = 0; i < focus.content.length; i++) {
-      focus.content[i].push(0);
-    }
-    blocks = blocks;
+    blocks = blocks.map((block) => {
+      if (block.id == focus.id) {
+        block.content.forEach((row) => {
+          row.push(0);
+        });
+      }
+      return block;
+    });
   };
 
   /**
@@ -438,11 +492,15 @@
    */
   const delColumn = () => {
     addToUndoStack(blocks);
-    if (focus.content[0].length > 1) {
-      for (let i = 0; i < focus.content.length; i++) {
-        focus.content[i].pop();
-      }
-      blocks = blocks;
+    if (focusedBlock.content[0].length > 1) {
+      blocks = blocks.map((block) => {
+        if (block.id == focus.id) {
+          block.content.forEach((row) => {
+            row.pop();
+          });
+        }
+        return block;
+      });
     }
   };
 
@@ -451,12 +509,12 @@
    */
   const addRow = () => {
     addToUndoStack(blocks);
-    let newRow = [];
-    for (let i = 0; i < focus.content[0].length; i++) {
-      newRow.push(0);
-    }
-    focus.content.push(newRow);
-    blocks = blocks;
+    blocks = blocks.map((block) => {
+      if (block.id == focus.id) {
+        block.content.push(new Array(block.content[0].length).fill(0));
+      }
+      return block;
+    });
   };
 
   /**
@@ -465,8 +523,12 @@
   const delRow = () => {
     addToUndoStack(blocks);
     if (focus.content.length > 1) {
-      focus.content.pop();
-      blocks = blocks;
+      blocks = blocks.map((block) => {
+        if (block.id == focus.id) {
+          block.content.pop();
+        }
+        return block;
+      });
     }
   };
 
@@ -478,14 +540,21 @@
   const setTitle = (title) => {
     addToUndoStack(blocks);
     const oldTitle =
-      focus.title != undefined ? focus.title : 'Table' + focus.id;
+      focusedBlock.title !== undefined
+        ? focusedBlock.title
+        : 'Table' + focusedBlock.id;
     focus.title = title;
-
-    // Change anything that sources from this table to source from its updated title
-    blocks.forEach((block) => {
-      if (block.sources == oldTitle) block.sources = title;
-    });
-    blocks = blocks;
+    blocks = blocks
+      .map((block) => {
+        if (block.id == focus.id) {
+          block.title = title;
+        }
+        return block;
+      })
+      .map((block) => {
+        if (block.sources === oldTitle) block.sources = title;
+        return block;
+      });
   };
 
   /**
@@ -497,8 +566,12 @@
     if (file) {
       const dataString = await file.text();
       const data = parseCSV(dataString);
-      focus.content = data;
-      blocks = blocks;
+      blocks = blocks.map((block) => {
+        if (block.id == focus.id) {
+          block.content = data;
+        }
+        return block;
+      });
     }
   };
 
@@ -537,8 +610,13 @@
    * @param hasHeaders - whether the table should have headers
    */
   const toggleHeaders = (hasHeaders) => {
-    focus.hasHeaders = hasHeaders;
-    blocks = blocks;
+    addToUndoStack(blocks);
+    blocks = blocks.map((block) => {
+      if (block.id == focus.id) {
+        block.hasHeaders = hasHeaders;
+      }
+      return block;
+    });
   };
 
   /**
@@ -547,8 +625,13 @@
    * @param dataType - the new data type
    */
   const setDataType = (dataType) => {
-    focus.dataType = dataType;
-    blocks = blocks;
+    addToUndoStack(blocks);
+    blocks = blocks.map((block) => {
+      if (block.id == focus.id) {
+        block.dataType = dataType;
+      }
+      return block;
+    });
   };
 
   /**
@@ -558,8 +641,12 @@
    */
   const setSource = (source) => {
     addToUndoStack(blocks);
-    focus.sources = source;
-    blocks = blocks;
+    blocks = blocks.map((block) => {
+      if (block.id == focus.id) {
+        block.sources = source;
+      }
+      return block;
+    });
   };
 
   /**
@@ -570,9 +657,14 @@
    */
   const setCol = (col, sourceNum) => {
     addToUndoStack(blocks);
-    if (sourceNum == 1) focus.col = col;
-    else if (sourceNum == 2) focus.col2 = col;
-    blocks = blocks;
+    if (sourceNum == 1)
+      blocks = blocks.map((block) =>
+        block.id == focus.id ? { ...block, col: col } : block
+      );
+    else if (sourceNum == 2)
+      blocks = blocks.map((block) =>
+        block.id == focus.id ? { ...block, col2: col } : block
+      );
   };
 
   /**
@@ -582,8 +674,12 @@
    */
   const setXCol = (col) => {
     addToUndoStack(blocks);
-    focus.xCol = col;
-    blocks = blocks;
+    blocks = blocks.map((block) => {
+      if (block.id == focus.id) {
+        block.xCol = col;
+      }
+      return block;
+    });
   };
 
   /**
@@ -593,8 +689,12 @@
    */
   const setCols = (cols) => {
     addToUndoStack(blocks);
-    focus.cols = cols;
-    blocks = blocks;
+    blocks = blocks.map((block) => {
+      if (block.id == focus.id) {
+        block.cols = cols;
+      }
+      return block;
+    });
   };
 
   /**
