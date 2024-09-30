@@ -41,6 +41,14 @@
   let focusedId = null;
 
   /**
+   * Coordinates of the focused cell in a table
+   */
+  let focusedCell = {
+    row: null,
+    col: null
+  };
+
+  /**
    * Reference to the currently focused block
    */
   $: focusedBlock = blocks.find((b) => b.id === focusedId) ?? nullFocus;
@@ -62,6 +70,7 @@
    */
   const setFocus = (props) => {
     focusedId = props.id;
+    focusedCell = { row: props?.row, col: props?.col };
   };
 
   /**
@@ -511,9 +520,10 @@
     if (focusedBlock.content[0].length > 1) {
       blocks = blocks.map((block) => {
         if (block.id == focusedId) {
-          block.content.forEach((row) => {
-            row.pop();
-          });
+          block.content = block.content.map((row) => [
+            ...row.slice(0, focusedCell.col),
+            ...row.slice(focusedCell.col + 1)
+          ]);
         }
         return block;
       });
@@ -534,14 +544,17 @@
   };
 
   /**
-   * Delete last row from table
+   * Delete focused row from table
    */
   const delRow = () => {
     addToUndoStack(blocks);
     if (focusedBlock.content.length > 1) {
       blocks = blocks.map((block) => {
         if (block.id == focusedId) {
-          block.content.pop();
+          block.content = [
+            ...block.content.slice(0, focusedCell.row),
+            ...block.content.slice(focusedCell.row + 1)
+          ];
         }
         return block;
       });
