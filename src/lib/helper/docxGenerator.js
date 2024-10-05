@@ -9,6 +9,22 @@ import {
 } from 'docx';
 import { saveAs } from 'file-saver';
 
+const generateTextRun = (block) =>
+  new Paragraph({
+    alignment: block.settings.textAlign,
+    children: [
+      new TextRun({
+        text: block.content,
+        bold: block.settings.bold,
+        italics: block.settings.italic,
+        underline: block.settings.underline ? {} : null,
+        color: block.settings.color,
+        font: block.settings.fontFamily,
+        size: block.settings.fontSize * 2
+      })
+    ]
+  });
+
 const generateDocx = (blocks) => {
   const doc = new Document({
     sections: [
@@ -16,20 +32,7 @@ const generateDocx = (blocks) => {
         properties: {},
         children: blocks.map((block) =>
           block.type === 'text'
-            ? new Paragraph({
-                alignment: block.settings.textAlign,
-                children: [
-                  new TextRun({
-                    text: block.content,
-                    bold: block.settings.bold,
-                    italics: block.settings.italic,
-                    underline: block.settings.underline ? {} : null,
-                    color: block.settings.color,
-                    font: block.settings.fontFamily,
-                    size: block.settings.fontSize * 2
-                  })
-                ]
-              })
+            ? generateTextRun(block)
             : block.type === 'table' && block?.visible
             ? new Table({
                 rows: block.content.map(
@@ -39,22 +42,7 @@ const generateDocx = (blocks) => {
                         (cell) =>
                           new TableCell({
                             children: [
-                              new Paragraph({
-                                alignment: block.settings.textAlign,
-                                children: [
-                                  new TextRun({
-                                    text: cell,
-                                    bold: block.settings.bold,
-                                    italics: block.settings.italic,
-                                    underline: block.settings.underline
-                                      ? {}
-                                      : null,
-                                    color: block.settings.color,
-                                    font: block.settings.fontFamily,
-                                    size: block.settings.fontSize * 2
-                                  })
-                                ]
-                              })
+                              generateTextRun({ ...block, content: cell })
                             ]
                           })
                       )
