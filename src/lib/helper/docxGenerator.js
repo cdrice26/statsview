@@ -61,7 +61,7 @@ const generateDocx = (blocks) => {
                     })
                 )
               })
-            : null
+            : {}
         )
       }
     ]
