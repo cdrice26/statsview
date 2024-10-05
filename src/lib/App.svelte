@@ -1,4 +1,5 @@
 <script>
+  import generateDocx, { saveDocx } from './helper/docxGenerator';
   import Navbar from './Navbar.svelte';
   import Page from './Page.svelte';
   import TestSetup from './TestSetup.svelte';
@@ -188,7 +189,12 @@
   /**
    * Export to .docx
    */
-  const exp = () => {};
+  const exp = () => {
+    if (blocks) {
+      const doc = generateDocx(blocks);
+      saveDocx(doc, 'report');
+    }
+  };
 
   /**
    * Create a new text block
@@ -206,7 +212,7 @@
         settings: {
           fontFamily: 'Times New Roman',
           fontSize: 12,
-          color: 'black',
+          color: '#000000',
           textAlign: 'left',
           bold: false,
           italic: false,
@@ -240,7 +246,7 @@
         settings: {
           fontFamily: 'Times New Roman',
           fontSize: 12,
-          color: 'black',
+          color: '#000000',
           textAlign: 'left',
           bold: false,
           italic: false,
@@ -291,7 +297,7 @@
         settings: {
           fontFamily: 'Times New Roman',
           fontSize: 12,
-          color: 'black',
+          color: '#000000',
           textAlign: 'left',
           bold: false,
           italic: false,
@@ -317,7 +323,7 @@
         settings: {
           fontFamily: 'Times New Roman',
           fontSize: 12,
-          color: 'black',
+          color: '#000000',
           textAlign: 'left',
           bold: false,
           italic: false,
