@@ -5,16 +5,17 @@
 </script>
 
 <!--Render a table with the correct rows and content-->
-<table>
-  {#each props.content as row, rid}
-    <tr>
-      {#each row as cell, cid}
-        <td
-          contenteditable
-          bind:textContent={cell}
-          on:focus={() => setFocus({ ...props, row: rid, col: cid })}
-          on:keyup={forceUpdate}
-          style={`
+{#if props.visible}
+  <table>
+    {#each props.content as row, rid}
+      <tr>
+        {#each row as cell, cid}
+          <td
+            contenteditable
+            bind:textContent={cell}
+            on:focus={() => setFocus({ ...props, row: rid, col: cid })}
+            on:keyup={forceUpdate}
+            style={`
                         --text-align: ${props.settings.textAlign};
                         --color: ${props.settings.color};
                         --font-family: ${props.settings.fontFamily};
@@ -29,12 +30,15 @@
                           props.settings.underline ? 'underline' : 'normal'
                         }; 
                     `}
-        >
-        </td>
-      {/each}
-    </tr>
-  {/each}
-</table>
+          >
+          </td>
+        {/each}
+      </tr>
+    {/each}
+  </table>
+{:else}
+  <div class="invisible">Invisible Table</div>
+{/if}
 
 <style>
   table,
@@ -57,5 +61,11 @@
 
   td:focus {
     outline: 1px solid lightgrey;
+  }
+
+  .invisible {
+    background-color: lightgrey;
+    border-radius: 10px;
+    text-align: center;
   }
 </style>

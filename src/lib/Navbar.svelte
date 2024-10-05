@@ -59,6 +59,8 @@
   export let getFromCSV = (file) => {};
   export let hasHeaders;
   export let toggleHeaders = (hasHeaders) => {};
+  export let visible;
+  export let toggleVisible = (visible) => {};
   export let dataType;
   export let setDataType = (dataType) => {};
 
@@ -142,6 +144,8 @@
         {getFromCSV}
         {hasHeaders}
         {toggleHeaders}
+        {visible}
+        {toggleVisible}
         {dataType}
         {setDataType}
       />

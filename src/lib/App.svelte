@@ -235,6 +235,7 @@
           ['0', '0']
         ],
         hasHeaders: true,
+        visible: true,
         dataType: 'Categorical',
         settings: {
           fontFamily: 'Times New Roman',
@@ -649,6 +650,19 @@
   };
 
   /**
+   * Toggle whether or not the table is visible
+   */
+  const toggleVisible = () => {
+    addToUndoStack(blocks);
+    blocks = blocks.map((block) => {
+      if (block.id == focusedId) {
+        block.visible = !block?.visible;
+      }
+      return block;
+    });
+  };
+
+  /**
    * Set data type for statistical thing
    *
    * @param dataType - the new data type
@@ -944,6 +958,8 @@
     {getFromCSV}
     hasHeaders={focusedBlock.hasHeaders}
     {toggleHeaders}
+    visible={focusedBlock.visible}
+    {toggleVisible}
     dataType={focusedBlock.dataType}
     {setDataType}
     source={focusedBlock.sources}
