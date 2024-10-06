@@ -10,6 +10,7 @@
     Samp2ZTest,
     Samp1ZTest
   } from '../stats/tests';
+  import { getColumnData } from '../helper/testHelpers';
 
   export let props;
   export let tableBlocks;
@@ -20,37 +21,9 @@
       : null;
 
   // Data in the right format (numeric for quantitative, 0 or 1 for binary, string for categorical) for column 1 of a test
-  $: data =
-    sourceBlock != null
-      ? getData(
-          sourceBlock.content,
-          props.col,
-          sourceBlock.hasHeaders,
-          props.testType != null
-            ? props.testType.includes('TTest')
-              ? 'Quantitative'
-              : props.testType.includes('ZTest')
-                ? 'Binary'
-                : 'Categorical'
-            : null
-        )
-      : null;
+  $: data = getColumnData(props, sourceBlock, props.col);
   // Data in the right format (numeric for quantitative, 0 or 1 for binary, string for categorical) for column 2 of a test
-  $: data2 =
-    sourceBlock != null && props.col2 != null
-      ? getData(
-          sourceBlock.content,
-          props.col2,
-          sourceBlock.hasHeaders,
-          props.testType != null
-            ? props.testType.includes('TTest')
-              ? 'Quantitative'
-              : props.testType.includes('ZTest')
-                ? 'Binary'
-                : 'Categorical'
-            : null
-        )
-      : null;
+  $: data2 = getColumnData(props, sourceBlock, props.col2);
 
   export let setFocus = (focus) => {};
 </script>
