@@ -10,7 +10,10 @@ import {
 } from '../stats/tests';
 
 export const getColumnData = (props, sourceBlock, column) =>
-  sourceBlock !== null && sourceBlock !== undefined
+  sourceBlock !== null &&
+  sourceBlock !== undefined &&
+  column !== null &&
+  column !== undefined
     ? getData(
         sourceBlock.content,
         column,
@@ -26,7 +29,7 @@ export const getColumnData = (props, sourceBlock, column) =>
     : null;
 
 export const getTestResults = (data, data2, props, sourceBlock) =>
-  data != null
+  (data !== null && data !== undefined) || props.testType === 'X2IndTest'
     ? props.testType == 'X2GOFTest'
       ? X2GOFTest(data, props.testData.expCounts, props.testData.alpha)
       : props.testType == 'X2IndTest'
