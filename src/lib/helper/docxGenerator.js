@@ -8,6 +8,7 @@ import {
   TableCell
 } from 'docx';
 import { saveAs } from 'file-saver';
+import generateStatText from './statTextGenerator';
 
 const generateTextRun = (block) =>
   new Paragraph({
@@ -47,6 +48,16 @@ const generateDocx = (blocks) => {
                           })
                       )
                     })
+                )
+              })
+            : block.type === 'stat'
+            ? generateTextRun({
+                ...block,
+                content: generateStatText(
+                  block,
+                  blocks.find(
+                    (b) => b.type === 'table' && b?.title === block?.sources
+                  )
                 )
               })
             : {}
