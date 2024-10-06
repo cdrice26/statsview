@@ -9,6 +9,7 @@ import {
 } from 'docx';
 import { saveAs } from 'file-saver';
 import generateStatText from './statTextGenerator';
+import { generateTestText, getColumnData, getTestResults } from './testHelpers';
 
 const generateTextRun = (block) =>
   new Paragraph({
@@ -55,6 +56,36 @@ const generateDocx = (blocks) => {
                 ...block,
                 content: generateStatText(
                   block,
+                  blocks.find(
+                    (b) => b.type === 'table' && b?.title === block?.sources
+                  )
+                )
+              })
+            : block.type === 'test'
+            ? generateTextRun({
+                ...block,
+                content: generateTestText(
+                  block,
+                  getTestResults(
+                    getColumnData(
+                      block,
+                      blocks.find(
+                        (b) => b.type === 'table' && b?.title === block?.sources
+                      ),
+                      block?.col
+                    ),
+                    getColumnData(
+                      block,
+                      blocks.find(
+                        (b) => b.type === 'table' && b?.title === block?.sources
+                      ),
+                      block?.col2
+                    ),
+                    block,
+                    blocks.find(
+                      (b) => b.type === 'table' && b?.title === block?.sources
+                    )
+                  ),
                   blocks.find(
                     (b) => b.type === 'table' && b?.title === block?.sources
                   )
