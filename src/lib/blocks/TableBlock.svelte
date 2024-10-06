@@ -37,7 +37,9 @@
     {/each}
   </table>
 {:else}
-  <div class="invisible">Invisible Table</div>
+  <button class="invisible" on:click={() => setFocus(props)}
+    >Invisible Table</button
+  >
 {/if}
 
 <style>
@@ -67,5 +69,7 @@
     background-color: lightgrey;
     border-radius: 10px;
     text-align: center;
+    border: none;
+    width: 100%;
   }
 </style>
