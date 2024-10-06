@@ -87,6 +87,9 @@ const generateDocx = (blocks) =>
       {
         properties: {},
         children: blocks.reduce((acc, block) => {
+          const sourceBlock = blocks.find(
+            (b) => b.type === 'table' && b?.title === block?.sources
+          );
           if (block.type === 'text') {
             const paragraphs = generateParagraphs(block);
             return acc.concat(paragraphs); // Concatenate paragraphs to the accumulator
@@ -115,12 +118,7 @@ const generateDocx = (blocks) =>
             return acc.concat(
               generateParagraphs({
                 ...block,
-                content: generateStatText(
-                  block,
-                  blocks.find(
-                    (b) => b.type === 'table' && b?.title === block?.sources
-                  )
-                )
+                content: generateStatText(block, sourceBlock)
               })
             );
           } else if (block.type === 'test') {
@@ -130,31 +128,16 @@ const generateDocx = (blocks) =>
                 content: generateTestText(
                   block,
                   getTestResults(
-                    getColumnData(
-                      block,
-                      blocks.find(
-                        (b) => b.type === 'table' && b?.title === block?.sources
-                      ),
-                      block?.col
-                    ),
-                    getColumnData(
-                      block,
-                      blocks.find(
-                        (b) => b.type === 'table' && b?.title === block?.sources
-                      ),
-                      block?.col2
-                    ),
+                    getColumnData(block, sourceBlock, block?.col),
+                    getColumnData(block, sourceBlock, block?.col2),
                     block,
-                    blocks.find(
-                      (b) => b.type === 'table' && b?.title === block?.sources
-                    )
+                    sourceBlock
                   ),
-                  blocks.find(
-                    (b) => b.type === 'table' && b?.title === block?.sources
-                  )
+                  sourceBlock
                 )
               })
             );
+          } else if (block.type === 'chart') {
           }
           return acc; // Return the accumulator unchanged for other block types
         }, [])
