@@ -20,7 +20,7 @@
 
   export let save = () => {};
   export let load = () => {};
-  export let exp = () => {};
+  export let exp = async () => {};
 
   export let newText = () => {};
   export let newTable = () => {};

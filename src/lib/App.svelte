@@ -189,9 +189,9 @@
   /**
    * Export to .docx
    */
-  const exp = () => {
+  const exp = async () => {
     if (blocks) {
-      const doc = generateDocx(blocks);
+      const doc = await generateDocx(blocks);
       saveDocx(doc, 'report');
     }
   };

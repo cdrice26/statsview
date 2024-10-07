@@ -1,33 +1,19 @@
 <script>
   import Plotly from 'plotly.js-dist';
-  import { getData } from '../stats/getData';
   import { onMount } from 'svelte';
-  import { getUnique } from '../helper/unique';
-  import { occurrencesOf } from '../helper/count';
-  import { calculateGridSize, calculateRowAndColumn } from '../helper/gridSize';
+  import {
+    generateChartData,
+    generateChartLayout,
+    getXCol,
+    rotateData
+  } from '../helper/chartHelpers';
 
   export let props;
   export let tableBlocks;
   $: sourceBlock = tableBlocks.find((table) => table.title == props.sources);
   $: sourceData = sourceBlock?.content;
-  $: rotatedData =
-    sourceData !== null && sourceData !== undefined
-      ? Object.fromEntries(
-          props?.cols?.map((col) => [
-            col,
-            getData(
-              sourceData,
-              col,
-              sourceBlock?.hasHeaders,
-              sourceBlock?.dataType
-            )
-          ]) ?? []
-        )
-      : null;
-  $: x =
-    props?.xCol != null
-      ? getData(sourceData, props.xCol, sourceBlock?.hasHeaders, 'Quantitative')
-      : null;
+  $: rotatedData = rotateData(sourceData, props?.cols, sourceBlock);
+  $: x = getXCol(sourceData, sourceBlock?.hasHeaders, props?.xCol);
   export let setFocus = (props) => {};
 
   let plotElement;
@@ -44,45 +30,9 @@
 
   const createChart = () => {
     const data =
-      sourceBlock?.dataType === 'Quantitative'
-        ? props.chartType === 'scatter' || props.chartType === 'line'
-          ? Object.entries(rotatedData).map((d) => ({
-              x: x,
-              y: d[1],
-              name: d[0],
-              type: 'scatter',
-              mode: props.chartType === 'line' ? 'lines' : 'markers'
-            }))
-          : Object.entries(rotatedData).map((x) => ({
-              x: x[1],
-              name: x[0],
-              type: props.chartType ?? 'histogram'
-            }))
-        : sourceBlock?.dataType === 'Categorical' ||
-            sourceBlock?.dataType === 'Binary'
-          ? Object.entries(rotatedData).map((d, idx) => ({
-              [props.chartType === 'pie' ? 'labels' : 'x']: getUnique(d[1]),
-              [props.chartType === 'pie' ? 'values' : 'y']: getUnique(d[1]).map(
-                (x) => occurrencesOf(d[1], x)
-              ),
-              name: d[0],
-              type: props.chartType ?? 'bar',
-              domain:
-                props.chartType === 'pie'
-                  ? calculateRowAndColumn(
-                      idx,
-                      calculateGridSize(Object.keys(rotatedData).length).columns
-                    )
-                  : {}
-            }))
-          : {};
+      generateChartData(sourceBlock, props?.chartType, rotatedData, x) || [];
 
-    const layout = {
-      title: props.title,
-      height: 400,
-      width: 850,
-      grid: props.chartType === 'pie' ? calculateGridSize(data.length) : {}
-    };
+    const layout = generateChartLayout(props?.title, props?.chartType, data);
 
     if (plotElement !== undefined) {
       // Clean up any existing plot before creating a new one

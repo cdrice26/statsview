@@ -3,7 +3,7 @@
 
   export let load = () => {};
   export let save = () => {};
-  export let exp = () => {};
+  export let exp = async () => {};
 </script>
 
 <!--File I/O Control Butons-->
