@@ -21,6 +21,7 @@
   export let save = () => {};
   export let load = () => {};
   export let exp = async () => {};
+  export let expPdf = async () => {};
 
   export let newText = () => {};
   export let newTable = () => {};
@@ -93,7 +94,7 @@
     <UndoRedo {undo} {redo} />
 
     <!--File IO Control (save, load, export)-->
-    <FileIOControl {save} {load} {exp} />
+    <FileIOControl {save} {load} {exp} {expPdf} />
 
     <!--Buttons to create new blocks-->
     <AddButtons {newText} {newChart} {newStat} {newTable} {newTest} />

@@ -1,5 +1,6 @@
 <script>
   import generateDocx, { saveDocx } from './helper/docxGenerator';
+  import generatePDF, { savePDF } from './helper/pdfGenerator';
   import Navbar from './Navbar.svelte';
   import Page from './Page.svelte';
   import TestSetup from './TestSetup.svelte';
@@ -193,6 +194,16 @@
     if (blocks) {
       const doc = await generateDocx(blocks);
       saveDocx(doc, 'report');
+    }
+  };
+
+  /**
+   * Export to .pdf
+   */
+  const expPdf = async () => {
+    if (blocks) {
+      const pdf = await generatePDF(blocks);
+      savePDF(pdf, 'report');
     }
   };
 
@@ -933,6 +944,7 @@
     {save}
     {load}
     {exp}
+    {expPdf}
     {newText}
     {newTable}
     {newChart}
