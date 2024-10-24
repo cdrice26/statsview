@@ -160,6 +160,7 @@ const generateDocx = async (blocks) => {
       );
 
       try {
+        // @ts-ignore
         await Plotly.newPlot(tempDiv, chartData, chartLayout);
         const imageData = await Plotly.toImage(tempDiv, {
           format: 'png',
@@ -191,7 +192,9 @@ const generateDocx = async (blocks) => {
   return new Document({
     sections: [
       {
-        properties: {},
+        properties: {
+          page: { size: { width: 12240, height: 15840 } }
+        },
         children: children.flat() // Flatten the array of children
       }
     ]

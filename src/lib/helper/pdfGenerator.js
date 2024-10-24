@@ -35,26 +35,46 @@ const parseHtmlToText = (html, settings) => {
 const generateText = (block) => parseHtmlToText(block.content, block.settings);
 
 const generatePDF = async (blocks) => {
-  const doc = new jsPDF();
+  const doc = new jsPDF({
+    unit: 'pt',
+    format: 'letter',
+    orientation: 'portrait'
+  });
+
+  const margins = {
+    top: 40,
+    bottom: 40,
+    left: 40,
+    right: 40
+  };
+
+  let cursorY = margins.top;
+
   const addTextToPdf = (text, settings) => {
     doc.setFont(settings.fontFamily);
     doc.setFontSize(settings.fontSize);
     doc.setTextColor(settings.color);
+
     let fontStyle = 'normal';
     if (settings.bold && settings.italic) fontStyle = 'bolditalic';
     else if (settings.bold) fontStyle = 'bold';
     else if (settings.italic) fontStyle = 'italic';
     doc.setFont(fontStyle);
-    if (settings.underline) {
-      // Underline by drawing a line below the text
-      const textWidth =
-        (doc.getStringUnitWidth(text) * settings.fontSize) /
-        doc.internal.scaleFactor;
-      doc.text(text, 10, 10);
-      doc.line(10, 12, 10 + textWidth, 12);
-    } else {
-      doc.text(text, 10, 10);
+
+    const lines = doc.splitTextToSize(
+      text,
+      doc.internal.pageSize.width - margins.left - margins.right
+    );
+    if (
+      cursorY + lines.length * settings.fontSize * 1.15 >
+      doc.internal.pageSize.height - margins.bottom
+    ) {
+      doc.addPage();
+      cursorY = margins.top;
     }
+
+    doc.text(lines, margins.left, cursorY);
+    cursorY += lines.length * settings.fontSize * 1.15;
   };
 
   for (const block of blocks) {
@@ -66,9 +86,38 @@ const generatePDF = async (blocks) => {
     } else if (block.type === 'table' && block?.visible) {
       doc.autoTable({
         head: [block.content[0]],
-        body: block.content.slice(1)
+        body: block.content.slice(1),
+        startY: cursorY,
+        margin: margins,
+        styles: {
+          font: block.settings.fontFamily,
+          fontSize: block.settings.fontSize,
+          textColor: block.settings.color,
+          lineColor: 0, // Black borders
+          cellPadding: 5,
+          fillColor: [255, 255, 255] // No background color
+        },
+        headStyles: {
+          fontStyle: 'bold',
+          fillColor: [255, 255, 255], // No background color
+          textColor: 0,
+          lineWidth: 1,
+          lineColor: 0
+        },
+        bodyStyles: {
+          lineWidth: 1,
+          lineColor: 0 // Black borders between cells
+        },
+        theme: 'plain',
+        tableWidth: 'auto', // Columns fit content
+        tableLineColor: [0, 0, 0],
+        tableLineWidth: 1
       });
-      doc.addPage();
+      cursorY = doc.autoTable.previous.finalY + 10;
+      if (cursorY > doc.internal.pageSize.height - margins.bottom) {
+        doc.addPage();
+        cursorY = margins.top;
+      }
     } else if (block.type === 'stat') {
       addTextToPdf(
         generateText({
@@ -120,10 +169,33 @@ const generatePDF = async (blocks) => {
         await Plotly.newPlot(tempDiv, chartData, chartLayout);
         const imageData = await Plotly.toImage(tempDiv, {
           format: 'png',
-          width: 600,
-          height: 400
+          width: 900,
+          height: 600
         });
-        doc.addImage(imageData, 'PNG', 15, 40, 180, 160);
+        const imgProps = {
+          x: margins.left,
+          y: cursorY,
+          width: 512, // Maintain aspect ratio
+          height: 384
+        };
+
+        if (
+          cursorY + imgProps.height >
+          doc.internal.pageSize.height - margins.bottom
+        ) {
+          doc.addPage();
+          cursorY = margins.top;
+        }
+
+        doc.addImage(
+          imageData,
+          'PNG',
+          imgProps.x,
+          imgProps.y,
+          imgProps.width,
+          imgProps.height
+        );
+        cursorY += imgProps.height + 20;
         document.body.removeChild(tempDiv);
       } catch (error) {
         console.error('Error generating chart:', error);
