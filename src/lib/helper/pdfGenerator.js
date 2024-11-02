@@ -16,20 +16,29 @@ const parseHtmlToText = (html, settings) => {
   const parser = new DOMParser();
   const doc = parser.parseFromString(html, 'text/html');
   let text = '';
+  let bold = false;
+
   const processNode = (node) => {
     if (node.nodeType === Node.TEXT_NODE) {
-      text += node.textContent.replace(/\s+/g, ' ').trim() + '\n';
+      const nodeText = node.textContent.replace(/\s+/g, ' ').trim();
+      text += bold ? `**${nodeText}**` : nodeText;
     } else if (node.nodeType === Node.ELEMENT_NODE) {
       if (node.tagName === 'BR') {
         text += '\n';
       } else if (node.tagName === 'DIV') {
-        Array.from(node.childNodes).forEach(processNode);
         text += '\n';
+        Array.from(node.childNodes).forEach(processNode);
+        //text += '\n';
+      } else if (node.tagName === 'STRONG') {
+        bold = true;
+        Array.from(node.childNodes).forEach(processNode);
+        bold = false;
       } else {
         Array.from(node.childNodes).forEach(processNode);
       }
     }
   };
+
   Array.from(doc.body.childNodes).forEach(processNode);
   return text;
 };
@@ -57,26 +66,40 @@ const generatePDF = async (blocks) => {
     doc.setFontSize(settings.fontSize);
     doc.setTextColor(settings.color);
 
-    let fontStyle = 'normal';
-    if (settings.bold && settings.italic) fontStyle = 'bolditalic';
-    else if (settings.bold) fontStyle = 'bold';
-    else if (settings.italic) fontStyle = 'italic';
-    doc.setFont(fontStyle);
+    const paragraphs = text.split('\n');
 
-    const lines = doc.splitTextToSize(
-      text,
-      doc.internal.pageSize.width - margins.left - margins.right
-    );
-    if (
-      cursorY + lines.length * settings.fontSize * 1.15 >
-      doc.internal.pageSize.height - margins.bottom
-    ) {
-      doc.addPage();
-      cursorY = margins.top;
-    }
+    paragraphs.forEach((paragraph) => {
+      let segments = paragraph.split('**');
+      for (let i = 0; i < segments.length; i++) {
+        let fontStyle = settings.italic ? 'italic' : 'normal';
 
-    doc.text(lines, margins.left, cursorY);
-    cursorY += lines.length * settings.fontSize * 1.15;
+        if (i % 2 !== 0) {
+          // Bold text segment
+          fontStyle = settings.italic ? 'bolditalic' : 'bold';
+        } else {
+          // Regular text segment
+          fontStyle = settings.bold ? 'bold' : fontStyle;
+        }
+
+        doc.setFont(settings.fontFamily, fontStyle);
+
+        const lines = doc.splitTextToSize(
+          segments[i],
+          doc.internal.pageSize.width - margins.left - margins.right
+        );
+
+        if (
+          cursorY + lines.length * settings.fontSize * 1.15 >
+          doc.internal.pageSize.height - margins.bottom
+        ) {
+          doc.addPage();
+          cursorY = margins.top;
+        }
+
+        doc.text(lines, margins.left, cursorY);
+        cursorY += lines.length * settings.fontSize * 1.15;
+      }
+    });
   };
 
   for (const block of blocks) {
