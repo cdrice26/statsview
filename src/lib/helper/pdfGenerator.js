@@ -8,6 +8,8 @@ import {
   getXCol,
   rotateData
 } from './chartHelpers';
+
+// @ts-ignore
 import Plotly from 'plotly.js-dist';
 
 const parseHtmlToText = (html, settings) => {
@@ -84,6 +86,7 @@ const generatePDF = async (blocks) => {
     if (block.type === 'text') {
       addTextToPdf(generateText(block), block.settings);
     } else if (block.type === 'table' && block?.visible) {
+      // @ts-ignore
       doc.autoTable({
         head: [block.content[0]],
         body: block.content.slice(1),
@@ -113,6 +116,7 @@ const generatePDF = async (blocks) => {
         tableLineColor: [0, 0, 0],
         tableLineWidth: 1
       });
+      // @ts-ignore
       cursorY = doc.autoTable.previous.finalY + 10;
       if (cursorY > doc.internal.pageSize.height - margins.bottom) {
         doc.addPage();

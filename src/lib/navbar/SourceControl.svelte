@@ -12,6 +12,8 @@
   export let focus;
 
   export let col;
+  $: console.log(col);
+  $: console.log(col2);
   export let col2;
   export let cols;
   export let setCol = (col, num) => {};
@@ -37,7 +39,7 @@
       ) ?? []}
     />
   {:else if sourceTable.dataType == 'Quantitative' || sourceTable.dataType == 'Binary' || focus.testType == 'X2GOFTest'}
-    <ColumnSelect value={col} setter={setCol} num="1">
+    <ColumnSelect value={col ?? ''} setter={setCol} num="1">
       {#each sourceTable.content[0] as title, index}
         <option value={sourceTable.hasHeaders ? title : 'Column ' + index}
           >{sourceTable.hasHeaders ? title : 'Column ' + index}</option
@@ -48,7 +50,7 @@
     <!--Second Column Dropdown/Button - Only for 2-Sample tests-->
     {#if focus.sources !== null && focus.sources !== undefined && focus.type == 'test' && focus.testType != null}
       {#if focus.testType.includes('2Samp') || focus.testType.includes('MP')}
-        vs. <ColumnSelect value={col2} setter={setCol} num="2">
+        vs. <ColumnSelect value={col2 ?? ''} setter={setCol} num="2">
           {#each sourceTable.content[0] as title, index}
             <option value={sourceTable.hasHeaders ? title : 'Column ' + index}
               >{sourceTable.hasHeaders ? title : 'Column ' + index}</option
