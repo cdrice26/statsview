@@ -28,7 +28,6 @@ const parseHtmlToText = (html, settings) => {
       } else if (node.tagName === 'DIV') {
         text += '\n';
         Array.from(node.childNodes).forEach(processNode);
-        //text += '\n';
       } else if (node.tagName === 'STRONG') {
         bold = true;
         Array.from(node.childNodes).forEach(processNode);
@@ -45,6 +44,127 @@ const parseHtmlToText = (html, settings) => {
 
 const generateText = (block) => parseHtmlToText(block.content, block.settings);
 
+const addTextToPdf = (doc, text, settings, margins, cursorY) => {
+  doc.setFont(settings.fontFamily);
+  doc.setFontSize(settings.fontSize);
+  doc.setTextColor(settings.color);
+
+  const paragraphs = text.split('\n');
+  paragraphs.forEach((paragraph) => {
+    let segments = paragraph.split('**');
+    segments.forEach((segment, index) => {
+      let fontStyle = settings.italic ? 'italic' : 'normal';
+      if (index % 2 !== 0) {
+        fontStyle = settings.italic ? 'bolditalic' : 'bold';
+      } else {
+        fontStyle = settings.bold ? 'bold' : fontStyle;
+      }
+
+      doc.setFont(settings.fontFamily, fontStyle);
+      const lines = doc.splitTextToSize(
+        segment,
+        doc.internal.pageSize.width - margins.left - margins.right
+      );
+
+      if (
+        cursorY + lines.length * settings.fontSize * 1.15 >
+        doc.internal.pageSize.height - margins.bottom
+      ) {
+        doc.addPage();
+        cursorY = margins.top;
+      }
+
+      doc.text(lines, margins.left, cursorY);
+      cursorY += lines.length * settings.fontSize * 1.15;
+    });
+  });
+
+  return cursorY;
+};
+
+const preGenerateCharts = async (blocks) => {
+  const charts = {};
+  for (const block of blocks) {
+    if (block.type === 'chart') {
+      const tempDiv = document.createElement('div');
+      document.body.appendChild(tempDiv);
+      const sourceBlock = blocks.find(
+        (b) => b.type === 'table' && b?.title === block?.sources
+      );
+      const sourceData = sourceBlock?.content;
+      if (!sourceData) {
+        console.warn('No source data available for chart block');
+        document.body.removeChild(tempDiv);
+        continue;
+      }
+      const rotatedData = rotateData(sourceData, block?.cols, sourceBlock);
+      const x = getXCol(sourceData, block?.hasHeaders, block?.xCol);
+      const chartData = generateChartData(
+        sourceBlock,
+        block?.chartType,
+        rotatedData,
+        x
+      );
+      const chartLayout = generateChartLayout(
+        block?.title,
+        block?.chartType,
+        chartData
+      );
+      try {
+        await Plotly.newPlot(tempDiv, chartData, chartLayout);
+        const imageData = await Plotly.toImage(tempDiv, {
+          format: 'png',
+          width: 900,
+          height: 600
+        });
+        charts[block.id] = imageData;
+        document.body.removeChild(tempDiv);
+        console.log(`Generated chart image for block id: ${block.id}`);
+      } catch (error) {
+        console.error('Error generating chart:', error);
+        document.body.removeChild(tempDiv);
+      }
+    }
+  }
+  return charts;
+};
+
+const addChartToPdf = (doc, imageData, margins, cursorY) => {
+  console.log('Adding chart to PDF');
+
+  const pageWidth = doc.internal.pageSize.width;
+  const pageHeight = doc.internal.pageSize.height;
+
+  const maxWidth = pageWidth - margins.left - margins.right;
+  const maxHeight = pageHeight - margins.top - margins.bottom;
+
+  // Get the natural dimensions of the image using jsPDF's internal method
+  const imgProps = doc.getImageProperties(imageData);
+  const aspectRatio = imgProps.width / imgProps.height;
+
+  let imgWidth = maxWidth;
+  let imgHeight = maxWidth / aspectRatio;
+
+  // Scale the image down to fit within the available height if necessary
+  if (imgHeight > maxHeight) {
+    imgHeight = maxHeight;
+    imgWidth = maxHeight * aspectRatio;
+  }
+
+  // Ensure the image fits on the current page
+  if (cursorY + imgHeight > pageHeight - margins.bottom) {
+    doc.addPage();
+    cursorY = margins.top; // reset cursorY to top of new page
+    console.log('Added new page for chart');
+  }
+
+  doc.addImage(imageData, 'PNG', margins.left, cursorY, imgWidth, imgHeight);
+  cursorY += imgHeight + 20; // update cursorY after adding the chart
+  console.log(`New cursorY after chart: ${cursorY}`);
+
+  return cursorY;
+};
+
 const generatePDF = async (blocks) => {
   const doc = new jsPDF({
     unit: 'pt',
@@ -60,54 +180,21 @@ const generatePDF = async (blocks) => {
   };
 
   let cursorY = margins.top;
-
-  const addTextToPdf = (text, settings) => {
-    doc.setFont(settings.fontFamily);
-    doc.setFontSize(settings.fontSize);
-    doc.setTextColor(settings.color);
-
-    const paragraphs = text.split('\n');
-
-    paragraphs.forEach((paragraph) => {
-      let segments = paragraph.split('**');
-      for (let i = 0; i < segments.length; i++) {
-        let fontStyle = settings.italic ? 'italic' : 'normal';
-
-        if (i % 2 !== 0) {
-          // Bold text segment
-          fontStyle = settings.italic ? 'bolditalic' : 'bold';
-        } else {
-          // Regular text segment
-          fontStyle = settings.bold ? 'bold' : fontStyle;
-        }
-
-        doc.setFont(settings.fontFamily, fontStyle);
-
-        const lines = doc.splitTextToSize(
-          segments[i],
-          doc.internal.pageSize.width - margins.left - margins.right
-        );
-
-        if (
-          cursorY + lines.length * settings.fontSize * 1.15 >
-          doc.internal.pageSize.height - margins.bottom
-        ) {
-          doc.addPage();
-          cursorY = margins.top;
-        }
-
-        doc.text(lines, margins.left, cursorY);
-        cursorY += lines.length * settings.fontSize * 1.15;
-      }
-    });
-  };
+  const charts = await preGenerateCharts(blocks);
 
   for (const block of blocks) {
     const sourceBlock = blocks.find(
       (b) => b.type === 'table' && b?.title === block?.sources
     );
+
     if (block.type === 'text') {
-      addTextToPdf(generateText(block), block.settings);
+      cursorY = addTextToPdf(
+        doc,
+        generateText(block),
+        block.settings,
+        margins,
+        cursorY
+      );
     } else if (block.type === 'table' && block?.visible) {
       // @ts-ignore
       doc.autoTable({
@@ -135,7 +222,7 @@ const generatePDF = async (blocks) => {
           lineColor: 0 // Black borders between cells
         },
         theme: 'plain',
-        tableWidth: 'auto', // Columns fit content
+        tableWidth: 'wrap', // Wrap content
         tableLineColor: [0, 0, 0],
         tableLineWidth: 1
       });
@@ -146,15 +233,19 @@ const generatePDF = async (blocks) => {
         cursorY = margins.top;
       }
     } else if (block.type === 'stat') {
-      addTextToPdf(
+      cursorY = addTextToPdf(
+        doc,
         generateText({
           ...block,
           content: generateStatText(block, sourceBlock)
         }),
-        block.settings
+        block.settings,
+        margins,
+        cursorY
       );
     } else if (block.type === 'test') {
-      addTextToPdf(
+      cursorY = addTextToPdf(
+        doc,
         generateText({
           ...block,
           content: generateTestText(
@@ -168,66 +259,13 @@ const generatePDF = async (blocks) => {
             sourceBlock
           )
         }),
-        block.settings
+        block.settings,
+        margins,
+        cursorY
       );
     } else if (block.type === 'chart') {
-      const tempDiv = document.createElement('div');
-      document.body.appendChild(tempDiv);
-      const sourceData = sourceBlock?.content;
-      if (!sourceData) {
-        console.warn('No source data available for chart block');
-        document.body.removeChild(tempDiv);
-        continue;
-      }
-      const rotatedData = rotateData(sourceData, block?.cols, sourceBlock);
-      const x = getXCol(sourceData, block?.hasHeaders, block?.xCol);
-      const chartData = generateChartData(
-        sourceBlock,
-        block?.chartType,
-        rotatedData,
-        x
-      );
-      const chartLayout = generateChartLayout(
-        block?.title,
-        block?.chartType,
-        chartData
-      );
-      try {
-        await Plotly.newPlot(tempDiv, chartData, chartLayout);
-        const imageData = await Plotly.toImage(tempDiv, {
-          format: 'png',
-          width: 900,
-          height: 600
-        });
-        const imgProps = {
-          x: margins.left,
-          y: cursorY,
-          width: 512, // Maintain aspect ratio
-          height: 384
-        };
-
-        if (
-          cursorY + imgProps.height >
-          doc.internal.pageSize.height - margins.bottom
-        ) {
-          doc.addPage();
-          cursorY = margins.top;
-        }
-
-        doc.addImage(
-          imageData,
-          'PNG',
-          imgProps.x,
-          imgProps.y,
-          imgProps.width,
-          imgProps.height
-        );
-        cursorY += imgProps.height + 20;
-        document.body.removeChild(tempDiv);
-      } catch (error) {
-        console.error('Error generating chart:', error);
-        document.body.removeChild(tempDiv);
-      }
+      const imageData = charts[block.id];
+      cursorY = addChartToPdf(doc, imageData, margins, cursorY);
     }
   }
 
