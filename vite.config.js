@@ -5,9 +5,24 @@ import { svelte } from '@sveltejs/vite-plugin-svelte';
 export default defineConfig({
   plugins: [svelte()],
   build: {
-    sourcemap: true
+    sourcemap: true,
+    rollupOptions: {
+      output: {
+        // Ensure WASM files are included in the build
+        assetFileNames: (assetInfo) => {
+          if (assetInfo.name.endsWith('.wasm')) {
+            return 'assets/[name].[hash][extname]';
+          }
+          return 'assets/[name].[hash][extname]';
+        }
+      }
+    }
   },
   server: {
-    open: true
+    open: true,
+    fs: {
+      // Allow serving files from one level up to the project root
+      allow: ['..']
+    }
   }
 });

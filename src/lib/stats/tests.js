@@ -2,6 +2,9 @@ import statistics from '@stdlib/stats';
 import { std } from './stats';
 import { getUnique, getUniqueFromMatrix } from '../helper/unique';
 import { occurrencesOf } from '../helper/count';
+import init, { variance_test } from 'statmaster';
+
+await init();
 
 /**
  * Chi-Squared Goodness-of-Fit Test
@@ -56,6 +59,34 @@ export const X2IndTest = (data, alpha) => {
       pValue: result.pValue,
       testStatistic: result.statistic,
       expected: result?.expected
+    };
+  }
+};
+
+/**
+ * 2-Sample Variance Test
+ * @param {Array} data - The raw data for column 1
+ * @param {Array} data2 - The raw data for column 2
+ * @param {'two-sided' | 'less' | 'greater'} tails - two-sided, less, greater
+ * @param {*} alpha - The significance level
+ * @returns an object with pValue and testStatistic
+ */
+export const Samp2VarTest = (data, data2, tails, alpha) => {
+  if (
+    data != undefined &&
+    data2 != undefined &&
+    tails != undefined &&
+    alpha != undefined
+  ) {
+    const result = variance_test(
+      data.map((item) => parseFloat(item)),
+      data2.map((item) => parseFloat(item)),
+      tails
+    );
+    console.log(result);
+    return {
+      pValue: result.p,
+      testStatistic: result.f
     };
   }
 };

@@ -6,8 +6,10 @@ import {
   MPTTest,
   Samp1TTest,
   Samp2ZTest,
-  Samp1ZTest
+  Samp1ZTest,
+  Samp2VarTest
 } from '../stats/tests';
+import toTitleCase from './toTitleCase';
 
 export const getColumnData = (props, sourceBlock, column) =>
   sourceBlock !== null &&
@@ -57,6 +59,8 @@ export const getTestResults = (data, data2, props, sourceBlock) =>
           props.testData.tails,
           props.testData.alpha
         )
+      : props.testType == '2SampVarTest'
+      ? Samp2VarTest(data, data2, props.testData.tails, props.testData.alpha)
       : null
     : null;
 
@@ -74,6 +78,7 @@ export const generateTestText = (props, testResults, sourceBlock) =>
             .replace('TTest', 'T-Test')
             .replace('ZTest', 'Z-Test')
             .replace('MP', 'Matched Pairs ')
+            .replace('VarTest', 'Variance Test')
 
           // Print the identifiers for the column/table we're dealing with
         } for ${
@@ -102,7 +107,8 @@ export const generateTestText = (props, testResults, sourceBlock) =>
             ? props.testData.expCounts.every((x) => x > 5)
             : props.testType == 'X2IndTest'
             ? testResults.expected._buffer.every((x) => x > 5)
-            : props.testType.includes('TTest')
+            : props.testType.includes('TTest') ||
+              props.testType.includes('VarTest')
             ? props.col
               ? getData(
                   sourceBlock.content,
@@ -160,7 +166,7 @@ export const generateTestText = (props, testResults, sourceBlock) =>
             : null
         }<br><br>
 
-        Two Tailed: ${props.testData.tails}<br><br>
+        Alternative: ${toTitleCase(props.testData.tails)}<br><br>
 
         Test Statistic: ${testResults.testStatistic}<br>
         P-Value: ${testResults.pValue}<br><br>
