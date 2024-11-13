@@ -2,7 +2,7 @@ import statistics from '@stdlib/stats';
 import { std } from './stats';
 import { getUnique, getUniqueFromMatrix } from '../helper/unique';
 import { occurrencesOf } from '../helper/count';
-import init, { variance_test } from 'statmaster';
+import init, { variance_test, anova_1way_test } from 'statmaster';
 
 await init();
 
@@ -136,6 +136,21 @@ export const MPTTest = (data, data2, tails, alpha) => {
       alpha: parseFloat(alpha),
       alternative: tails
     });
+    return {
+      pValue: result.pValue,
+      testStatistic: result.statistic
+    };
+  }
+};
+
+/**
+ * 1-Way ANOVA Test
+ * @param {Array} data - The raw data
+ * @returns an object with pValue and testStatistic
+ */
+export const ANOVATest = (data) => {
+  if (data != undefined) {
+    const result = anova_1way_test(data);
     return {
       pValue: result.pValue,
       testStatistic: result.statistic
