@@ -18,6 +18,7 @@
     <option value="2SampTTest">2-Sample T-Test</option>
     <option value="MPTTest">Matched Pairs T-Test</option>
     <option value="2SampVarTest">2-Sample Variance Test</option>
+    <option value="1WayANOVATest">1-Way ANOVA</option>
   {:else if currentType == 'Binary'}
     <option value="1SampZTest">1-Sample Z-Test</option>
     <option value="2SampZTest">2-Sample Z-Test</option>

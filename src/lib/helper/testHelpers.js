@@ -7,10 +7,19 @@ import {
   Samp1TTest,
   Samp2ZTest,
   Samp1ZTest,
-  Samp2VarTest
+  Samp2VarTest,
+  ANOVATest
 } from '../stats/tests';
 import toTitleCase from './toTitleCase';
 
+/**
+ * Retrieves the data for a specific column from the source block.
+ *
+ * @param {Object} props - The properties containing test type information.
+ * @param {Object} sourceBlock - The block containing the source data.
+ * @param {string} column - The name or index of the column to retrieve data from.
+ * @returns {Array|null} The data for the specified column, or null if not found.
+ */
 export const getColumnData = (props, sourceBlock, column) =>
   sourceBlock !== null &&
   sourceBlock !== undefined &&
@@ -30,7 +39,94 @@ export const getColumnData = (props, sourceBlock, column) =>
       )
     : null;
 
-export const getTestResults = (data, data2, props, sourceBlock) =>
+/**
+ * Runs the specified statistical test on the given data.
+ *
+ * @param {Array} data - The data to run the test on
+ * @param {Array} data2 - The second dataset for the Samp2TTest, Samp2ZTest, Samp2VarTest, and MPTTest
+ * @param {Object} props - The object containing all the test data and parameters
+ * @param {Object} sourceBlock - The block containing the source data
+ * @returns {Object} The results of the test
+ */
+export const getTestResults = (data, data2, props, sourceBlock) => {
+  if (
+    (data !== null && data !== undefined) ||
+    props.testType === 'X2IndTest' ||
+    props.testType === '1WayANOVATest'
+  ) {
+    if (props.testType === 'X2GOFTest') {
+      return X2GOFTest(data, props.testData.expCounts, props.testData.alpha);
+    } else if (props.testType === 'X2IndTest') {
+      return X2IndTest(
+        getFullData(sourceBlock.content, sourceBlock.hasHeaders),
+        props.testData.alpha
+      );
+    } else if (props.testType === '2SampTTest') {
+      return Samp2TTest(
+        data,
+        data2,
+        props.testData.tails,
+        props.testData.alpha
+      );
+    } else if (props.testType === 'MPTTest') {
+      return MPTTest(data, data2, props.testData.tails, props.testData.alpha);
+    } else if (props.testType === '1SampTTest') {
+      return Samp1TTest(
+        data,
+        props.testData.testAgainst,
+        props.testData.tails,
+        props.testData.alpha
+      );
+    } else if (props.testType === '2SampZTest') {
+      return Samp2ZTest(
+        data,
+        data2,
+        props.testData.tails,
+        props.testData.alpha
+      );
+    } else if (props.testType === '1SampZTest') {
+      return Samp1ZTest(
+        data,
+        props.testData.testAgainst,
+        props.testData.tails,
+        props.testData.alpha
+      );
+    } else if (props.testType === '2SampVarTest') {
+      return Samp2VarTest(
+        data,
+        data2,
+        props.testData.tails,
+        props.testData.alpha
+      );
+    } else if (props.testType === '2SampTTest') {
+      return Samp2TTest(
+        data,
+        data2,
+        props.testData.tails,
+        props.testData.alpha
+      );
+    } else if (props.testType === 'MPTTest') {
+      return MPTTest(data, data2, props.testData.tails, props.testData.alpha);
+    } else if (props.testType === '1WayANOVATest') {
+      console.log(
+        ANOVATest(getFullData(sourceBlock.content, sourceBlock.hasHeaders))
+      );
+      return ANOVATest(
+        getFullData(sourceBlock.content, sourceBlock.hasHeaders)
+      );
+    }
+  }
+};
+
+/**
+ * @deprecated This function is deprecated and may be removed in future releases.
+ * @param {Array} data - The first set of data for the test.
+ * @param {Array} data2 - The second set of data for the test, if applicable.
+ * @param {Object} props - The properties containing test configuration.
+ * @param {Object} sourceBlock - The block containing the source data.
+ * @returns {Object|boolean} The test results object or a boolean indicating if test parameters are valid.
+ */
+export const getTestResultsOld = (data, data2, props, sourceBlock) =>
   (data !== null && data !== undefined) || props.testType === 'X2IndTest'
     ? props.testType == 'X2GOFTest'
       ? X2GOFTest(data, props.testData.expCounts, props.testData.alpha)
@@ -64,6 +160,13 @@ export const getTestResults = (data, data2, props, sourceBlock) =>
       : null
     : null;
 
+/**
+ * Generates the text for a test block based on the given properties and test results.
+ * @param {Object} props - The properties of the test block
+ * @param {Object} testResults - The results of the test
+ * @param {Object} sourceBlock - The block containing the source data
+ * @returns {string} The text for the test block
+ */
 export const generateTestText = (props, testResults, sourceBlock) =>
   // Check to make sure there's sources and a testType, otherwise we won't be able to render results
   props.sources != null && props.testType != null && testResults != null
@@ -79,6 +182,7 @@ export const generateTestText = (props, testResults, sourceBlock) =>
             .replace('ZTest', 'Z-Test')
             .replace('MP', 'Matched Pairs ')
             .replace('VarTest', 'Variance Test')
+            .replace('1WayANOVA', '1- Way ANOVA ')
 
           // Print the identifiers for the column/table we're dealing with
         } for ${

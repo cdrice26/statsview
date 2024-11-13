@@ -38,7 +38,7 @@
         sourceTable.hasHeaders ? col : 'Column ' + idx
       ) ?? []}
     />
-  {:else if sourceTable.dataType == 'Quantitative' || sourceTable.dataType == 'Binary' || focus.testType == 'X2GOFTest'}
+  {:else if (sourceTable.dataType == 'Quantitative' && !focus.testType?.includes('ANOVA')) || sourceTable.dataType == 'Binary' || focus.testType == 'X2GOFTest'}
     <ColumnSelect value={col ?? ''} setter={setCol} num="1">
       {#each sourceTable.content[0] as title, index}
         <option value={sourceTable.hasHeaders ? title : 'Column ' + index}
