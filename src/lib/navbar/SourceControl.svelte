@@ -12,8 +12,6 @@
   export let focus;
 
   export let col;
-  $: console.log(col);
-  $: console.log(col2);
   export let col2;
   export let cols;
   export let setCol = (col, num) => {};

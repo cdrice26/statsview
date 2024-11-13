@@ -119,7 +119,6 @@ const preGenerateCharts = async (blocks) => {
         });
         charts[block.id] = imageData;
         document.body.removeChild(tempDiv);
-        console.log(`Generated chart image for block id: ${block.id}`);
       } catch (error) {
         console.error('Error generating chart:', error);
         document.body.removeChild(tempDiv);
@@ -130,8 +129,6 @@ const preGenerateCharts = async (blocks) => {
 };
 
 const addChartToPdf = (doc, imageData, margins, cursorY) => {
-  console.log('Adding chart to PDF');
-
   const pageWidth = doc.internal.pageSize.width;
   const pageHeight = doc.internal.pageSize.height;
 
@@ -155,12 +152,10 @@ const addChartToPdf = (doc, imageData, margins, cursorY) => {
   if (cursorY + imgHeight > pageHeight - margins.bottom) {
     doc.addPage();
     cursorY = margins.top; // reset cursorY to top of new page
-    console.log('Added new page for chart');
   }
 
   doc.addImage(imageData, 'PNG', margins.left, cursorY, imgWidth, imgHeight);
   cursorY += imgHeight + 20; // update cursorY after adding the chart
-  console.log(`New cursorY after chart: ${cursorY}`);
 
   return cursorY;
 };

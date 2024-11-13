@@ -83,7 +83,6 @@ export const Samp2VarTest = (data, data2, tails, alpha) => {
       data2.map((item) => parseFloat(item)),
       tails
     );
-    console.log(result);
     return {
       pValue: result.p,
       testStatistic: result.f

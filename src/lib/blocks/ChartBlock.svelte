@@ -43,19 +43,6 @@
     // @ts-ignore
     Plotly.react(plotElement, data, layout);
   };
-
-  async function exportChart() {
-    const imageOptions = {
-      format: 'png',
-      width: 850,
-      height: 400
-    };
-
-    const imgData = await Plotly.toImage(plotElement, imageOptions);
-    console.log(imgData); // This is a base64 encoded string that can be used in docx.js
-
-    // You can pass imgData to docx.js to embed it in a Word document
-  }
 </script>
 
 <button
