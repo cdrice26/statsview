@@ -28,8 +28,7 @@ export const getData = (sourceTable, col, hasHeaders, type) => {
 };
 
 // Get the data from sourceTable, for all columns
-// Only categorical is supported since this is only used for the X2IndTest
-export const getFullData = (sourceTable, hasHeaders) => {
+export const getFullData = (sourceTable, hasHeaders, type = 'Categorical') => {
   let data = [];
 
   // Put the correct number of columns into data
@@ -40,7 +39,13 @@ export const getFullData = (sourceTable, hasHeaders) => {
   // Populate those columns with the correct values, omitting the first one if it's a header
   for (let i = hasHeaders ? 1 : 0; i < sourceTable.length; i++) {
     for (let j = 0; j < sourceTable[i].length; j++) {
-      data[j].push(sourceTable[i][j]);
+      data[j].push(
+        type == 'Quantitative'
+          ? parseFloat(sourceTable[i][j])
+          : type == 'Binary'
+          ? bitVal(sourceTable[i][j])
+          : sourceTable[i][j]
+      );
     }
   }
 

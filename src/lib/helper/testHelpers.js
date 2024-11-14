@@ -109,7 +109,7 @@ export const getTestResults = (data, data2, props, sourceBlock) => {
       return MPTTest(data, data2, props.testData.tails, props.testData.alpha);
     } else if (props.testType === '1WayANOVATest') {
       return ANOVATest(
-        getFullData(sourceBlock.content, sourceBlock.hasHeaders)
+        getFullData(sourceBlock.content, sourceBlock.hasHeaders, 'Quantitative')
       );
     }
   }

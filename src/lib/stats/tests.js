@@ -151,8 +151,8 @@ export const ANOVATest = (data) => {
   if (data != undefined) {
     const result = anova_1way_test(data);
     return {
-      pValue: result.pValue,
-      testStatistic: result.statistic
+      pValue: result.p,
+      testStatistic: result.f
     };
   }
 };
