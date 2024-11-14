@@ -8,7 +8,8 @@ import {
   Samp2ZTest,
   Samp1ZTest,
   Samp2VarTest,
-  ANOVATest
+  ANOVATest,
+  LinearRegressionTest
 } from '../stats/tests';
 import toTitleCase from './toTitleCase';
 
@@ -111,6 +112,8 @@ export const getTestResults = (data, data2, props, sourceBlock) => {
       return ANOVATest(
         getFullData(sourceBlock.content, sourceBlock.hasHeaders, 'Quantitative')
       );
+    } else if (props.testType === 'RegressionTest') {
+      return LinearRegressionTest(data, data2);
     }
   }
 };
@@ -178,8 +181,9 @@ export const generateTestText = (props, testResults, sourceBlock) =>
             .replace('TTest', 'T-Test')
             .replace('ZTest', 'Z-Test')
             .replace('MP', 'Matched Pairs ')
-            .replace('VarTest', 'Variance Test')
-            .replace('1WayANOVA', '1- Way ANOVA ')
+            .replace('Var', 'Variance ')
+            .replace('1WayANOVA', '1-Way ANOVA ')
+            .replace('Regression', 'Regression ')
 
           // Print the identifiers for the column/table we're dealing with
         } for ${
