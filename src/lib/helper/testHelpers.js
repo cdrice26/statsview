@@ -161,6 +161,76 @@ export const getTestResultsOld = (data, data2, props, sourceBlock) =>
     : null;
 
 /**
+ * Checks if the large counts condition is met for the given test type.
+ * @param {Object} props - The properties containing test configuration.
+ * @param {Object} testResults - The results of the test.
+ * @param {Object} sourceBlock - The block containing the source data.
+ * @returns {boolean} True if the large counts condition is met, false otherwise.
+ * Null if the test type is not supported.
+ */
+export const checkLargeCountsCondition = (props, testResults, sourceBlock) =>
+  props.testType == 'X2GOFTest'
+    ? props.testData.expCounts.every((x) => x > 5)
+    : props.testType == 'X2IndTest'
+    ? testResults.expected._buffer.every((x) => x > 5)
+    : props.testType.includes('TTest') || props.testType.includes('VarTest')
+    ? props.col
+      ? getData(
+          sourceBlock.content,
+          props.col,
+          sourceBlock.hasHeaders,
+          'Quantitative'
+        ).length > 30 &&
+        (props.col2
+          ? getData(
+              sourceBlock.content,
+              props.col2,
+              sourceBlock.hasHeaders,
+              'Quantitative'
+            ).length > 30
+          : true)
+      : sourceBlock.content.length > 30
+    : props.testType == '1SampZTest'
+    ? getData(
+        sourceBlock.content,
+        props.col,
+        sourceBlock.hasHeaders,
+        'Binary'
+      ).filter((x) => x == 1).length > 10 &&
+      getData(
+        sourceBlock.content,
+        props.col,
+        sourceBlock.hasHeaders,
+        'Binary'
+      ).filter((x) => x == 0).length > 10
+    : props.testType == '2SampZTest'
+    ? getData(
+        sourceBlock.content,
+        props.col,
+        sourceBlock.hasHeaders,
+        'Binary'
+      ).filter((x) => x == 1).length > 10 &&
+      getData(
+        sourceBlock.content,
+        props.col,
+        sourceBlock.hasHeaders,
+        'Binary'
+      ).filter((x) => x == 0).length > 10 &&
+      getData(
+        sourceBlock.content,
+        props.col2,
+        sourceBlock.hasHeaders,
+        'Binary'
+      ).filter((x) => x == 1).length > 10 &&
+      getData(
+        sourceBlock.content,
+        props.col2,
+        sourceBlock.hasHeaders,
+        'Binary'
+      ).filter((x) => x == 0).length > 10
+    : null;
+
+/**
  * Generates the text for a test block based on the given properties and test results.
  * @param {Object} props - The properties of the test block
  * @param {Object} testResults - The results of the test
@@ -207,69 +277,15 @@ export const generateTestText = (props, testResults, sourceBlock) =>
         Alternative Hypothesis: ${props.testData.ha}<br><br>
 
         Random Sample: ${props.testData.rand}<br>
-        Large Counts: ${
-          props.testType == 'X2GOFTest'
-            ? props.testData.expCounts.every((x) => x > 5)
-            : props.testType == 'X2IndTest'
-            ? testResults.expected._buffer.every((x) => x > 5)
-            : props.testType.includes('TTest') ||
-              props.testType.includes('VarTest')
-            ? props.col
-              ? getData(
-                  sourceBlock.content,
-                  props.col,
-                  sourceBlock.hasHeaders,
-                  'Quantitative'
-                ).length > 30 &&
-                (props.col2
-                  ? getData(
-                      sourceBlock.content,
-                      props.col2,
-                      sourceBlock.hasHeaders,
-                      'Quantitative'
-                    ).length > 30
-                  : true)
-              : sourceBlock.content.length > 30
-            : props.testType == '1SampZTest'
-            ? getData(
-                sourceBlock.content,
-                props.col,
-                sourceBlock.hasHeaders,
-                'Binary'
-              ).filter((x) => x == 1).length > 10 &&
-              getData(
-                sourceBlock.content,
-                props.col,
-                sourceBlock.hasHeaders,
-                'Binary'
-              ).filter((x) => x == 0).length > 10
-            : props.testType == '2SampZTest'
-            ? getData(
-                sourceBlock.content,
-                props.col,
-                sourceBlock.hasHeaders,
-                'Binary'
-              ).filter((x) => x == 1).length > 10 &&
-              getData(
-                sourceBlock.content,
-                props.col,
-                sourceBlock.hasHeaders,
-                'Binary'
-              ).filter((x) => x == 0).length > 10 &&
-              getData(
-                sourceBlock.content,
-                props.col2,
-                sourceBlock.hasHeaders,
-                'Binary'
-              ).filter((x) => x == 1).length > 10 &&
-              getData(
-                sourceBlock.content,
-                props.col2,
-                sourceBlock.hasHeaders,
-                'Binary'
-              ).filter((x) => x == 0).length > 10
-            : null
-        }<br><br>
+        ${
+          checkLargeCountsCondition(props, testResults, sourceBlock) === null
+            ? ''
+            : `Large Counts: ${checkLargeCountsCondition(
+                props,
+                testResults,
+                sourceBlock
+              )}`
+        }<br><br>{}
 
         Alternative: ${toTitleCase(props.testData.tails)}<br><br>
 
