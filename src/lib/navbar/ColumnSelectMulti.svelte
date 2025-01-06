@@ -1,9 +1,7 @@
 <script>
   import { MultiSelect } from 'svelte-multiselect';
 
-  export let allCols;
-  export let selected;
-  export let setter = (cols) => {};
+  let { allCols, selected = $bindable(), setter = (cols) => {} } = $props();
 </script>
 
 <div class="multiselect-wrapper">

@@ -1,7 +1,6 @@
 <script>
     import Button from '../Button.svelte';
-    export let csvFiles;
-    export let getFromCSV = (csvFiles) => {};
+    let { csvFiles = $bindable(), getFromCSV = (csvFiles) => {} } = $props();
 </script>
 
 <!--Button which opens a CSV file dialoag. Use getFromCSV to handle the file.-->
@@ -12,7 +11,7 @@
     accept=".csv"
     style="display:none"
     bind:files={csvFiles}
-    on:change={() => getFromCSV(csvFiles[0])}
+    onchange={() => getFromCSV(csvFiles[0])}
 />
 <Button
     add={null}

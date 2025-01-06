@@ -1,8 +1,7 @@
 <script>
   import Select from './Select.svelte';
 
-  export let statType;
-  export let setStatType;
+  let { statType, setStatType } = $props();
 </script>
 
 <!--A dropdown with various statistics as options-->

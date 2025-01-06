@@ -1,7 +1,6 @@
 <script>
     import Button from './Button.svelte';
-    export let undo = () => {};
-    export let redo = () => {};
+    let { undo = () => {}, redo = () => {} } = $props();
 </script>
 
 <!--Undo/Redo Buttons-->

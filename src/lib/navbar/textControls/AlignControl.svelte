@@ -1,6 +1,6 @@
 <script>
     import Button from '../Button.svelte';
-    export let align = (align) => {};
+    let { align = (align) => {} } = $props();
 </script>
 
 <!--Text align-->

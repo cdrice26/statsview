@@ -1,8 +1,7 @@
 <script>
     import Button from './Button.svelte';
 
-    export let moveUp = () => {};
-    export let moveDown = () => {};
+    let { moveUp = () => {}, moveDown = () => {} } = $props();
 </script>
 
 <!--Buttons to swap blocks around-->

@@ -1,43 +1,47 @@
+<!-- @migration-task Error while migrating Svelte code: migrating this component would require adding a `$properties` rune but there's already a variable named properties.
+     Rename the variable and try again or migrate by hand. -->
 <script>
-  export let props;
-  export let setFocus = (props) => {};
+  export let properties;
+  export let setFocus = (properties) => {};
   export let forceUpdate = () => {};
 </script>
 
 <!--Render a table with the correct rows and content-->
-{#if props.visible}
+{#if properties.visible}
   <table>
-    {#each props.content as row, rid}
-      <tr>
-        {#each row as cell, cid}
-          <td
-            contenteditable
-            bind:textContent={cell}
-            on:focus={() => setFocus({ ...props, row: rid, col: cid })}
-            on:keyup={forceUpdate}
-            style={`
-                        --text-align: ${props.settings.textAlign};
-                        --color: ${props.settings.color};
-                        --font-family: ${props.settings.fontFamily};
-                        --font-size: ${props.settings.fontSize * 1.38}pt;
+    <tbody>
+      {#each properties.content as row, rid}
+        <tr>
+          {#each row as cell, cid}
+            <td
+              contenteditable
+              bind:textContent={cell}
+              on:focus={() => setFocus({ ...properties, row: rid, col: cid })}
+              on:keyup={forceUpdate}
+              style={`
+                        --text-align: ${properties.settings.textAlign};
+                        --color: ${properties.settings.color};
+                        --font-family: ${properties.settings.fontFamily};
+                        --font-size: ${properties.settings.fontSize * 1.38}pt;
                         --font-weight: ${
-                          props.settings.bold ? 'bold' : 'normal'
+                          properties.settings.bold ? 'bold' : 'normal'
                         };
                         --font-style: ${
-                          props.settings.italic ? 'italic' : 'normal'
+                          properties.settings.italic ? 'italic' : 'normal'
                         };
                         --text-decoration: ${
-                          props.settings.underline ? 'underline' : 'normal'
+                          properties.settings.underline ? 'underline' : 'normal'
                         }; 
                     `}
-          >
-          </td>
-        {/each}
-      </tr>
-    {/each}
+            >
+            </td>
+          {/each}
+        </tr>
+      {/each}
+    </tbody>
   </table>
 {:else}
-  <button class="invisible" on:click={() => setFocus(props)}
+  <button class="invisible" on:click={() => setFocus(properties)}
     >Invisible Table</button
   >
 {/if}

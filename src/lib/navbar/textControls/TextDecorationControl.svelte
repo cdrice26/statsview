@@ -1,9 +1,7 @@
 <script>
     import Button from '../Button.svelte';
 
-    export let bold = () => {};
-    export let italic = () => {};
-    export let underline = () => {};
+    let { bold = () => {}, italic = () => {}, underline = () => {} } = $props();
 </script>
 
 <!--Text decoration-->

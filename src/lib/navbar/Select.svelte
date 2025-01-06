@@ -1,12 +1,11 @@
 <script>
-  export let value;
-  export let setter = (value) => {};
+  let { value = $bindable(), setter = (value) => {}, children } = $props();
 </script>
 
 <!--A simple dropdown menu, styled to match the app-->
 
-<select bind:value on:change={() => setter(value)}>
-  <slot />
+<select bind:value onchange={() => setter(value)}>
+  {@render children?.()}
 </select>
 
 <style>

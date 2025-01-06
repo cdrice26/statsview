@@ -1,6 +1,8 @@
+<!-- @migration-task Error while migrating Svelte code: migrating this component would require adding a `$properties` rune but there's already a variable named properties.
+     Rename the variable and try again or migrate by hand. -->
 <script>
-  export let props;
-  export let setFocus = (props) => {};
+  export let properties;
+  export let setFocus = (properties) => {};
   export let forceUpdate = () => {};
   let forceUpdateOnKey = (e) => {
     if (e.key == 'Enter' || e.key == ' ') forceUpdate();
@@ -10,21 +12,21 @@
 <!-- svelte-ignore a11y-no-static-element-interactions -->
 <div
   contenteditable
-  bind:innerHTML={props.content}
-  on:focus={() => setFocus(props)}
+  bind:innerHTML={properties.content}
+  on:focus={() => setFocus(properties)}
   on:keyup={(e) => forceUpdateOnKey(e)}
   style={`
-        --text-align: ${props.settings.textAlign};
-        --color: ${props.settings.color};
-        --font-family: ${props.settings.fontFamily};
-        --font-size: ${props.settings.fontSize * 1.38}pt;
-        --font-weight: ${props.settings.bold ? 'bold' : 'normal'};
-        --font-style: ${props.settings.italic ? 'italic' : 'normal'};
+        --text-align: ${properties.settings.textAlign};
+        --color: ${properties.settings.color};
+        --font-family: ${properties.settings.fontFamily};
+        --font-size: ${properties.settings.fontSize * 1.38}pt;
+        --font-weight: ${properties.settings.bold ? 'bold' : 'normal'};
+        --font-style: ${properties.settings.italic ? 'italic' : 'normal'};
         --text-decoration: ${
-          props.settings.underline ? 'underline' : 'normal'
+          properties.settings.underline ? 'underline' : 'normal'
         }; 
     `}
-/>
+></div>
 
 <style>
   div {

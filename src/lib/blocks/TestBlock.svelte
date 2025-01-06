@@ -1,8 +1,10 @@
+<!-- @migration-task Error while migrating Svelte code: migrating this component would require adding a `$properties` rune but there's already a variable named properties.
+     Rename the variable and try again or migrate by hand. -->
 <script>
   import { generateTestText } from '../helper/testHelpers';
   import TextBlock from './TextBlock.svelte';
 
-  export let props;
+  export let properties;
   export let sourceBlock;
 
   // The results of the test to display here
@@ -12,9 +14,9 @@
 </script>
 
 <TextBlock
-  props={{
-    ...props,
-    content: generateTestText(props, testResults, sourceBlock)
+  properties={{
+    ...properties,
+    content: generateTestText(properties, testResults, sourceBlock)
   }}
-  setFocus={() => setFocus(props)}
+  setFocus={() => setFocus(properties)}
 />

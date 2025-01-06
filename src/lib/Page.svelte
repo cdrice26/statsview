@@ -1,10 +1,12 @@
 <script>
-    import Block from './Block.svelte';
+  import Block from './Block.svelte';
 
-    export let blocks;
-    $: tableBlocks = blocks.filter((block) => block.type == 'table');
-    export let setFocus = (props) => {};
-    export let forceUpdate = () => {};
+  let {
+    blocks,
+    setFocus = (properties) => {},
+    forceUpdate = () => {}
+  } = $props();
+  let tableBlocks = $derived(blocks.filter((block) => block.type == 'table'));
 </script>
 
 <!--Render a page. The y position is set by the prop yPos
@@ -12,24 +14,24 @@
     the prop entitled 'props' is a reference to the data regarding
     the block itself.-->
 <div>
-    {#each blocks as block (block.id)}
-        <Block props={block} {tableBlocks} {setFocus} {forceUpdate} />
-    {/each}
+  {#each blocks as block (block.id)}
+    <Block properties={block} {tableBlocks} {setFocus} {forceUpdate} />
+  {/each}
 </div>
 
 <style>
-    div {
-        position: absolute;
-        min-height: 1100px;
-        width: 850px;
-        background-color: white;
-        border: none;
-        filter: drop-shadow(3px 3px 3px grey);
-        border-radius: 3px;
-        top: 60px;
-        left: 50%;
-        transform: translateX(-50%);
-        z-index: 1;
-        padding: 100px;
-    }
+  div {
+    position: absolute;
+    min-height: 1100px;
+    width: 850px;
+    background-color: white;
+    border: none;
+    filter: drop-shadow(3px 3px 3px grey);
+    border-radius: 3px;
+    top: 60px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1;
+    padding: 100px;
+  }
 </style>

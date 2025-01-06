@@ -1,8 +1,7 @@
 <script>
     import Select from '../Select.svelte';
 
-    export let font;
-    export let setFont = (font) => {};
+    let { font, setFont = (font) => {} } = $props();
 </script>
 
 <!--Font Family-->

@@ -1,10 +1,12 @@
 <script>
     import Button from './Button.svelte';
-    export let newText = () => {};
-    export let newTable = () => {};
-    export let newChart = () => {};
-    export let newStat = () => {};
-    export let newTest = () => {};
+    let {
+        newText = () => {},
+        newTable = () => {},
+        newChart = () => {},
+        newStat = () => {},
+        newTest = () => {}
+    } = $props();
 </script>
 
 <!--Buttons to add elements-->

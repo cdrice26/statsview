@@ -2,14 +2,16 @@
   import Select from './Select.svelte';
   import TableTitleInput from './tableControls/TableTitleInput.svelte';
 
-  export let setChartType = (chartType) => {};
-  export let title;
-  export let setChartTitle = (chartTitle) => {};
-  export let chartType;
-  export let dataType;
-  export let xCol;
-  export let sourceTable;
-  export let setXCol = (xCol) => {};
+  let {
+    setChartType = (chartType) => {},
+    title,
+    setChartTitle = (chartTitle) => {},
+    chartType,
+    dataType,
+    xCol,
+    sourceTable,
+    setXCol = (xCol) => {}
+  } = $props();
 </script>
 
 <!--Chart Controls-->

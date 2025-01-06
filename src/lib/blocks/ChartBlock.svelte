@@ -1,3 +1,5 @@
+<!-- @migration-task Error while migrating Svelte code: migrating this component would require adding a `$properties` rune but there's already a variable named properties.
+     Rename the variable and try again or migrate by hand. -->
 <script>
   import Plotly from 'plotly.js-dist';
   import { onMount } from 'svelte';
@@ -8,13 +10,15 @@
     rotateData
   } from '../helper/chartHelpers';
 
-  export let props;
+  export let properties;
   export let tableBlocks;
-  $: sourceBlock = tableBlocks.find((table) => table.title == props.sources);
+  $: sourceBlock = tableBlocks.find(
+    (table) => table.title == properties.sources
+  );
   $: sourceData = sourceBlock?.content;
-  $: rotatedData = rotateData(sourceData, props?.cols, sourceBlock);
-  $: x = getXCol(sourceData, sourceBlock?.hasHeaders, props?.xCol);
-  export let setFocus = (props) => {};
+  $: rotatedData = rotateData(sourceData, properties?.cols, sourceBlock);
+  $: x = getXCol(sourceData, sourceBlock?.hasHeaders, properties?.xCol);
+  export let setFocus = (properties) => {};
 
   let plotElement;
 
@@ -22,7 +26,7 @@
     createChart();
   });
 
-  $: if (rotatedData || x || props.chartType) {
+  $: if (rotatedData || x || properties.chartType) {
     if (plotElement) {
       createChart();
     }
@@ -30,9 +34,14 @@
 
   const createChart = () => {
     const data =
-      generateChartData(sourceBlock, props?.chartType, rotatedData, x) || [];
+      generateChartData(sourceBlock, properties?.chartType, rotatedData, x) ||
+      [];
 
-    const layout = generateChartLayout(props?.title, props?.chartType, data);
+    const layout = generateChartLayout(
+      properties?.title,
+      properties?.chartType,
+      data
+    );
 
     if (plotElement !== undefined) {
       // Clean up any existing plot before creating a new one
@@ -48,13 +57,13 @@
 <button
   type="button"
   aria-label="Interactive plot area"
-  on:click={() => setFocus(props)}
+  on:click={() => setFocus(properties)}
   on:keydown={(event) => {
     if (event.key === 'Enter' || event.key === ' ') {
-      setFocus(props);
+      setFocus(properties);
     }
   }}
   style="border: none; background: none; padding: 0; margin: 0; cursor: pointer;"
 >
-  <div bind:this={plotElement} />
+  <div bind:this={plotElement}></div>
 </button>

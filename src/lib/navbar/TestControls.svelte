@@ -2,13 +2,21 @@
   import Button from './Button.svelte';
   import Select from './Select.svelte';
 
-  // The current type of table that the block we are editing is attached to
-  export let currentType;
+  /**
+   * @typedef {Object} Props
+   * @property {any} currentType - The current type of table that the block we are editing is attached to
+   * @property {any} testType
+   * @property {any} [setTestType]
+   * @property {any} [setupTest]
+   */
 
-  export let testType;
-  export let setTestType = (testType) => {};
-
-  export let setupTest = () => {};
+  /** @type {Props} */
+  let {
+    currentType,
+    testType,
+    setTestType = (testType) => {},
+    setupTest = () => {}
+  } = $props();
 </script>
 
 <!--Type Dropdown for Tests-->

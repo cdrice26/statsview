@@ -1,6 +1,5 @@
 <script>
-  export let fontSize;
-  export let setFontSize = (fontSize) => {};
+  let { fontSize = $bindable(), setFontSize = (fontSize) => {} } = $props();
 </script>
 
 <!--Font size-->
@@ -8,7 +7,7 @@
   id="number"
   type="number"
   bind:value={fontSize}
-  on:change={() => setFontSize(fontSize)}
+  onchange={() => setFontSize(fontSize)}
 />
 
 <style>

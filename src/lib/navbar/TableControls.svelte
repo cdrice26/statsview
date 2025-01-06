@@ -5,20 +5,22 @@
   import CheckInput from './tableControls/CheckInput.svelte';
   import DataTypeDropdown from './tableControls/DataTypeDropdown.svelte';
 
-  export let title;
-  export let setTitle = (title) => {};
-  export let addColumn = () => {};
-  export let delColumn = () => {};
-  export let addRow = () => {};
-  export let delRow = () => {};
-  export let csvFiles;
-  export let getFromCSV = (csvFiles) => {};
-  export let hasHeaders;
-  export let toggleHeaders = (hasHeaders) => {};
-  export let visible;
-  export let toggleVisible = (visible) => {};
-  export let dataType;
-  export let setDataType = (dataType) => {};
+  let {
+    title,
+    setTitle = (title) => {},
+    addColumn = () => {},
+    delColumn = () => {},
+    addRow = () => {},
+    delRow = () => {},
+    csvFiles,
+    getFromCSV = (csvFiles) => {},
+    hasHeaders,
+    toggleHeaders = (hasHeaders) => {},
+    visible,
+    toggleVisible = (visible) => {},
+    dataType,
+    setDataType = (dataType) => {}
+  } = $props();
 </script>
 
 <!--All the table-related controls needed by StatsView-->

@@ -11,79 +11,143 @@
   import SwapControl from './navbar/SwapControl.svelte';
   import ChartControls from './navbar/ChartControls.svelte';
 
-  // This is a reference to the block the user is currently editing
-  export let focus;
+  
 
-  // The following keep track of and update various editor state stuff
-  export let undo = () => {};
-  export let redo = () => {};
+  
 
-  export let save = () => {};
-  export let load = () => {};
-  export let exp = async () => {};
-  export let expPdf = async () => {};
 
-  export let newText = () => {};
-  export let newTable = () => {};
-  export let newChart = () => {};
-  export let newStat = () => {};
-  export let newTest = () => {};
 
-  export let font;
-  export let setFont = (font) => {};
-  export let fontSize;
-  export let setFontSize = (fontSize) => {};
-  export let color;
-  export let setColor = (color) => {};
-  export let align = (align) => {};
-  export let bold = () => {};
-  export let italic = () => {};
-  export let underline = () => {};
 
-  export let testType;
-  export let setTestType = (testType) => {};
 
-  export let statType;
-  export let setStatType = (statType) => {};
 
-  export let chartType;
-  export let setChartType = (chartType) => {};
 
-  export let addColumn = () => {};
-  export let delColumn = () => {};
-  export let addRow = () => {};
-  export let delRow = () => {};
-  export let title;
-  export let setTitle = (title) => {};
-  export let setChartTitle = (title) => {};
   let csvFiles;
-  export let getFromCSV = (file) => {};
-  export let hasHeaders;
-  export let toggleHeaders = (hasHeaders) => {};
-  export let visible;
-  export let toggleVisible = (visible) => {};
-  export let dataType;
-  export let setDataType = (dataType) => {};
 
-  export let source;
-  export let setSource = (source) => {};
 
-  export let col;
-  export let col2;
-  export let cols;
-  export let xCol;
-  export let setCols = (cols) => {};
-  export let setCol = (col, sourceNum) => {};
-  export let setXCol = (col) => {};
 
-  export let moveUp = () => {};
-  export let moveDown = () => {};
-  export let delBlock = () => {};
 
-  export let setupTest = () => {};
 
-  export let tableBlocks;
-  export let sourceTable;
+  /**
+   * @typedef {Object} Props
+   * @property {any} focus - This is a reference to the block the user is currently editing
+   * @property {any} [undo] - The following keep track of and update various editor state stuff
+   * @property {any} [redo]
+   * @property {any} [save]
+   * @property {any} [load]
+   * @property {any} [exp]
+   * @property {any} [expPdf]
+   * @property {any} [newText]
+   * @property {any} [newTable]
+   * @property {any} [newChart]
+   * @property {any} [newStat]
+   * @property {any} [newTest]
+   * @property {any} font
+   * @property {any} [setFont]
+   * @property {any} fontSize
+   * @property {any} [setFontSize]
+   * @property {any} color
+   * @property {any} [setColor]
+   * @property {any} [align]
+   * @property {any} [bold]
+   * @property {any} [italic]
+   * @property {any} [underline]
+   * @property {any} testType
+   * @property {any} [setTestType]
+   * @property {any} statType
+   * @property {any} [setStatType]
+   * @property {any} chartType
+   * @property {any} [setChartType]
+   * @property {any} [addColumn]
+   * @property {any} [delColumn]
+   * @property {any} [addRow]
+   * @property {any} [delRow]
+   * @property {any} title
+   * @property {any} [setTitle]
+   * @property {any} [setChartTitle]
+   * @property {any} [getFromCSV]
+   * @property {any} hasHeaders
+   * @property {any} [toggleHeaders]
+   * @property {any} visible
+   * @property {any} [toggleVisible]
+   * @property {any} dataType
+   * @property {any} [setDataType]
+   * @property {any} source
+   * @property {any} [setSource]
+   * @property {any} col
+   * @property {any} col2
+   * @property {any} cols
+   * @property {any} xCol
+   * @property {any} [setCols]
+   * @property {any} [setCol]
+   * @property {any} [setXCol]
+   * @property {any} [moveUp]
+   * @property {any} [moveDown]
+   * @property {any} [delBlock]
+   * @property {any} [setupTest]
+   * @property {any} tableBlocks
+   * @property {any} sourceTable
+   */
+
+  /** @type {Props} */
+  let {
+    focus,
+    undo = () => {},
+    redo = () => {},
+    save = () => {},
+    load = () => {},
+    exp = async () => {},
+    expPdf = async () => {},
+    newText = () => {},
+    newTable = () => {},
+    newChart = () => {},
+    newStat = () => {},
+    newTest = () => {},
+    font,
+    setFont = (font) => {},
+    fontSize,
+    setFontSize = (fontSize) => {},
+    color,
+    setColor = (color) => {},
+    align = (align) => {},
+    bold = () => {},
+    italic = () => {},
+    underline = () => {},
+    testType,
+    setTestType = (testType) => {},
+    statType,
+    setStatType = (statType) => {},
+    chartType,
+    setChartType = (chartType) => {},
+    addColumn = () => {},
+    delColumn = () => {},
+    addRow = () => {},
+    delRow = () => {},
+    title,
+    setTitle = (title) => {},
+    setChartTitle = (title) => {},
+    getFromCSV = (file) => {},
+    hasHeaders,
+    toggleHeaders = (hasHeaders) => {},
+    visible,
+    toggleVisible = (visible) => {},
+    dataType,
+    setDataType = (dataType) => {},
+    source,
+    setSource = (source) => {},
+    col,
+    col2,
+    cols,
+    xCol,
+    setCols = (cols) => {},
+    setCol = (col, sourceNum) => {},
+    setXCol = (col) => {},
+    moveUp = () => {},
+    moveDown = () => {},
+    delBlock = () => {},
+    setupTest = () => {},
+    tableBlocks,
+    sourceTable
+  } = $props();
 </script>
 
 <nav>

@@ -3,19 +3,18 @@
   import ColumnSelect from './ColumnSelect.svelte';
   import ColumnSelectMulti from './ColumnSelectMulti.svelte';
 
-  export let source;
-  export let setSource = (source) => {};
-
-  export let tableBlocks;
-  export let sourceTable;
-
-  export let focus;
-
-  export let col;
-  export let col2;
-  export let cols;
-  export let setCol = (col, num) => {};
-  export let setCols = (cols) => {};
+  let {
+    source,
+    setSource = (source) => {},
+    tableBlocks,
+    sourceTable,
+    focus,
+    col,
+    col2,
+    cols,
+    setCol = (col, num) => {},
+    setCols = (cols) => {}
+  } = $props();
 </script>
 
 <!--Source Dropdown-->

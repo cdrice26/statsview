@@ -9,7 +9,7 @@
   /**
    * The list of all blocks
    */
-  let blocks = [];
+  let blocks = $state([]);
 
   /**
    * Focus object for if nothing is focused
@@ -40,7 +40,7 @@
   /**
    * Id of the currently focused block
    */
-  let focusedId = null;
+  let focusedId = $state(null);
 
   /**
    * Coordinates of the focused cell in a table
@@ -53,18 +53,21 @@
   /**
    * Reference to the currently focused block
    */
-  $: focusedBlock = blocks.find((b) => b.id === focusedId) ?? nullFocus;
+  let focusedBlock = $derived(
+    blocks.find((b) => b.id === focusedId) ?? nullFocus
+  );
 
   /**
    * List of all table blocks
    */
-  $: tableBlocks = blocks.filter((b) => b.type === 'table');
+  let tableBlocks = $derived(blocks.filter((b) => b.type === 'table'));
 
   /**
    * Reference to the source table of the focused block
    */
-  $: sourceTable =
-    tableBlocks.find((b) => b.title === focusedBlock?.sources) ?? null;
+  let sourceTable = $derived(
+    tableBlocks.find((b) => b.title === focusedBlock?.sources) ?? null
+  );
 
   /**
    * Set the focus
@@ -78,7 +81,7 @@
   /**
    * Reference to the current window
    */
-  let currentWin = null;
+  let currentWin = $state(null);
 
   /**
    * Stack of history for use with undo
@@ -99,7 +102,7 @@
     // If we undo something, then the redo actions make no sense. Get rid of them here.
     redoStack = [];
 
-    undoStack = [structuredClone(instance), ...undoStack];
+    undoStack = [structuredClone($state.snapshot(instance)), ...undoStack];
     if (undoStack.length > 50) {
       undoStack.pop();
     }
@@ -112,7 +115,7 @@
    * @param instance - the instance to add
    */
   const addToRedoStack = (instance) => {
-    redoStack = [structuredClone(instance), ...redoStack];
+    redoStack = [structuredClone($state.snapshot(instance)), ...redoStack];
     if (redoStack.length > 50) {
       redoStack.pop();
     }
@@ -131,7 +134,7 @@
   const undo = () => {
     if (undoStack.length > 0) {
       addToRedoStack(blocks);
-      blocks = structuredClone(undoStack[0]);
+      blocks = structuredClone($state.snapshot(undoStack[0]));
       undoStack.splice(0, 1);
     }
   };
@@ -142,13 +145,13 @@
   const redo = () => {
     if (redoStack.length > 0) {
       // First add the current setup to undoStack
-      undoStack = [structuredClone(blocks), ...undoStack];
+      undoStack = [structuredClone($state.snapshot(blocks)), ...undoStack];
       if (undoStack.length > 50) {
         undoStack.pop();
       }
 
       // Then activate the redo
-      blocks = structuredClone(redoStack[0]);
+      blocks = structuredClone($state.snapshot(redoStack[0]));
       redoStack.splice(0, 1);
     }
   };

@@ -1,9 +1,11 @@
 <script>
     import Button from '../Button.svelte';
-    export let addColumn = () => {};
-    export let delColumn = () => {};
-    export let addRow = () => {};
-    export let delRow = () => {};
+    let {
+        addColumn = () => {},
+        delColumn = () => {},
+        addRow = () => {},
+        delRow = () => {}
+    } = $props();
 </script>
 
 <!--Buttons to edit table dimensions-->

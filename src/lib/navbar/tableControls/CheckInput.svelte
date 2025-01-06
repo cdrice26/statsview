@@ -1,7 +1,5 @@
 <script>
-  export let bool;
-  export let toggle = (bool) => {};
-  export let title;
+  let { bool = $bindable(), toggle = (bool) => {}, title } = $props();
 </script>
 
 <!--A basic component for a labeled checkbox-->
@@ -9,9 +7,8 @@
 <input
   type="checkbox"
   id={title.replace(' ', '-') + '-checkbox'}
-  bind:value={bool}
   bind:checked={bool}
-  on:change={() => toggle(bool)}
+  onchange={() => toggle(bool)}
 />
 
 <style>

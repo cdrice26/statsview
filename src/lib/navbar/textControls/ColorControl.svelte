@@ -1,8 +1,7 @@
 <script>
   import ColorPicker from 'svelte-awesome-color-picker';
 
-  export let color;
-  export let setColor = (color) => {};
+  let { color = $bindable(), setColor = (color) => {} } = $props();
 </script>
 
 <!--Text color-->

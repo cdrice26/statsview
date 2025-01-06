@@ -1,6 +1,5 @@
 <script>
-  export let title;
-  export let setTitle = (title) => {};
+  let { title = $bindable(), setTitle = (title) => {} } = $props();
 </script>
 
 <!--Input to edit table title-->
@@ -9,7 +8,7 @@
   id="titleInput"
   type="text"
   bind:value={title}
-  on:input={() => setTitle(title)}
+  oninput={() => setTitle(title)}
 />
 
 <style>

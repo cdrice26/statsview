@@ -1,10 +1,12 @@
 <script>
   import Button from './Button.svelte';
 
-  export let load = () => {};
-  export let save = () => {};
-  export let exp = async () => {};
-  export let expPdf = async () => {};
+  let {
+    load = () => {},
+    save = () => {},
+    exp = async () => {},
+    expPdf = async () => {}
+  } = $props();
 </script>
 
 <!--File I/O Control Butons-->

@@ -1,9 +1,19 @@
+<script>
+    /**
+     * @typedef {Object} Props
+     * @property {import('svelte').Snippet} [children]
+     */
+
+    /** @type {Props} */
+    let { children } = $props();
+</script>
+
 <!--This is a simple window that can be wrapped around another component.
     It darkens and inactivates everything outside it.-->
 
 <div id="prevent-interaction">
     <div id="window">
-        <slot />
+        {@render children?.()}
     </div>
 </div>
 

@@ -1,13 +1,16 @@
 <script>
-  export let value;
-  export let num;
-  export let setter = (value, num) => {};
+  let {
+    value = $bindable(),
+    num,
+    setter = (value, num) => {},
+    children
+  } = $props();
 </script>
 
 <!--Same as the select component, except for columns where the setter has 2 arguments-->
 
-<select bind:value on:change={() => setter(value, num)}>
-  <slot />
+<select bind:value onchange={() => setter(value, num)}>
+  {@render children?.()}
 </select>
 
 <style>

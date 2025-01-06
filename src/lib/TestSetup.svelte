@@ -2,68 +2,100 @@
     to avoid it being too crowded.-->
 
 <script>
+  import { run } from 'svelte/legacy';
+
   import { getUnique } from './helper/unique';
 
-  export let closeWin = () => {};
-  export let testType;
 
-  export let testAgainst = null;
-  export let setTestAgainst = (testAgainst) => {};
-  export let source = null;
-  export let sourceTable;
-  export let col;
-  export let expCounts = [];
-  export let setExpCounts = (index, value) => {};
-  export let h0 = null;
-  export let setH0 = (h0) => {};
-  export let ha = null;
-  export let setHa = (ha) => {};
-  export let rand = null;
-  export let setRand = (rand) => {};
-  export let tails = null;
-  export let setTails = (tails) => {};
-  export let alpha = null;
-  export let setAlpha = (alpha) => {};
+  /**
+   * @typedef {Object} Props
+   * @property {any} [closeWin]
+   * @property {any} testType
+   * @property {any} [testAgainst]
+   * @property {any} [setTestAgainst]
+   * @property {any} [source]
+   * @property {any} sourceTable
+   * @property {any} col
+   * @property {any} [expCounts]
+   * @property {any} [setExpCounts]
+   * @property {any} [h0]
+   * @property {any} [setH0]
+   * @property {any} [ha]
+   * @property {any} [setHa]
+   * @property {any} [rand]
+   * @property {any} [setRand]
+   * @property {any} [tails]
+   * @property {any} [setTails]
+   * @property {any} [alpha]
+   * @property {any} [setAlpha]
+   */
+
+  /** @type {Props} */
+  let {
+    closeWin = () => {},
+    testType,
+    testAgainst = $bindable(null),
+    setTestAgainst = (testAgainst) => {},
+    source = null,
+    sourceTable,
+    col,
+    expCounts = $bindable([]),
+    setExpCounts = (index, value) => {},
+    h0 = $bindable(null),
+    setH0 = (h0) => {},
+    ha = $bindable(null),
+    setHa = (ha) => {},
+    rand = $bindable(null),
+    setRand = (rand) => {},
+    tails = $bindable(null),
+    setTails = (tails) => {},
+    alpha = $bindable(null),
+    setAlpha = (alpha) => {}
+  } = $props();
 
   /**
    * Check if the source table has headers
    */
-  $: hasHeaders = sourceTable.hasHeaders;
+  let hasHeaders = $derived(sourceTable.hasHeaders);
 
   /**
    * Get the content of the source table
    */
-  $: sourceTableContent = sourceTable.content;
+  let sourceTableContent = $derived(sourceTable.content);
 
   /**
    * Get the index of the column we are testing
    */
-  $: colIndex = sourceTableContent[0].indexOf(col);
+  let colIndex = $derived(sourceTableContent[0].indexOf(col));
 
   /**
    * Get the unique values in the column we are testing (used only on X2 GOF tests)
    */
-  $: vals =
-    source == null
+  let vals =
+    $derived(source == null
       ? []
       : (getUnique(
           (hasHeaders ? sourceTableContent.slice(1) : sourceTableContent).map(
             (item) => item[colIndex === -1 ? 0 : colIndex] ?? ''
           )
-        ) ?? []);
+        ) ?? []));
 
   /**
    * Set the expected counts to be the same length as the unique values
    */
-  $: if (vals.length > 0 && expCounts === null) {
-    expCounts = new Array(vals.length).fill(1);
-  }
-  $: if (expCounts.length < vals.length) {
-    expCounts = [
-      ...expCounts,
-      ...new Array(vals.length - expCounts.length).fill(1)
-    ];
-  }
+  run(() => {
+    if (vals.length > 0 && expCounts === null) {
+      expCounts = new Array(vals.length).fill(1);
+    }
+  });
+  run(() => {
+    if (expCounts.length < vals.length) {
+      expCounts = [
+        ...expCounts,
+        ...new Array(vals.length - expCounts.length).fill(1)
+      ];
+    }
+  });
 </script>
 
 <main>
@@ -77,7 +109,7 @@
       id={testType + '-testAgainst'}
       type="number"
       bind:value={testAgainst}
-      on:change={() => setTestAgainst(testAgainst)}
+      onchange={() => setTestAgainst(testAgainst)}
     />
     <br />
   {/if}
@@ -91,7 +123,7 @@
       <input
         id={testType + `-expCounts${idx}`}
         bind:value={expCounts[idx]}
-        on:change={() => setExpCounts(expCounts)}
+        onchange={() => setExpCounts(expCounts)}
       />
       <br />
     {/each}
@@ -99,10 +131,10 @@
   {/if}
   <!--Inputs for hypotheses.-->
   <label for={testType + '-h0'}>Null Hypothesis:</label>
-  <input id={testType + '-h0'} bind:value={h0} on:input={() => setH0(h0)} />
+  <input id={testType + '-h0'} bind:value={h0} oninput={() => setH0(h0)} />
   <br />
   <label for={testType + '-ha'}>Alternative Hypothesis:</label>
-  <input id={testType + '-ha'} bind:value={ha} on:change={() => setHa(ha)} />
+  <input id={testType + '-ha'} bind:value={ha} onchange={() => setHa(ha)} />
   <br />
   <!--Random condition checkbox-->
   <label for={testType + '-rand'}>Random Sample?</label>
@@ -110,7 +142,7 @@
     id={testType + '-rand'}
     type="checkbox"
     bind:checked={rand}
-    on:change={() => setRand(rand)}
+    onchange={() => setRand(rand)}
   />
   <br />
   <!--If it's not chi-squared, dropdown for two-tailed test-->
@@ -119,7 +151,7 @@
     <select
       id={testType + '-2t'}
       bind:value={tails}
-      on:change={() => setTails(tails)}
+      onchange={() => setTails(tails)}
     >
       <option value="two-sided">Two Tailed</option>
       <option value="less">Left Tailed</option>
@@ -136,11 +168,11 @@
     min="0.01"
     max="1"
     bind:value={alpha}
-    on:change={() => setAlpha(alpha)}
+    onchange={() => setAlpha(alpha)}
   />
   <br />
   <!--Done button to close the window-->
-  <button on:click={closeWin}>Done</button>
+  <button onclick={closeWin}>Done</button>
 </main>
 
 <style>
