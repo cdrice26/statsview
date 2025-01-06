@@ -284,10 +284,16 @@ export const generateTestText = (props, testResults, sourceBlock) =>
                 props,
                 testResults,
                 sourceBlock
-              )}`
-        }<br><br>
+              )}<br>`
+        }<br>
 
-        Alternative: ${toTitleCase(props.testData.tails)}<br><br>
+        ${
+          !props.testType.includes('ANOVA') &&
+          !props.testType.includes('Regression') &&
+          !props.testType.includes('X2')
+            ? `Alternative: ${toTitleCase(props.testData.tails)}<br><br>`
+            : ''
+        }
 
         Test Statistic: ${testResults.testStatistic}<br>
         P-Value: ${testResults.pValue}<br><br>

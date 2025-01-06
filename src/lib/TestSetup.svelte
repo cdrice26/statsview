@@ -114,8 +114,8 @@
   />
   <br />
   <!--If it's not chi-squared, dropdown for two-tailed test-->
-  {#if !testType.includes('X2')}
-    <label for={testType + '-2t'}>Two Tailed?</label>
+  {#if !testType.includes('X2') && !testType.includes('ANOVA') && !testType.includes('Regression')}
+    <label for={testType + '-2t'}>Alternative:</label>
     <select
       id={testType + '-2t'}
       bind:value={tails}
