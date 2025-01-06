@@ -285,7 +285,7 @@ export const generateTestText = (props, testResults, sourceBlock) =>
                 testResults,
                 sourceBlock
               )}`
-        }<br><br>{}
+        }<br><br>
 
         Alternative: ${toTitleCase(props.testData.tails)}<br><br>
 
