@@ -20,7 +20,6 @@ export default defineConfig({
   },
   server: {
     open: true,
-    preserveLocalState: true,
     fs: {
       // Allow serving files from one level up to the project root
       allow: ['..']
