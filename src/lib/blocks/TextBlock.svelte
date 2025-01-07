@@ -1,17 +1,9 @@
 <script>
   let {
-    properties = {},
+    properties = $bindable({}),
     setFocus = (properties) => {},
     forceUpdate = () => {}
   } = $props();
-
-  // Directly use properties.content
-  let content = $state(properties.content);
-
-  $effect(() => {
-    // Update local content when properties change
-    content = properties.content;
-  });
 
   let forceUpdateOnKey = (e) => {
     if (e.key == 'Enter' || e.key == ' ') forceUpdate();
@@ -21,7 +13,7 @@
 <!-- svelte-ignore a11y_no_static_element_interactions -->
 <div
   contenteditable
-  bind:innerHTML={content}
+  bind:innerHTML={properties.content}
   onfocus={() => setFocus(properties)}
   onkeyup={(e) => forceUpdateOnKey(e)}
   style={`
