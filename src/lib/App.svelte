@@ -999,8 +999,8 @@
     {setupTest}
   />
 
-  <!--Render the pages-->
-  <Page {blocks} {setFocus} {forceUpdate} />
+  <!--Render the pagesx-->
+  <Page bind:blocks {setFocus} {forceUpdate} />
 
   <!--Render the window, if there is one-->
   {#if currentWin !== null && focusedBlock.testType !== undefined && focusedBlock.testType !== null}

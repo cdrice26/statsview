@@ -2,7 +2,11 @@
   import TestBlock from './TestBlock.svelte';
   import { getColumnData, getTestResults } from '../helper/testHelpers';
 
-  let { properties, tableBlocks, setFocus = (focus) => {} } = $props();
+  let {
+    properties = $bindable({}),
+    tableBlocks,
+    setFocus = (focus) => {}
+  } = $props();
   // sourceBlock is the table in tableBlocks whose title is equal to properties.sources
   let sourceBlock = $derived(
     tableBlocks.length > 0
@@ -18,7 +22,7 @@
 </script>
 
 <TestBlock
-  {properties}
+  bind:properties
   {sourceBlock}
   {setFocus}
   testResults={getTestResults(data, data2, properties, sourceBlock)}

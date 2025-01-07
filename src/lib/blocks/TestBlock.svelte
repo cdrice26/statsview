@@ -12,7 +12,7 @@
 
   /** @type {Props} */
   let {
-    properties = {},
+    properties = $bindable({}),
     sourceBlock = null,
     testResults = null,
     setFocus = (focus) => {}

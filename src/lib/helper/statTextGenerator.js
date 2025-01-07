@@ -15,7 +15,7 @@ import { getData } from '../stats/getData';
  * Generates a descriptive text representation of a statistical calculation.
  *
  * @param {Object} props - Configuration object for the statistical text generation.
- * @param {string} props.statType - The type of statistical calculation to perform.
+ * @param {string} [props.statType] - The type of statistical calculation to perform.
  *                                   Supported types: 'Mean', 'StDev', 'Median', 'IQR',
  *                                   'Min', 'Max', 'Range', 'R-Squared', 'Correlation Coefficient'.
  * @param {string} [props.col] - The primary column name for statistical calculation.

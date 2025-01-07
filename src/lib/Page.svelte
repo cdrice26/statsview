@@ -2,7 +2,7 @@
   import Block from './Block.svelte';
 
   let {
-    blocks,
+    blocks = $bindable([]),
     setFocus = (properties) => {},
     forceUpdate = () => {}
   } = $props();
@@ -14,8 +14,8 @@
     the prop entitled 'props' is a reference to the data regarding
     the block itself.-->
 <div>
-  {#each blocks as block (block.id)}
-    <Block properties={block} {tableBlocks} {setFocus} {forceUpdate} />
+  {#each blocks as block, i (block.id)}
+    <Block bind:properties={blocks[i]} {tableBlocks} {setFocus} {forceUpdate} />
   {/each}
 </div>
 

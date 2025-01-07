@@ -8,7 +8,11 @@
     rotateData
   } from '../helper/chartHelpers';
 
-  let { properties, tableBlocks, setFocus = (properties) => {} } = $props();
+  let {
+    properties = $bindable({}),
+    tableBlocks,
+    setFocus = (properties) => {}
+  } = $props();
 
   let plotElement = $state();
 
