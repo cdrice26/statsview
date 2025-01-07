@@ -1,6 +1,6 @@
 <script>
   let {
-    properties,
+    properties = $bindable({}),
     setFocus = (properties) => {},
     forceUpdate = () => {}
   } = $props();

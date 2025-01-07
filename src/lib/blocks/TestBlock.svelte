@@ -12,17 +12,22 @@
 
   /** @type {Props} */
   let {
-    properties,
-    sourceBlock,
-    testResults,
+    properties = {},
+    sourceBlock = null,
+    testResults = null,
     setFocus = (focus) => {}
   } = $props();
+
+  // Add type checking and null checks
+  let generatedContent = $derived(
+    generateTestText(properties, testResults, sourceBlock)
+  );
 </script>
 
 <TextBlock
   properties={{
     ...properties,
-    content: generateTestText(properties, testResults, sourceBlock)
+    content: generatedContent
   }}
   setFocus={() => setFocus(properties)}
 />

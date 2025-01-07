@@ -1,19 +1,16 @@
 <script>
   let {
-    properties = $bindable(),
+    properties = {},
     setFocus = (properties) => {},
     forceUpdate = () => {}
   } = $props();
 
-  // Add a reactive variable to handle the content
+  // Directly use properties.content
   let content = $state(properties.content);
 
-  // Update properties when content changes
   $effect(() => {
-    if (content !== properties.content) {
-      properties.content = content;
-      forceUpdate();
-    }
+    // Update local content when properties change
+    content = properties.content;
   });
 
   let forceUpdateOnKey = (e) => {
@@ -28,14 +25,14 @@
   onfocus={() => setFocus(properties)}
   onkeyup={(e) => forceUpdateOnKey(e)}
   style={`
-        --text-align: ${properties.settings.textAlign};
-        --color: ${properties.settings.color};
-        --font-family: ${properties.settings.fontFamily};
-        --font-size: ${properties.settings.fontSize * 1.38}pt;
-        --font-weight: ${properties.settings.bold ? 'bold' : 'normal'};
-        --font-style: ${properties.settings.italic ? 'italic' : 'normal'};
+        --text-align: ${properties.settings?.textAlign};
+        --color: ${properties.settings?.color};
+        --font-family: ${properties.settings?.fontFamily};
+        --font-size: ${properties.settings?.fontSize * 1.38}pt;
+        --font-weight: ${properties.settings?.bold ? 'bold' : 'normal'};
+        --font-style: ${properties.settings?.italic ? 'italic' : 'normal'};
         --text-decoration: ${
-          properties.settings.underline ? 'underline' : 'normal'
+          properties.settings?.underline ? 'underline' : 'normal'
         }; 
     `}
 ></div>
