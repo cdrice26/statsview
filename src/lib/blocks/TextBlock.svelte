@@ -1,20 +1,32 @@
-<!-- @migration-task Error while migrating Svelte code: migrating this component would require adding a `$properties` rune but there's already a variable named properties.
-     Rename the variable and try again or migrate by hand. -->
 <script>
-  export let properties;
-  export let setFocus = (properties) => {};
-  export let forceUpdate = () => {};
+  let {
+    properties = $bindable(),
+    setFocus = (properties) => {},
+    forceUpdate = () => {}
+  } = $props();
+
+  // Add a reactive variable to handle the content
+  let content = $state(properties.content);
+
+  // Update properties when content changes
+  $effect(() => {
+    if (content !== properties.content) {
+      properties.content = content;
+      forceUpdate();
+    }
+  });
+
   let forceUpdateOnKey = (e) => {
     if (e.key == 'Enter' || e.key == ' ') forceUpdate();
   };
 </script>
 
-<!-- svelte-ignore a11y-no-static-element-interactions -->
+<!-- svelte-ignore a11y_no_static_element_interactions -->
 <div
   contenteditable
-  bind:innerHTML={properties.content}
-  on:focus={() => setFocus(properties)}
-  on:keyup={(e) => forceUpdateOnKey(e)}
+  bind:innerHTML={content}
+  onfocus={() => setFocus(properties)}
+  onkeyup={(e) => forceUpdateOnKey(e)}
   style={`
         --text-align: ${properties.settings.textAlign};
         --color: ${properties.settings.color};

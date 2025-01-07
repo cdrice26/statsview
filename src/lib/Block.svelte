@@ -7,10 +7,12 @@
   import StatBlock from './blocks/StatBlock.svelte';
   import TestProvider from './blocks/TestProvider.svelte';
 
-  export let properties;
-  export let tableBlocks;
-  export let setFocus = (properties) => {};
-  export let forceUpdate = () => {};
+  let {
+    properties,
+    tableBlocks,
+    setFocus = (properties) => {},
+    forceUpdate = () => {}
+  } = $props();
 </script>
 
 <!--Render the correct block based on type. Text, Tests, and Stats all use text blocks

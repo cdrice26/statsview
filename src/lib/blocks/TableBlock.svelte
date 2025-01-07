@@ -1,9 +1,9 @@
-<!-- @migration-task Error while migrating Svelte code: migrating this component would require adding a `$properties` rune but there's already a variable named properties.
-     Rename the variable and try again or migrate by hand. -->
 <script>
-  export let properties;
-  export let setFocus = (properties) => {};
-  export let forceUpdate = () => {};
+  let {
+    properties,
+    setFocus = (properties) => {},
+    forceUpdate = () => {}
+  } = $props();
 </script>
 
 <!--Render a table with the correct rows and content-->
@@ -12,12 +12,12 @@
     <tbody>
       {#each properties.content as row, rid}
         <tr>
-          {#each row as cell, cid}
+          {#each row as _cell, cid}
             <td
               contenteditable
-              bind:textContent={cell}
-              on:focus={() => setFocus({ ...properties, row: rid, col: cid })}
-              on:keyup={forceUpdate}
+              bind:textContent={properties.content[rid][cid]}
+              onfocus={() => setFocus({ ...properties, row: rid, col: cid })}
+              onkeyup={(_e) => forceUpdate}
               style={`
                         --text-align: ${properties.settings.textAlign};
                         --color: ${properties.settings.color};
@@ -41,7 +41,7 @@
     </tbody>
   </table>
 {:else}
-  <button class="invisible" on:click={() => setFocus(properties)}
+  <button class="invisible" onclick={() => setFocus(properties)}
     >Invisible Table</button
   >
 {/if}

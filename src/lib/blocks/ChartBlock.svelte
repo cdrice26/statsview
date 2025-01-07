@@ -1,5 +1,3 @@
-<!-- @migration-task Error while migrating Svelte code: migrating this component would require adding a `$properties` rune but there's already a variable named properties.
-     Rename the variable and try again or migrate by hand. -->
 <script>
   import Plotly from 'plotly.js-dist';
   import { onMount } from 'svelte';
@@ -10,27 +8,13 @@
     rotateData
   } from '../helper/chartHelpers';
 
-  export let properties;
-  export let tableBlocks;
-  $: sourceBlock = tableBlocks.find(
-    (table) => table.title == properties.sources
-  );
-  $: sourceData = sourceBlock?.content;
-  $: rotatedData = rotateData(sourceData, properties?.cols, sourceBlock);
-  $: x = getXCol(sourceData, sourceBlock?.hasHeaders, properties?.xCol);
-  export let setFocus = (properties) => {};
+  let { properties, tableBlocks, setFocus = (properties) => {} } = $props();
 
-  let plotElement;
+  let plotElement = $state();
 
   onMount(() => {
     createChart();
   });
-
-  $: if (rotatedData || x || properties.chartType) {
-    if (plotElement) {
-      createChart();
-    }
-  }
 
   const createChart = () => {
     const data =
@@ -52,13 +36,30 @@
     // @ts-ignore
     Plotly.react(plotElement, data, layout);
   };
+  let sourceBlock = $derived(
+    tableBlocks.find((table) => table.title == properties.sources)
+  );
+  let sourceData = $derived(sourceBlock?.content);
+  let rotatedData = $derived(
+    rotateData(sourceData, properties?.cols, sourceBlock)
+  );
+  let x = $derived(
+    getXCol(sourceData, sourceBlock?.hasHeaders, properties?.xCol)
+  );
+  $effect(() => {
+    if (rotatedData || x || properties.chartType) {
+      if (plotElement) {
+        createChart();
+      }
+    }
+  });
 </script>
 
 <button
   type="button"
   aria-label="Interactive plot area"
-  on:click={() => setFocus(properties)}
-  on:keydown={(event) => {
+  onclick={() => setFocus(properties)}
+  onkeydown={(event) => {
     if (event.key === 'Enter' || event.key === ' ') {
       setFocus(properties);
     }

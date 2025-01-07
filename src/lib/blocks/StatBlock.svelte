@@ -1,17 +1,14 @@
-<!-- @migration-task Error while migrating Svelte code: migrating this component would require adding a `$properties` rune but there's already a variable named properties.
-     Rename the variable and try again or migrate by hand. -->
 <script>
   import TextBlock from './TextBlock.svelte';
   import generateStatText from '../helper/statTextGenerator';
 
-  export let properties;
-  export let tableBlocks;
+  let { properties, tableBlocks, setFocus = (properties) => {} } = $props();
   // sourceBlock is the table in tableBlocks whose title is equal to properties.sources
-  $: sourceBlock =
+  let sourceBlock = $derived(
     tableBlocks.length > 0
       ? tableBlocks.filter((table) => table.title == properties.sources)[0]
-      : null;
-  export let setFocus = (properties) => {};
+      : null
+  );
 </script>
 
 <!--We use a TextBlock to display the statistics. This code first checks the statistic we want to calculate
