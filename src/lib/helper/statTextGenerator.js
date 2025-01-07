@@ -11,6 +11,33 @@ import {
 } from '../stats/stats';
 import { getData } from '../stats/getData';
 
+/**
+ * Generates a descriptive text representation of a statistical calculation.
+ *
+ * @param {Object} props - Configuration object for the statistical text generation.
+ * @param {string} props.statType - The type of statistical calculation to perform.
+ *                                   Supported types: 'Mean', 'StDev', 'Median', 'IQR',
+ *                                   'Min', 'Max', 'Range', 'R-Squared', 'Correlation Coefficient'.
+ * @param {string} [props.col] - The primary column name for statistical calculation.
+ * @param {string} [props.col2] - The secondary column name for comparative statistics
+ *                                 (used in R-Squared and Correlation Coefficient).
+ * @param {string} [props.sources] - The source block ID containing the data for the calculation.
+ * @param {Object} sourceBlock - The data source block containing content and header information.
+ * @param {Array<Array<string>>} sourceBlock.content - The raw data content.
+ * @param {boolean} sourceBlock.hasHeaders - Indicates whether the data has header rows.
+ *
+ * @returns {string} A human-readable string describing the statistical calculation,
+ *                   including the statistic type and its calculated value.
+ *                   Returns 'Configuration Required' or 'Source Configuration Required'
+ *                   if insufficient information is provided.
+ *
+ * @example
+ * // Returns "Mean of Age: 25.5"
+ * generateStatText(
+ *   { statType: 'Mean', col: 'Age' },
+ *   { content: [['Name', 'Age'], ['John', '25'], ['Jane', '26']], hasHeaders: true }
+ * )
+ */
 const generateStatText = (props, sourceBlock) => {
   let statText = '';
   switch (props.statType) {
@@ -55,7 +82,7 @@ const generateStatText = (props, sourceBlock) => {
             props.col,
             sourceBlock.hasHeaders,
             'Quantitative'
-          )
+          ).map((x) => Number(x))
         );
         break;
       case 'StDev':
@@ -65,7 +92,7 @@ const generateStatText = (props, sourceBlock) => {
             props.col,
             sourceBlock.hasHeaders,
             'Quantitative'
-          )
+          ).map((x) => Number(x))
         );
         break;
       case 'Median':
@@ -75,7 +102,7 @@ const generateStatText = (props, sourceBlock) => {
             props.col,
             sourceBlock.hasHeaders,
             'Quantitative'
-          )
+          ).map((x) => Number(x))
         );
         break;
       case 'IQR':
@@ -85,7 +112,7 @@ const generateStatText = (props, sourceBlock) => {
             props.col,
             sourceBlock.hasHeaders,
             'Quantitative'
-          )
+          ).map((x) => Number(x))
         );
         break;
       case 'Min':
@@ -95,7 +122,7 @@ const generateStatText = (props, sourceBlock) => {
             props.col,
             sourceBlock.hasHeaders,
             'Quantitative'
-          )
+          ).map((x) => Number(x))
         );
         break;
       case 'Max':
@@ -105,7 +132,7 @@ const generateStatText = (props, sourceBlock) => {
             props.col,
             sourceBlock.hasHeaders,
             'Quantitative'
-          )
+          ).map((x) => Number(x))
         );
         break;
       case 'Range':
@@ -115,7 +142,7 @@ const generateStatText = (props, sourceBlock) => {
             props.col,
             sourceBlock.hasHeaders,
             'Quantitative'
-          )
+          ).map((x) => Number(x))
         );
         break;
       case 'R-Squared':
@@ -125,13 +152,13 @@ const generateStatText = (props, sourceBlock) => {
             props.col,
             sourceBlock.hasHeaders,
             'Quantitative'
-          ),
+          ).map((x) => Number(x)),
           getData(
             sourceBlock.content,
             props.col2,
             sourceBlock.hasHeaders,
             'Quantitative'
-          )
+          ).map((x) => Number(x))
         );
         break;
       case 'Correlation Coefficient':
@@ -141,13 +168,13 @@ const generateStatText = (props, sourceBlock) => {
             props.col,
             sourceBlock.hasHeaders,
             'Quantitative'
-          ),
+          ).map((x) => Number(x)),
           getData(
             sourceBlock.content,
             props.col2,
             sourceBlock.hasHeaders,
             'Quantitative'
-          )
+          ).map((x) => Number(x))
         );
         break;
       default:

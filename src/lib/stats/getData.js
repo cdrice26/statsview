@@ -1,4 +1,12 @@
-// Get the data from sourceTable
+/**
+ * Extracts data from a specific column in a source table.
+ *
+ * @param {Array<Array<string>>} sourceTable - The input table of data.
+ * @param {string} col - The column name or index to extract.
+ * @param {boolean} hasHeaders - Indicates whether the table has a header row.
+ * @param {string} type - The type of data to extract ('Quantitative', 'Binary', or 'Categorical').
+ * @returns {Array<number|string>} An array of extracted values from the specified column.
+ */
 export const getData = (sourceTable, col, hasHeaders, type) => {
   // Find out which column we are taking stats of - the title should equal col
   // if we have headers, otherwise the index is at the end of the name
@@ -27,7 +35,14 @@ export const getData = (sourceTable, col, hasHeaders, type) => {
   return returnList;
 };
 
-// Get the data from sourceTable, for all columns
+/**
+ * Extracts data from all columns in a source table.
+ *
+ * @param {Array<Array<string>>} sourceTable - The input table of data.
+ * @param {boolean} hasHeaders - Indicates whether the table has a header row.
+ * @param {string} [type='Categorical'] - The type of data to extract ('Quantitative', 'Binary', or 'Categorical').
+ * @returns {Array<Array<number|string>>} A 2D array of extracted values from all columns.
+ */
 export const getFullData = (sourceTable, hasHeaders, type = 'Categorical') => {
   let data = [];
 
@@ -52,7 +67,13 @@ export const getFullData = (sourceTable, hasHeaders, type = 'Categorical') => {
   return data;
 };
 
-// Convert a string using common values for true and false to a bit (1 or 0)
+/**
+ * Converts a string representation to a binary value (1 or 0).
+ *
+ * @param {string} str - The input string to convert.
+ * @returns {number} 1 for truthy values, 0 for falsy values.
+ * @private
+ */
 const bitVal = (str) => {
   if (
     str == 'Yes' ||

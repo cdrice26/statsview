@@ -12,6 +12,13 @@ import {
 // @ts-ignore
 import Plotly from 'plotly.js-dist';
 
+/**
+ * Parses HTML content into plain text with basic formatting.
+ *
+ * @param {string} html - The HTML content to parse.
+ * @param {Object} settings - Text formatting settings.
+ * @returns {string} Parsed text with markdown-like formatting.
+ */
 const parseHtmlToText = (html, settings) => {
   const parser = new DOMParser();
   const doc = parser.parseFromString(html, 'text/html');
@@ -42,8 +49,24 @@ const parseHtmlToText = (html, settings) => {
   return text;
 };
 
+/**
+ * Generates text from a content block by parsing its HTML content.
+ *
+ * @param {Object} block - The content block to generate text from.
+ * @returns {string} Generated text content.
+ */
 const generateText = (block) => parseHtmlToText(block.content, block.settings);
 
+/**
+ * Adds formatted text to a PDF document.
+ *
+ * @param {jsPDF} doc - The PDF document to add text to.
+ * @param {string} text - The text content to add.
+ * @param {Object} settings - Text formatting settings.
+ * @param {Object} margins - Page margins configuration.
+ * @param {number} cursorY - Current vertical cursor position on the page.
+ * @returns {number} Updated vertical cursor position after adding text.
+ */
 const addTextToPdf = (doc, text, settings, margins, cursorY) => {
   doc.setFont(settings.fontFamily);
   doc.setFontSize(settings.fontSize);
@@ -82,6 +105,12 @@ const addTextToPdf = (doc, text, settings, margins, cursorY) => {
   return cursorY;
 };
 
+/**
+ * Pre-generates charts for all chart blocks in the document.
+ *
+ * @param {Array<Object>} blocks - An array of content blocks.
+ * @returns {Promise<Object>} A map of chart block IDs to their generated image data.
+ */
 const preGenerateCharts = async (blocks) => {
   const charts = {};
   for (const block of blocks) {
@@ -128,6 +157,15 @@ const preGenerateCharts = async (blocks) => {
   return charts;
 };
 
+/**
+ * Adds a chart image to a PDF document.
+ *
+ * @param {jsPDF} doc - The PDF document to add the chart to.
+ * @param {string} imageData - Base64 encoded image data of the chart.
+ * @param {Object} margins - Page margins configuration.
+ * @param {number} cursorY - Current vertical cursor position on the page.
+ * @returns {number} Updated vertical cursor position after adding the chart.
+ */
 const addChartToPdf = (doc, imageData, margins, cursorY) => {
   const pageWidth = doc.internal.pageSize.width;
   const pageHeight = doc.internal.pageSize.height;
@@ -160,6 +198,12 @@ const addChartToPdf = (doc, imageData, margins, cursorY) => {
   return cursorY;
 };
 
+/**
+ * Generates a complete PDF document from an array of content blocks.
+ *
+ * @param {Array<Object>} blocks - An array of content blocks to include in the PDF.
+ * @returns {Promise<jsPDF>} A Promise that resolves to the generated PDF document.
+ */
 const generatePDF = async (blocks) => {
   const doc = new jsPDF({
     unit: 'pt',
@@ -267,6 +311,12 @@ const generatePDF = async (blocks) => {
   return doc;
 };
 
+/**
+ * Saves a PDF document to a file.
+ *
+ * @param {jsPDF} doc - The PDF document to save.
+ * @param {string} fileName - The name of the file to save.
+ */
 export const savePDF = async (doc, fileName) => {
   doc.save(`${fileName}.pdf`);
 };

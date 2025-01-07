@@ -20,6 +20,19 @@ import {
 // @ts-ignore
 import Plotly from 'plotly.js-dist';
 
+/**
+ * Parses HTML content into docx Paragraph objects with specified text settings.
+ *
+ * @param {string} html - The HTML content to parse.
+ * @param {Object} settings - Text formatting settings.
+ * @param {boolean} [settings.bold=false] - Whether the text should be bold.
+ * @param {boolean} [settings.italic=false] - Whether the text should be italic.
+ * @param {boolean} [settings.underline=false] - Whether the text should be underlined.
+ * @param {string} [settings.color] - Text color.
+ * @param {string} [settings.fontFamily] - Font family for the text.
+ * @param {number} [settings.fontSize] - Font size.
+ * @returns {Paragraph[]} An array of docx Paragraph objects.
+ */
 const parseHtmlToParagraphs = (html, settings) => {
   const parser = new DOMParser();
   const doc = parser.parseFromString(html, 'text/html');
@@ -87,9 +100,21 @@ const parseHtmlToParagraphs = (html, settings) => {
   return paragraphs;
 };
 
+/**
+ * Generates paragraphs from a content block with specified settings.
+ *
+ * @param {Object} block - The content block to generate paragraphs from.
+ * @returns {Paragraph[]} An array of docx Paragraph objects.
+ */
 const generateParagraphs = (block) =>
   parseHtmlToParagraphs(block.content, block.settings);
 
+/**
+ * Generates a docx Document from an array of content blocks.
+ *
+ * @param {Array<Object>} blocks - An array of content blocks to include in the document.
+ * @returns {Promise<Document>} A Promise that resolves to a docx Document.
+ */
 const generateDocx = async (blocks) => {
   const childrenPromises = blocks.map(async (block) => {
     const sourceBlock = blocks.find(
@@ -201,6 +226,12 @@ const generateDocx = async (blocks) => {
   });
 };
 
+/**
+ * Saves a docx Document to a file.
+ *
+ * @param {Document} doc - The docx Document to save.
+ * @param {string} fileName - The name of the file to save.
+ */
 export const saveDocx = async (doc, fileName) => {
   const blob = await Packer.toBlob(doc);
   saveAs(blob, `${fileName}.docx`);
