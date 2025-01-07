@@ -10,9 +10,10 @@
   };
 </script>
 
-<!-- svelte-ignore a11y_no_static_element_interactions -->
 <div
   contenteditable
+  role="textbox"
+  tabindex="0"
   bind:innerHTML={properties.content}
   onfocus={() => setFocus(properties)}
   onkeyup={(e) => forceUpdateOnKey(e)}
