@@ -6,6 +6,15 @@ import {
   twoSampZInterval
 } from '../stats/intervals';
 
+/**
+ * Calculates the confidence interval based on the specified interval type and data.
+ *
+ * @param {string} intervalType - The type of interval to calculate (e.g., '1SampTInterval', '2SampZInterval')
+ * @param {number[]} data - The primary dataset for interval calculation
+ * @param {number[]} data2 - The secondary dataset for two-sample intervals (null if no second column)
+ * @param {number} confidenceLevel - The confidence level for the interval (e.g., 0.95 for 95% confidence)
+ * @returns {number[]|null} The calculated confidence interval or null if invalid parameters
+ */
 export const getInterval = (intervalType, data, data2, confidenceLevel) => {
   const alpha = 1 - confidenceLevel;
   if (
@@ -41,6 +50,12 @@ export const getInterval = (intervalType, data, data2, confidenceLevel) => {
   }
 };
 
+/**
+ * Retrieves the parameter description for a given interval type.
+ *
+ * @param {string} intervalType - The type of interval
+ * @returns {string|null} A descriptive string of the parameter being estimated, or null if unknown
+ */
 export const getParameter = (intervalType) => {
   if (intervalType === '1SampTInterval') return 'mean of';
   else if (intervalType === '2SampTInterval')
@@ -52,13 +67,30 @@ export const getParameter = (intervalType) => {
   else return null;
 };
 
+/**
+ * Combines column names for interval description.
+ *
+ * @param {string} col - The primary column name
+ * @param {string} [col2=null] - The secondary column name (optional)
+ * @returns {string} Combined column name(s)
+ */
 export const getColumnNames = (col, col2) => {
   if (col2 === null || col2 === undefined) return col;
   else return col + ' and ' + col2;
 };
 
+/**
+ * Generates a human-readable confidence interval description.
+ *
+ * @param {number} confidence - The confidence level
+ * @param {string} intervalType - The type of interval being calculated
+ * @param {string} col - The primary column name
+ * @param {string} col2 - The secondary column name (null if no second column)
+ * @param {number[]} interval - The calculated interval values
+ * @returns {string} A formatted confidence interval description
+ */
 export const getIntervalText = (
-  confidence = 0.95,
+  confidence,
   intervalType,
   col,
   col2,
