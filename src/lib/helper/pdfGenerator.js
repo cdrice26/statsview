@@ -11,6 +11,7 @@ import {
 
 // @ts-ignore
 import Plotly from 'plotly.js-dist';
+import { getInterval, getIntervalText } from './intervalHelpers';
 
 /**
  * Parses HTML content into plain text with basic formatting.
@@ -297,6 +298,32 @@ const generatePDF = async (blocks) => {
             ),
             sourceBlock
           )
+        }),
+        block.settings,
+        margins,
+        cursorY
+      );
+    } else if (block.type === 'interval') {
+      const data1 = getColumnData(block, sourceBlock, block?.col);
+      const data2 = getColumnData(block, sourceBlock, block?.col2);
+      const interval = getInterval(
+        block?.intervalType,
+        data1,
+        data2,
+        block?.confidenceLevel
+      );
+      const intervalText = getIntervalText(
+        block?.confidenceLevel,
+        block?.intervalType,
+        block?.col,
+        block?.col2,
+        interval
+      );
+      cursorY = addTextToPdf(
+        doc,
+        generateText({
+          ...block,
+          content: intervalText
         }),
         block.settings,
         margins,
