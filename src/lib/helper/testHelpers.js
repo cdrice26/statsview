@@ -33,7 +33,8 @@ export const getColumnData = (props, sourceBlock, column) =>
         props.testType !== null &&
           (props.testType !== undefined || props.intervalType !== undefined)
           ? props?.testType?.includes('TTest') ||
-            props?.intervalType?.includes('TInterval')
+            props?.intervalType?.includes('TInterval') ||
+            props?.intervalType?.includes('VarInterval')
             ? 'Quantitative'
             : props?.testType?.includes('ZTest') ||
               props?.intervalType?.includes('ZInterval')
