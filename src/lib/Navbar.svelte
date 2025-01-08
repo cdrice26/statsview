@@ -10,22 +10,9 @@
   import SourceControl from './navbar/SourceControl.svelte';
   import SwapControl from './navbar/SwapControl.svelte';
   import ChartControls from './navbar/ChartControls.svelte';
-
-  
-
-  
-
-
-
-
-
-
+  import IntervalControls from './navbar/IntervalControls.svelte';
 
   let csvFiles;
-
-
-
-
 
   /**
    * @typedef {Object} Props
@@ -41,6 +28,7 @@
    * @property {any} [newChart]
    * @property {any} [newStat]
    * @property {any} [newTest]
+   * @property {any} [newInterval]
    * @property {any} font
    * @property {any} [setFont]
    * @property {any} fontSize
@@ -53,6 +41,10 @@
    * @property {any} [underline]
    * @property {any} testType
    * @property {any} [setTestType]
+   * @property {any} intervalType
+   * @property {any} [setIntervalType]
+   * @property {any} confidenceLevel
+   * @property {any} [setConfidenceLevel]
    * @property {any} statType
    * @property {any} [setStatType]
    * @property {any} chartType
@@ -102,6 +94,7 @@
     newChart = () => {},
     newStat = () => {},
     newTest = () => {},
+    newInterval = () => {},
     font,
     setFont = (font) => {},
     fontSize,
@@ -114,6 +107,10 @@
     underline = () => {},
     testType,
     setTestType = (testType) => {},
+    intervalType,
+    setIntervalType = (intervalType) => {},
+    confidenceLevel,
+    setConfidenceLevel = (confidenceLevel) => {},
     statType,
     setStatType = (statType) => {},
     chartType,
@@ -161,7 +158,14 @@
     <FileIOControl {save} {load} {exp} {expPdf} />
 
     <!--Buttons to create new blocks-->
-    <AddButtons {newText} {newChart} {newStat} {newTable} {newTest} />
+    <AddButtons
+      {newText}
+      {newChart}
+      {newStat}
+      {newTable}
+      {newTest}
+      {newInterval}
+    />
 
     <!--If we're in a text, table, test, or stat block, render the text controls-->
     {#if focus.type == 'text' || focus.type == 'table' || focus.type == 'test' || focus.type == 'stat'}
@@ -185,6 +189,17 @@
         {testType}
         {setTestType}
         {setupTest}
+        currentType={sourceTable?.dataType}
+      />
+    {/if}
+
+    <!--Interval Controls-->
+    {#if focus.type == 'interval' && focus.sources !== null && focus.sources !== undefined}
+      <IntervalControls
+        {intervalType}
+        {setIntervalType}
+        {confidenceLevel}
+        {setConfidenceLevel}
         currentType={sourceTable?.dataType}
       />
     {/if}
@@ -231,7 +246,7 @@
     {/if}
 
     <!--Source Dropdown-->
-    {#if focus.type == 'chart' || focus.type == 'stat' || focus.type == 'test'}
+    {#if focus.type == 'chart' || focus.type == 'stat' || focus.type == 'test' || focus.type == 'interval'}
       <SourceControl
         {source}
         {setSource}

@@ -358,6 +358,34 @@
   };
 
   /**
+   * Create new interval block
+   */
+  const newInterval = () => {
+    addToUndoStack(blocks);
+    blocks = [
+      ...blocks,
+      {
+        id: blocks.length,
+        type: 'interval',
+        sources: null,
+        col: null,
+        content: 'Source configuration required.',
+        intervalType: null,
+        confidenceLevel: 0.95,
+        settings: {
+          fontFamily: 'Times New Roman',
+          fontSize: 12,
+          color: '#000000',
+          textAlign: 'left',
+          bold: false,
+          italic: false,
+          underline: false
+        }
+      }
+    ];
+  };
+
+  /**
    * Change font
    *
    * @param font - the new font
@@ -466,6 +494,36 @@
     blocks = blocks.map((block) => {
       if (block.id == focusedId) {
         block.testType = testType;
+      }
+      return block;
+    });
+  };
+
+  /**
+   * Set type of an interval
+   *
+   * @param intervalType - the new interval type
+   */
+  const setIntervalType = (intervalType) => {
+    addToUndoStack(blocks);
+    blocks = blocks.map((block) => {
+      if (block.id == focusedId) {
+        block.intervalType = intervalType;
+      }
+      return block;
+    });
+  };
+
+  /**
+   * Set confidence level of an interval
+   *
+   * @param confidenceLevel - the new confidence level
+   */
+  const setConfidenceLevel = (confidenceLevel) => {
+    addToUndoStack(blocks);
+    blocks = blocks.map((block) => {
+      if (block.id == focusedId) {
+        block.confidenceLevel = confidenceLevel;
       }
       return block;
     });
@@ -953,6 +1011,7 @@
     {newChart}
     {newStat}
     {newTest}
+    {newInterval}
     font={focusedBlock.settings.fontFamily}
     {setFont}
     fontSize={focusedBlock.settings.fontSize}
@@ -965,6 +1024,10 @@
     {underline}
     testType={focusedBlock.testType}
     {setTestType}
+    intervalType={focusedBlock.intervalType}
+    {setIntervalType}
+    confidenceLevel={focusedBlock.confidenceLevel}
+    {setConfidenceLevel}
     chartType={focusedBlock.chartType}
     {setChartType}
     statType={focusedBlock.statType}

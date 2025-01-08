@@ -4,6 +4,7 @@
   import ChartBlock from './blocks/ChartBlock.svelte';
   import StatBlock from './blocks/StatBlock.svelte';
   import TestProvider from './blocks/TestProvider.svelte';
+  import IntervalBlock from './blocks/IntervalBlock.svelte';
 
   let {
     properties = $bindable({}),
@@ -27,4 +28,6 @@
   <!--We need to use a separate TestProvider component to clean up the code that calculates test results.
         TestProvider in itself renders a TestBlock.-->
   <TestProvider bind:properties {tableBlocks} {setFocus} />
+{:else if properties.type === 'interval'}
+  <IntervalBlock bind:properties {tableBlocks} {setFocus} />
 {/if}

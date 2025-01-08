@@ -30,10 +30,13 @@ export const getColumnData = (props, sourceBlock, column) =>
         sourceBlock.content,
         column,
         sourceBlock.hasHeaders,
-        props.testType !== null && props.testType !== undefined
-          ? props.testType.includes('TTest')
+        props.testType !== null &&
+          (props.testType !== undefined || props.intervalType !== undefined)
+          ? props?.testType?.includes('TTest') ||
+            props?.intervalType?.includes('TInterval')
             ? 'Quantitative'
-            : props.testType.includes('ZTest')
+            : props?.testType?.includes('ZTest') ||
+              props?.intervalType?.includes('ZInterval')
             ? 'Binary'
             : 'Categorical'
           : null

@@ -18,7 +18,6 @@
     setFocus = (focus) => {}
   } = $props();
 
-  // Add type checking and null checks
   let generatedContent = $derived(
     generateTestText(properties, testResults, sourceBlock)
   );

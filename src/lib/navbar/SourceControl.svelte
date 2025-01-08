@@ -45,8 +45,8 @@
     </ColumnSelect>
 
     <!--Second Column Dropdown/Button - Only for 2-Sample tests-->
-    {#if (focus.sources !== null && focus.sources !== undefined && focus.type == 'test' && focus.testType != null) || focus.type == 'stat'}
-      {#if focus?.testType?.includes('2Samp') || focus?.testType?.includes('MP') || focus?.testType?.includes('Regression') || focus?.statType?.includes('Correlation Coefficient') || focus?.statType?.includes('R-Squared')}
+    {#if (focus.sources !== null && focus.sources !== undefined && focus.type == 'test' && focus.testType != null) || focus.type == 'stat' || focus.type == 'interval'}
+      {#if focus?.testType?.includes('2Samp') || focus?.testType?.includes('MP') || focus?.testType?.includes('Regression') || focus?.statType?.includes('Correlation Coefficient') || focus?.statType?.includes('R-Squared') || focus?.intervalType?.includes('2Samp')}
         vs. <ColumnSelect value={col2 ?? ''} setter={setCol} num="2">
           {#each sourceTable.content[0] as title, index}
             <option value={sourceTable.hasHeaders ? title : 'Column ' + index}
