@@ -19,6 +19,7 @@ import {
 } from './chartHelpers';
 // @ts-ignore
 import Plotly from 'plotly.js-dist';
+import { getInterval, getIntervalText } from './intervalHelpers';
 
 /**
  * Parses HTML content into docx Paragraph objects with specified text settings.
@@ -158,6 +159,26 @@ const generateDocx = async (blocks) => {
           ),
           sourceBlock
         )
+      });
+    } else if (block.type === 'interval') {
+      const data1 = getColumnData(block, sourceBlock, block?.col);
+      const data2 = getColumnData(block, sourceBlock, block?.col2);
+      const interval = getInterval(
+        block?.intervalType,
+        data1,
+        data2,
+        block?.confidenceLevel
+      );
+      const intervalText = getIntervalText(
+        block?.confidenceLevel,
+        block?.intervalType,
+        block?.col,
+        block?.col2,
+        interval
+      );
+      return generateParagraphs({
+        ...block,
+        content: intervalText
       });
     } else if (block.type === 'chart') {
       const tempDiv = document.createElement('div');
