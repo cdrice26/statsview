@@ -2,8 +2,6 @@
     to avoid it being too crowded.-->
 
 <script>
-  import { run } from 'svelte/legacy';
-
   import { getUnique } from './helper/unique';
 
   /**
@@ -55,17 +53,19 @@
   /**
    * Check if the source table has headers
    */
-  let hasHeaders = $derived(sourceTable.hasHeaders);
+  let hasHeaders = $derived(sourceTable?.hasHeaders);
 
   /**
    * Get the content of the source table
    */
-  let sourceTableContent = $derived(sourceTable.content);
+  let sourceTableContent = $derived(sourceTable?.content);
 
   /**
    * Get the index of the column we are testing
    */
-  let colIndex = $derived(sourceTableContent[0].indexOf(col));
+  let colIndex = $derived(
+    sourceTableContent.length > 0 ? sourceTableContent[0].indexOf(col) : -1
+  );
 
   /**
    * Get the unique values in the column we are testing (used only on X2 GOF tests)
@@ -83,12 +83,23 @@
   /**
    * Set the expected counts to be the same length as the unique values
    */
-  run(() => {
-    if (vals.length > 0 && expCounts === null) {
+  $effect.pre(() => {
+    if (!(vals && vals.length > 0)) return;
+
+    // Ensure expCounts is initialized as an array
+    if (expCounts === null || expCounts === undefined) {
       expCounts = new Array(vals.length).fill(1);
+      return;
     }
-  });
-  run(() => {
+
+    // Defensive array check
+    if (!Array.isArray(expCounts)) {
+      console.error('expCounts is not an array', expCounts);
+      expCounts = new Array(vals.length).fill(1);
+      return;
+    }
+
+    // Extend expCounts if needed
     if (expCounts.length < vals.length) {
       expCounts = [
         ...expCounts,
@@ -118,16 +129,18 @@
     Expected Counts (should add up to {hasHeaders
       ? sourceTableContent.length - 1
       : sourceTableContent.length}): <br />
-    {#each vals as val, idx}
-      <label for={testType + `-expCounts${idx}`}>{val}:</label>
-      <input
-        id={testType + `-expCounts${idx}`}
-        bind:value={expCounts[idx]}
-        onchange={() => setExpCounts(expCounts)}
-      />
+    {#if vals && vals.length > 0}
+      {#each vals as val, idx}
+        <label for={testType + `-expCounts${idx}`}>{val}:</label>
+        <input
+          id={testType + `-expCounts${idx}`}
+          bind:value={expCounts[idx]}
+          onchange={() => setExpCounts(expCounts)}
+        />
+        <br />
+      {/each}
       <br />
-    {/each}
-    <br />
+    {/if}
   {/if}
   <!--Inputs for hypotheses.-->
   <label for={testType + '-h0'}>Null Hypothesis:</label>
