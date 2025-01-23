@@ -59,65 +59,74 @@ export const getTestResults = (data, data2, props, sourceBlock) => {
     props.testType === 'X2IndTest' ||
     props.testType === '1WayANOVATest'
   ) {
-    if (props.testType === 'X2GOFTest') {
-      return X2GOFTest(data, props.testData.expCounts, props.testData.alpha);
-    } else if (props.testType === 'X2IndTest') {
-      return X2IndTest(
-        getFullData(sourceBlock.content, sourceBlock.hasHeaders),
-        props.testData.alpha
-      );
-    } else if (props.testType === '2SampTTest') {
-      return Samp2TTest(
-        data,
-        data2,
-        props.testData.tails,
-        props.testData.alpha
-      );
-    } else if (props.testType === 'MPTTest') {
-      return MPTTest(data, data2, props.testData.tails, props.testData.alpha);
-    } else if (props.testType === '1SampTTest') {
-      return Samp1TTest(
-        data,
-        props.testData.testAgainst,
-        props.testData.tails,
-        props.testData.alpha
-      );
-    } else if (props.testType === '2SampZTest') {
-      return Samp2ZTest(
-        data,
-        data2,
-        props.testData.tails,
-        props.testData.alpha
-      );
-    } else if (props.testType === '1SampZTest') {
-      return Samp1ZTest(
-        data,
-        props.testData.testAgainst,
-        props.testData.tails,
-        props.testData.alpha
-      );
-    } else if (props.testType === '2SampVarTest') {
-      return Samp2VarTest(
-        data,
-        data2,
-        props.testData.tails,
-        props.testData.alpha
-      );
-    } else if (props.testType === '2SampTTest') {
-      return Samp2TTest(
-        data,
-        data2,
-        props.testData.tails,
-        props.testData.alpha
-      );
-    } else if (props.testType === 'MPTTest') {
-      return MPTTest(data, data2, props.testData.tails, props.testData.alpha);
-    } else if (props.testType === '1WayANOVATest') {
-      return ANOVATest(
-        getFullData(sourceBlock.content, sourceBlock.hasHeaders, 'Quantitative')
-      );
-    } else if (props.testType === 'RegressionTest') {
-      return LinearRegressionTest(data, data2);
+    try {
+      if (props.testType === 'X2GOFTest') {
+        return X2GOFTest(data, props.testData.expCounts, props.testData.alpha);
+      } else if (props.testType === 'X2IndTest') {
+        return X2IndTest(
+          getFullData(sourceBlock.content, sourceBlock.hasHeaders),
+          props.testData.alpha
+        );
+      } else if (props.testType === '2SampTTest') {
+        return Samp2TTest(
+          data,
+          data2,
+          props.testData.tails,
+          props.testData.alpha
+        );
+      } else if (props.testType === 'MPTTest') {
+        return MPTTest(data, data2, props.testData.tails, props.testData.alpha);
+      } else if (props.testType === '1SampTTest') {
+        return Samp1TTest(
+          data,
+          props.testData.testAgainst,
+          props.testData.tails,
+          props.testData.alpha
+        );
+      } else if (props.testType === '2SampZTest') {
+        return Samp2ZTest(
+          data,
+          data2,
+          props.testData.tails,
+          props.testData.alpha
+        );
+      } else if (props.testType === '1SampZTest') {
+        return Samp1ZTest(
+          data,
+          props.testData.testAgainst,
+          props.testData.tails,
+          props.testData.alpha
+        );
+      } else if (props.testType === '2SampVarTest') {
+        return Samp2VarTest(
+          data,
+          data2,
+          props.testData.tails,
+          props.testData.alpha
+        );
+      } else if (props.testType === '2SampTTest') {
+        return Samp2TTest(
+          data,
+          data2,
+          props.testData.tails,
+          props.testData.alpha
+        );
+      } else if (props.testType === 'MPTTest') {
+        return MPTTest(data, data2, props.testData.tails, props.testData.alpha);
+      } else if (props.testType === '1WayANOVATest') {
+        return ANOVATest(
+          getFullData(
+            sourceBlock.content,
+            sourceBlock.hasHeaders,
+            'Quantitative'
+          )
+        );
+      } else if (props.testType === 'RegressionTest') {
+        return LinearRegressionTest(data, data2);
+      }
+    } catch (e) {
+      console.log(e);
+      return null;
     }
   }
 };

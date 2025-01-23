@@ -5,6 +5,14 @@
     forceUpdate = () => {}
   } = $props();
 
+  // Create a reactive wrapper for content
+  let reactiveContent = $state(properties.content ?? '');
+
+  // Sync changes back to properties
+  $effect(() => {
+    properties.content = reactiveContent;
+  });
+
   let forceUpdateOnKey = (e) => {
     if (e.key == 'Enter' || e.key == ' ') forceUpdate();
   };
@@ -14,7 +22,7 @@
   contenteditable
   role="textbox"
   tabindex="0"
-  bind:innerHTML={properties.content}
+  bind:innerHTML={reactiveContent}
   onfocus={() => setFocus(properties)}
   onkeyup={(e) => forceUpdateOnKey(e)}
   style={`

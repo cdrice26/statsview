@@ -6,7 +6,6 @@
 
   import { getUnique } from './helper/unique';
 
-
   /**
    * @typedef {Object} Props
    * @property {any} [closeWin]
@@ -71,14 +70,15 @@
   /**
    * Get the unique values in the column we are testing (used only on X2 GOF tests)
    */
-  let vals =
-    $derived(source == null
+  let vals = $derived(
+    source == null
       ? []
       : (getUnique(
           (hasHeaders ? sourceTableContent.slice(1) : sourceTableContent).map(
             (item) => item[colIndex === -1 ? 0 : colIndex] ?? ''
           )
-        ) ?? []));
+        ) ?? [])
+  );
 
   /**
    * Set the expected counts to be the same length as the unique values
