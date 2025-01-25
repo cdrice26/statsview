@@ -349,7 +349,7 @@
           expCounts: null,
           h0: 'Null Hypothesis',
           ha: 'Alt Hypothesis',
-          rand: false,
+          showConclusion: false,
           tails: 'two-sided',
           alpha: 0.05
         }
@@ -943,15 +943,16 @@
   };
 
   /**
-   * Update the boolean value representing whether the sample is random
+   * Update the boolean value representing whether the conclusion
+   * should be included in the test output
    *
-   * @param rand - the new value
+   * @param showConclusion - the new value
    */
-  const setRand = (rand) => {
+  const setShowConclusion = (showConclusion) => {
     addToUndoStack(blocks);
     blocks = blocks.map((block) => {
       if (block.id == focusedId) {
-        block.testData.rand = rand;
+        block.testData.showConclusion = showConclusion;
       }
       return block;
     });
@@ -1082,8 +1083,8 @@
         {setH0}
         ha={focusedBlock.testData.ha}
         {setHa}
-        rand={focusedBlock.testData.rand}
-        {setRand}
+        showConclusion={focusedBlock?.testData?.showConclusion ?? false}
+        {setShowConclusion}
         tails={focusedBlock.testData.tails}
         {setTails}
         alpha={focusedBlock.testData.alpha}

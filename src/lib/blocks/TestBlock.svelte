@@ -5,7 +5,6 @@
   /**
    * @typedef {Object} Props
    * @property {any} properties
-   * @property {any} sourceBlock
    * @property {any} testResults - The results of the test to display here
    * @property {any} [setFocus]
    */
@@ -13,14 +12,11 @@
   /** @type {Props} */
   let {
     properties = $bindable({}),
-    sourceBlock = null,
     testResults = null,
     setFocus = (focus) => {}
   } = $props();
 
-  let generatedContent = $derived(
-    generateTestText(properties, testResults, sourceBlock)
-  );
+  let generatedContent = $derived(generateTestText(properties, testResults));
 </script>
 
 <TextBlock

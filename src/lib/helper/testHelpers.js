@@ -247,13 +247,19 @@ export const checkLargeCountsCondition = (props, testResults, sourceBlock) =>
  * Generates the text for a test block based on the given properties and test results.
  * @param {Object} props - The properties of the test block
  * @param {Object} testResults - The results of the test
- * @param {Object} sourceBlock - The block containing the source data
  * @returns {string} The text for the test block
  */
-export const generateTestText = (props, testResults, sourceBlock) =>
+export const generateTestText = (props, testResults) => {
   // Check to make sure there's sources and a testType, otherwise we won't be able to render results
-  props.sources != null && props.testType != null && testResults != null
-    ? `
+  if (
+    props.sources !== null &&
+    props.sources !== undefined &&
+    props.testType !== null &&
+    props.testType !== undefined &&
+    testResults !== null &&
+    testResults !== undefined
+  )
+    return `
         <strong> ${
           // Replace the value name with the actual name of the test and render it
           props.testType
@@ -270,14 +276,14 @@ export const generateTestText = (props, testResults, sourceBlock) =>
 
           // Print the identifiers for the column/table we're dealing with
         } for ${
-        props.testType == 'X2IndTest'
-          ? ''
-          : props.col +
-            (props.testType.includes('2Samp') || props.testType.includes('MP')
-              ? ` vs. ${props.col2} `
-              : '') +
-            ' of '
-      } ${props.sources}<br><br>
+      props.testType == 'X2IndTest'
+        ? ''
+        : props.col +
+          (props.testType.includes('2Samp') || props.testType.includes('MP')
+            ? ` vs. ${props.col2} `
+            : '') +
+          ' of '
+    } ${props.sources}<br><br>
         
         </strong>${
           // Chi-Squared GOF test: print the expected counts
@@ -289,17 +295,6 @@ export const generateTestText = (props, testResults, sourceBlock) =>
         Null Hypothesis: ${props.testData.h0}<br>
         Alternative Hypothesis: ${props.testData.ha}<br><br>
 
-        Random Sample: ${props.testData.rand}<br>
-        ${
-          checkLargeCountsCondition(props, testResults, sourceBlock) === null
-            ? ''
-            : `Large Counts: ${checkLargeCountsCondition(
-                props,
-                testResults,
-                sourceBlock
-              )}<br>`
-        }<br>
-
         ${
           !props.testType.includes('ANOVA') &&
           !props.testType.includes('Regression') &&
@@ -309,15 +304,20 @@ export const generateTestText = (props, testResults, sourceBlock) =>
         }
 
         Test Statistic: ${testResults.testStatistic}<br>
-        P-Value: ${testResults.pValue}<br><br>
+        P-Value: ${testResults.pValue}
 
-        Because the p-value is ${
-          testResults.pValue < props.testData.alpha ? 'less' : 'greater'
-        } than the significance level of 
+        ${
+          props?.testData?.showConclusion
+            ? `<br><br>Because the p-value is ${
+                testResults.pValue < props.testData.alpha ? 'less' : 'greater'
+              } than the significance level of 
         ${props.testData.alpha}, there is ${
-        testResults.pValue < props.testData.alpha ? '' : 'no '
-      }significant evidence to reject the null 
-        hypothesis and accept that ${props.testData.ha}
+                testResults.pValue < props.testData.alpha ? '' : 'no '
+              }significant evidence to reject the null 
+        hypothesis and accept that ${props.testData.ha}`
+            : ''
+        }
 
-  `
-    : 'Configuration Required';
+  `;
+  else return 'Configuration Required';
+};

@@ -295,8 +295,7 @@ const generatePDF = async (blocks) => {
               getColumnData(block, sourceBlock, block?.col2),
               block,
               sourceBlock
-            ),
-            sourceBlock
+            )
           )
         }),
         block.settings,

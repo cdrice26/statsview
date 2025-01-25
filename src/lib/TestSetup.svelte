@@ -19,8 +19,8 @@
    * @property {any} [setH0]
    * @property {any} [ha]
    * @property {any} [setHa]
-   * @property {any} [rand]
-   * @property {any} [setRand]
+   * @property {any} [showConclusion]
+   * @property {any} [setShowConclusion]
    * @property {any} [tails]
    * @property {any} [setTails]
    * @property {any} [alpha]
@@ -42,8 +42,8 @@
     setH0 = (h0) => {},
     ha = $bindable(null),
     setHa = (ha) => {},
-    rand = $bindable(null),
-    setRand = (rand) => {},
+    showConclusion = $bindable(null),
+    setShowConclusion = (rand) => {},
     tails = $bindable(null),
     setTails = (tails) => {},
     alpha = $bindable(null),
@@ -149,15 +149,6 @@
   <label for={testType + '-ha'}>Alternative Hypothesis:</label>
   <input id={testType + '-ha'} bind:value={ha} onchange={() => setHa(ha)} />
   <br />
-  <!--Random condition checkbox-->
-  <label for={testType + '-rand'}>Random Sample?</label>
-  <input
-    id={testType + '-rand'}
-    type="checkbox"
-    bind:checked={rand}
-    onchange={() => setRand(rand)}
-  />
-  <br />
   <!--If it's not chi-squared, dropdown for two-tailed test-->
   {#if !testType.includes('X2') && !testType.includes('ANOVA') && !testType.includes('Regression')}
     <label for={testType + '-2t'}>Alternative:</label>
@@ -182,6 +173,15 @@
     max="1"
     bind:value={alpha}
     onchange={() => setAlpha(alpha)}
+  />
+  <br />
+  <!--Show conclusion testbod-->
+  <label for={testType + '-conc'}>Show Conclusion?</label>
+  <input
+    id={testType + '-conc'}
+    type="checkbox"
+    bind:checked={showConclusion}
+    onchange={() => setShowConclusion(showConclusion)}
   />
   <br />
   <!--Done button to close the window-->

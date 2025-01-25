@@ -156,8 +156,7 @@ const generateDocx = async (blocks) => {
             getColumnData(block, sourceBlock, block?.col2),
             block,
             sourceBlock
-          ),
-          sourceBlock
+          )
         )
       });
     } else if (block.type === 'interval') {

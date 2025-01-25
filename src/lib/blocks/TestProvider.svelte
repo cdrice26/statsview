@@ -23,7 +23,6 @@
 
 <TestBlock
   bind:properties
-  {sourceBlock}
   {setFocus}
   testResults={getTestResults(data, data2, properties, sourceBlock)}
 />
