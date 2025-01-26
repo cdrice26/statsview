@@ -3,7 +3,8 @@
   import { getColumnData, getTestResults } from '../helper/testHelpers';
 
   let {
-    properties = $bindable({}),
+    properties,
+    updateBlock,
     tableBlocks,
     setFocus = (focus) => {}
   } = $props();
@@ -22,7 +23,8 @@
 </script>
 
 <TestBlock
-  bind:properties
+  {properties}
+  {updateBlock}
   {setFocus}
   testResults={getTestResults(data, data2, properties, sourceBlock)}
 />

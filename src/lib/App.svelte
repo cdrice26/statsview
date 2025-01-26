@@ -386,6 +386,18 @@
   };
 
   /**
+   * Update a block
+   *
+   * @param id - the id of the block
+   * @param updates - the updates to make
+   */
+  const updateBlock = (id, updates) => {
+    blocks = blocks.map((block) =>
+      block.id === id ? { ...block, ...updates } : block
+    );
+  };
+
+  /**
    * Change font
    *
    * @param font - the new font
@@ -1064,7 +1076,7 @@
   />
 
   <!--Render the pagesx-->
-  <Page bind:blocks {setFocus} {forceUpdate} />
+  <Page {updateBlock} {blocks} {setFocus} {forceUpdate} />
 
   <!--Render the window, if there is one-->
   {#if currentWin !== null && focusedBlock.testType !== undefined && focusedBlock.testType !== null}

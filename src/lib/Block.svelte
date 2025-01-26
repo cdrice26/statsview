@@ -7,7 +7,8 @@
   import IntervalBlock from './blocks/IntervalBlock.svelte';
 
   let {
-    properties = $bindable({}),
+    properties,
+    updateBlock = (id, updates) => {},
     tableBlocks,
     setFocus = (properties) => {},
     forceUpdate = () => {}
@@ -17,17 +18,17 @@
 <!--Render the correct block based on type. Text, Tests, and Stats all use text blocks
     at the core, only the toolbar is different.-->
 {#if properties.type == 'text'}
-  <TextBlock bind:properties {setFocus} {forceUpdate} />
+  <TextBlock {properties} {updateBlock} {setFocus} {forceUpdate} />
 {:else if properties.type == 'stat'}
-  <StatBlock bind:properties {tableBlocks} {setFocus} />
+  <StatBlock {properties} {updateBlock} {tableBlocks} {setFocus} />
 {:else if properties.type == 'table'}
-  <TableBlock bind:properties {setFocus} {forceUpdate} />
+  <TableBlock {properties} {updateBlock} {setFocus} {forceUpdate} />
 {:else if properties.type == 'chart'}
-  <ChartBlock bind:properties {tableBlocks} {setFocus} />
+  <ChartBlock {properties} {tableBlocks} {setFocus} />
 {:else if properties.type == 'test'}
   <!--We need to use a separate TestProvider component to clean up the code that calculates test results.
         TestProvider in itself renders a TestBlock.-->
-  <TestProvider bind:properties {tableBlocks} {setFocus} />
+  <TestProvider {properties} {updateBlock} {tableBlocks} {setFocus} />
 {:else if properties.type === 'interval'}
-  <IntervalBlock bind:properties {tableBlocks} {setFocus} />
+  <IntervalBlock {properties} {updateBlock} {tableBlocks} {setFocus} />
 {/if}

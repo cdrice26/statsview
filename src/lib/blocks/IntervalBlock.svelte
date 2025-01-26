@@ -7,12 +7,14 @@
    * @typedef {Object} Props
    * @property {any} properties
    * @property {Array} tableBlocks
+   * @property {any} [updateBlock]
    * @property {any} [setFocus]
    */
 
   /** @type {Props} */
   let {
-    properties = $bindable({}),
+    properties,
+    updateBlock = (id, updates) => {},
     tableBlocks = null,
     setFocus = (focus) => {}
   } = $props();
@@ -56,5 +58,6 @@
     ...properties,
     content: generatedContent
   }}
+  {updateBlock}
   setFocus={() => setFocus(properties)}
 />

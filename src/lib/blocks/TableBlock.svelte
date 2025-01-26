@@ -1,9 +1,21 @@
 <script>
   let {
-    properties = $bindable({}),
+    properties,
+    updateBlock = (id, updates) => {},
     setFocus = (properties) => {},
     forceUpdate = () => {}
   } = $props();
+
+  // Ensure direct reference to maintain two-way binding
+  $inspect(properties.content);
+
+  function handleCellUpdate(rid, cid, newValue) {
+    // Directly mutate the original content to maintain two-way binding
+    properties.content[rid][cid] = newValue;
+
+    // Trigger update block to notify parent components
+    updateBlock(properties.id, { content: properties.content });
+  }
 </script>
 
 <!--Render a table with the correct rows and content-->
@@ -16,23 +28,29 @@
             <td
               contenteditable
               bind:textContent={properties.content[rid][cid]}
-              onfocus={() => setFocus({ ...properties, row: rid, col: cid })}
-              onkeyup={(_e) => forceUpdate}
+              oninput={(e) => {
+                handleCellUpdate(rid, cid, e.currentTarget.textContent);
+              }}
+              onfocus={() =>
+                setFocus({
+                  ...properties,
+                  row: rid,
+                  col: cid
+                })}
+              onkeyup={(_) => forceUpdate}
               style={`
-                        --text-align: ${properties.settings.textAlign};
-                        --color: ${properties.settings.color};
-                        --font-family: ${properties.settings.fontFamily};
-                        --font-size: ${properties.settings.fontSize * 1.38}pt;
-                        --font-weight: ${
-                          properties.settings.bold ? 'bold' : 'normal'
-                        };
-                        --font-style: ${
-                          properties.settings.italic ? 'italic' : 'normal'
-                        };
-                        --text-decoration: ${
-                          properties.settings.underline ? 'underline' : 'normal'
-                        }; 
-                    `}
+                --text-align: ${properties.settings.textAlign};
+                --color: ${properties.settings.color};
+                --font-family: ${properties.settings.fontFamily};
+                --font-size: ${properties.settings.fontSize * 1.38}pt;
+                --font-weight: ${properties.settings.bold ? 'bold' : 'normal'};
+                --font-style: ${
+                  properties.settings.italic ? 'italic' : 'normal'
+                };
+                --text-decoration: ${
+                  properties.settings.underline ? 'underline' : 'normal'
+                }; 
+              `}
             >
             </td>
           {/each}
@@ -41,9 +59,9 @@
     </tbody>
   </table>
 {:else}
-  <button class="invisible" onclick={() => setFocus(properties)}
-    >Invisible Table</button
-  >
+  <button class="invisible" onclick={() => setFocus(properties)}>
+    Invisible Table
+  </button>
 {/if}
 
 <style>
@@ -62,7 +80,7 @@
     font-size: var(--font-size, 12px);
     font-weight: var(--font-weight, normal);
     font-style: var(--font-style, normal);
-    text-decoration: (--text-decoration, none);
+    text-decoration: var(--text-decoration, none);
   }
 
   td:focus {

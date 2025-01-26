@@ -3,7 +3,8 @@
   import generateStatText from '../helper/statTextGenerator';
 
   let {
-    properties = $bindable({}),
+    properties,
+    updateBlock = (id, updates) => {},
     tableBlocks,
     setFocus = (properties) => {}
   } = $props();
@@ -28,4 +29,4 @@
     and outputs its name into the TextBlock. Then it checks to make sure we have data to calculate the statistic.
     If we don't, it outputs 'Source Configuration Required'. If we do, it calculates the statistic for the given
     column of the given table and then prints that out into the TextBlock.-->
-<TextBlock bind:properties setFocus={() => setFocus(properties)} />
+<TextBlock {properties} {updateBlock} setFocus={() => setFocus(properties)} />

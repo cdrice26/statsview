@@ -5,13 +5,15 @@
   /**
    * @typedef {Object} Props
    * @property {any} properties
+   * @property {any} updateBlock
    * @property {any} testResults - The results of the test to display here
    * @property {any} [setFocus]
    */
 
   /** @type {Props} */
   let {
-    properties = $bindable({}),
+    properties,
+    updateBlock,
     testResults = null,
     setFocus = (focus) => {}
   } = $props();
@@ -24,5 +26,6 @@
     ...properties,
     content: generatedContent
   }}
+  {updateBlock}
   setFocus={() => setFocus(properties)}
 />
