@@ -1,17 +1,14 @@
 <script>
   let {
-    properties,
+    properties = $bindable(),
     updateBlock = (id, updates) => {},
     setFocus = (properties) => {},
     forceUpdate = () => {}
   } = $props();
 
-  // Ensure direct reference to maintain two-way binding
-  $inspect(properties.content);
-
   function handleCellUpdate(rid, cid, newValue) {
     // Directly mutate the original content to maintain two-way binding
-    properties.content[rid][cid] = newValue;
+    // properties.content[rid][cid] = newValue;
 
     // Trigger update block to notify parent components
     updateBlock(properties.id, { content: properties.content });

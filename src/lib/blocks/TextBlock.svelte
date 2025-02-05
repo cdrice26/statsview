@@ -1,4 +1,6 @@
 <script>
+  import DOMPurify from 'dompurify';
+
   let {
     properties,
     updateBlock = (id, updates) => {},
@@ -10,10 +12,10 @@
     if (e.key == 'Enter' || e.key == ' ') forceUpdate();
   };
 
-  let content = $state(properties.content);
+  let content = $state(DOMPurify.sanitize(properties.content));
 
   $effect(() => {
-    content = properties.content;
+    content = DOMPurify.sanitize(properties.content);
   });
 </script>
 
