@@ -1,17 +1,25 @@
 <script>
   let {
-    properties = $bindable(),
+    properties,
     updateBlock = (id, updates) => {},
     setFocus = (properties) => {},
     forceUpdate = () => {}
   } = $props();
 
-  function handleCellUpdate(rid, cid, newValue) {
-    // Directly mutate the original content to maintain two-way binding
-    // properties.content[rid][cid] = newValue;
+  // Create a reactive state for content that can be mutated
+  let content = $state(structuredClone($state.snapshot(properties.content)));
 
-    // Trigger update block to notify parent components
-    updateBlock(properties.id, { content: properties.content });
+  // Watch for changes in the original properties and sync if needed
+  $effect(() => {
+    content = structuredClone($state.snapshot(properties.content));
+  });
+
+  function handleCellUpdate(rid, cid, newValue) {
+    // Directly update the reactive state
+    content[rid][cid] = newValue;
+
+    // Notify parent of updates
+    updateBlock(properties.id, { content });
   }
 </script>
 
@@ -19,12 +27,12 @@
 {#if properties.visible}
   <table>
     <tbody>
-      {#each properties.content as row, rid}
+      {#each content as row, rid}
         <tr>
-          {#each row as _cell, cid}
+          {#each row as cell, cid}
             <td
               contenteditable
-              bind:textContent={properties.content[rid][cid]}
+              bind:textContent={content[rid][cid]}
               oninput={(e) => {
                 handleCellUpdate(rid, cid, e.currentTarget.textContent);
               }}
@@ -34,7 +42,7 @@
                   row: rid,
                   col: cid
                 })}
-              onkeyup={(_) => forceUpdate}
+              onkeyup={() => forceUpdate()}
               style={`
                 --text-align: ${properties.settings.textAlign};
                 --color: ${properties.settings.color};
