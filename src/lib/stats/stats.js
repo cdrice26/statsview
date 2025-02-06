@@ -106,22 +106,28 @@ export const correlationCoefficient = (list1, list2) => {
     return null;
   }
 
+  const n = list1.length;
+
   // Calculate means
   const mean1 = mean(list1);
   const mean2 = mean(list2);
 
-  // Calculate numerator (covariance)
-  let numerator = 0;
-  for (let i = 0; i < list1.length; i++) {
-    numerator += (list1[i] - mean1) * (list2[i] - mean2);
+  // Calculate covariance and standard deviations
+  let covariance = 0;
+  let sumSquaredDiff1 = 0;
+  let sumSquaredDiff2 = 0;
+
+  for (let i = 0; i < n; i++) {
+    const diff1 = list1[i] - mean1;
+    const diff2 = list2[i] - mean2;
+
+    covariance += diff1 * diff2;
+    sumSquaredDiff1 += diff1 * diff1;
+    sumSquaredDiff2 += diff2 * diff2;
   }
 
-  // Calculate denominators (standard deviations)
-  const std1 = std(list1);
-  const std2 = std(list2);
-
   // Calculate correlation coefficient
-  return numerator / ((list1.length - 1) * std1 * std2);
+  return covariance / Math.sqrt(sumSquaredDiff1 * sumSquaredDiff2);
 };
 
 /**

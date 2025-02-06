@@ -74,7 +74,7 @@ export const getFullData = (sourceTable, hasHeaders, type = 'Categorical') => {
  * @returns {number} 1 for truthy values, 0 for falsy values.
  * @private
  */
-const bitVal = (str) => {
+export const bitVal = (str) => {
   if (
     str == 'Yes' ||
     str == 'yes' ||
