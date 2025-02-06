@@ -1,5 +1,5 @@
 # StatsView
-This is a web app for visualizing and analyzing data, and creating statistical reports. It supports charts, descriptive statistics, hypothesis tests, and confidence intervals, and can export to Word (recommended) or PDF (has some formatting quirks). It is built with Svelte and Vite.
+This is a web app for visualizing and analyzing data, and creating statistical reports. It supports charts, descriptive statistics, hypothesis tests, and confidence intervals, and can export to Word. It is built with Svelte and Vite.
 
 ## Getting Started
 
