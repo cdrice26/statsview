@@ -1,11 +1,16 @@
-import statistics from '@stdlib/stats';
-import { std } from './stats';
 import { getUnique, getUniqueFromMatrix } from '../helper/unique';
 import { occurrencesOf } from '../helper/count';
 import init, {
   variance_test,
   anova_1way_test,
-  regression_test
+  regression_test,
+  one_samp_t_test,
+  two_samp_t_test,
+  matched_pairs_t_test,
+  one_samp_z_test,
+  two_samp_z_test,
+  chi2_gof_test,
+  chi2_ind_test
 } from 'statmaster';
 
 await init();
@@ -29,13 +34,11 @@ export const X2GOFTest = (data, testAgainst, alpha) => {
     // Validate the expected counts
     if (obsCounts.length != expCounts.length) return null;
 
-    const result = statistics.chi2gof(obsCounts, expCounts, {
-      alpha: parseFloat(alpha)
-    });
+    const result = chi2_gof_test(obsCounts, expCounts);
 
     return {
-      pValue: result.pValue,
-      testStatistic: result.statistic
+      pValue: result.p,
+      testStatistic: result.x2
     };
   }
 };
@@ -55,14 +58,12 @@ export const X2IndTest = (data, alpha) => {
       obsCounts.push(unique.map((item) => occurrencesOf(data[i], item)));
     }
 
-    const result = statistics.chi2test(obsCounts, {
-      alpha: parseFloat(alpha)
-    });
+    const result = chi2_ind_test(obsCounts);
 
     return {
-      pValue: result.pValue,
-      testStatistic: result.statistic,
-      expected: result?.expected
+      pValue: result.p,
+      testStatistic: result.x2,
+      expected: result?.exp
     };
   }
 };
@@ -109,13 +110,10 @@ export const Samp2TTest = (data, data2, tails, alpha) => {
     tails != undefined &&
     alpha != undefined
   ) {
-    const result = statistics.ttest2(data, data2, {
-      alpha: parseFloat(alpha),
-      alternative: tails
-    });
+    const result = two_samp_t_test(data, data2, 0, tails);
     return {
-      pValue: result.pValue,
-      testStatistic: result.statistic
+      pValue: result.p,
+      testStatistic: result.t
     };
   }
 };
@@ -135,13 +133,10 @@ export const MPTTest = (data, data2, tails, alpha) => {
     tails != undefined &&
     alpha != undefined
   ) {
-    const result = statistics.ttest(data, data2, {
-      alpha: parseFloat(alpha),
-      alternative: tails
-    });
+    const result = matched_pairs_t_test(data, data2, 0, tails);
     return {
-      pValue: result.pValue,
-      testStatistic: result.statistic
+      pValue: result.p,
+      testStatistic: result.t
     };
   }
 };
@@ -194,14 +189,10 @@ export const Samp1TTest = (data, testAgainst, tails, alpha) => {
     tails != undefined &&
     alpha != undefined
   ) {
-    const result = statistics.ttest(data, {
-      mu: parseFloat(testAgainst),
-      alpha: parseFloat(alpha),
-      alternative: tails
-    });
+    const result = one_samp_t_test(data, tails, testAgainst);
     return {
-      pValue: result.pValue,
-      testStatistic: result.statistic
+      pValue: result.p,
+      testStatistic: result.t
     };
   }
   return null;
@@ -222,13 +213,10 @@ export const Samp2ZTest = (data, data2, tails, alpha) => {
     tails != undefined &&
     alpha != undefined
   ) {
-    const result = statistics.ztest2(data, data2, std(data), std(data2), {
-      alpha: parseFloat(alpha),
-      alternative: tails
-    });
+    const result = one_samp_z_test(data, tails, 0);
     return {
-      pValue: result.pValue,
-      testStatistic: result.statistic
+      pValue: result.p,
+      testStatistic: result.z
     };
   }
 };
@@ -247,14 +235,10 @@ export const Samp1ZTest = (data, testAgainst, tails, alpha) => {
     tails != undefined &&
     alpha != undefined
   ) {
-    const result = statistics.ztest(data, std(data), {
-      mu: parseFloat(testAgainst),
-      alpha: parseFloat(alpha),
-      alternative: tails
-    });
+    const result = one_samp_z_test(data, tails, testAgainst);
     return {
-      pValue: result.pValue,
-      testStatistic: result.statistic
+      pValue: result.p,
+      testStatistic: result.z
     };
   }
 };
