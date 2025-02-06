@@ -213,7 +213,7 @@ export const Samp2ZTest = (data, data2, tails, alpha) => {
     tails != undefined &&
     alpha != undefined
   ) {
-    const result = one_samp_z_test(data, tails, 0);
+    const result = two_samp_z_test(data, data2, tails, 0);
     return {
       pValue: result.p,
       testStatistic: result.z
