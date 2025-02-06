@@ -9,7 +9,7 @@
 export const calculateGridSize = (n) => {
   const maxWidth = 3;
   const columns = Math.min(n, maxWidth);
-  const rows = Math.ceil(n / columns);
+  const rows = n === 0 ? 0 : Math.ceil(n / columns);
   return { rows, columns };
 };
 

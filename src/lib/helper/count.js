@@ -5,9 +5,9 @@
  * @returns the number of times item appears in arr
  */
 export const occurrencesOf = (arr, item) => {
-    let count = 0;
-    arr.forEach((thing) => {
-        if (thing == item) count++;
-    });
-    return count;
+  let count = 0;
+  arr.forEach((thing) => {
+    if (thing === item) count++;
+  });
+  return count;
 };
