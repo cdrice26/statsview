@@ -1,13 +1,27 @@
 <script>
   import { MultiSelect } from 'svelte-multiselect';
 
-  let { allCols, selected = $bindable(), setter = (cols) => {} } = $props();
+  let { allCols, selected, setter = (cols) => {} } = $props();
+
+  const onChange = (e) => {
+    const detail = e?.detail;
+    if (!detail) return;
+
+    let newSelected;
+    if (detail.type === 'add') {
+      newSelected = [...selected, detail.option];
+    } else {
+      newSelected = selected.filter((col) => col !== detail.option);
+    }
+
+    setter(newSelected);
+  };
 </script>
 
 <div class="multiselect-wrapper">
   <MultiSelect
-    bind:selected
-    on:change={() => setter(selected)}
+    {selected}
+    on:change={onChange}
     options={allCols}
     placeholder="Select Columns"
   />
