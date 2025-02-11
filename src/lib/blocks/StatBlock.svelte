@@ -16,13 +16,14 @@
       : null
   );
 
-  const updateContent = () => {
-    properties.content =
+  $effect(() => {
+    const newContent =
       generateStatText(properties, sourceBlock) ||
       'Source Configuration Required';
-  };
-
-  $effect(() => updateContent());
+    if (properties.content !== newContent) {
+      updateBlock(properties.id, { content: newContent });
+    }
+  });
 </script>
 
 <!--We use a TextBlock to display the statistics. This code first checks the statistic we want to calculate

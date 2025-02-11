@@ -73,7 +73,12 @@ const generateStatText = (props, sourceBlock) => {
   }
 
   if (props.sources != null && props.col != null) {
-    statText += ` of ${props.col}${props.col2 ? ` vs. ${props.col2}` : ''}: `;
+    statText += ` of ${props.col}${
+      props.statType === 'R-Squared' ||
+      props.statType === 'Correlation Coefficient'
+        ? ` vs. ${props.col2}`
+        : ''
+    }: `;
     switch (props.statType) {
       case 'Mean':
         statText += mean(
