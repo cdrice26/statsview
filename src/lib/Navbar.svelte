@@ -151,123 +151,126 @@
 
 <nav>
   <span
-    >StatsView |
+    ><div>
+      StatsView |
 
-    <!--Undo/Redo-->
-    <UndoRedo {undo} {redo} />
+      <!--Undo/Redo-->
+      <UndoRedo {undo} {redo} />
 
-    <!--File IO Control (save, load, export)-->
-    <FileIOControl {save} {load} {exp} {expPdf} />
+      <!--File IO Control (save, load, export)-->
+      <FileIOControl {save} {load} {exp} {expPdf} />
 
-    <!--Buttons to create new blocks-->
-    <AddButtons
-      {newText}
-      {newChart}
-      {newStat}
-      {newTable}
-      {newTest}
-      {newInterval}
-    />
-
-    <!--If we're in a text, table, test, or stat block, render the text controls-->
-    {#if focus.type == 'text' || focus.type == 'table' || focus.type == 'test' || focus.type == 'stat'}
-      <TextControls
-        {font}
-        {setFont}
-        {fontSize}
-        {setFontSize}
-        {color}
-        {setColor}
-        {align}
-        {bold}
-        {italic}
-        {underline}
+      <!--Buttons to create new blocks-->
+      <AddButtons
+        {newText}
+        {newChart}
+        {newStat}
+        {newTable}
+        {newTest}
+        {newInterval}
       />
-    {/if}
+    </div>
+    <div>
+      <!--If we're in a text, table, test, or stat block, render the text controls-->
+      {#if focus.type == 'text' || focus.type == 'table' || focus.type == 'test' || focus.type == 'stat'}
+        <TextControls
+          {font}
+          {setFont}
+          {fontSize}
+          {setFontSize}
+          {color}
+          {setColor}
+          {align}
+          {bold}
+          {italic}
+          {underline}
+        />
+      {/if}
 
-    <!--Test Controls-->
-    {#if focus.type == 'test' && focus.sources !== null && focus.sources !== undefined}
-      <TestControls {testType} {setTestType} {setupTest} />
-    {/if}
+      <!--Test Controls-->
+      {#if focus.type == 'test' && focus.sources !== null && focus.sources !== undefined}
+        <TestControls {testType} {setTestType} {setupTest} />
+      {/if}
 
-    <!--Interval Controls-->
-    {#if focus.type == 'interval' && focus.sources !== null && focus.sources !== undefined}
-      <IntervalControls
-        {intervalType}
-        {setIntervalType}
-        {confidenceLevel}
-        {setConfidenceLevel}
-      />
-    {/if}
+      <!--Interval Controls-->
+      {#if focus.type == 'interval' && focus.sources !== null && focus.sources !== undefined}
+        <IntervalControls
+          {intervalType}
+          {setIntervalType}
+          {confidenceLevel}
+          {setConfidenceLevel}
+        />
+      {/if}
 
-    <!--Type Dropdown for Stats-->
-    {#if focus.type == 'stat' && focus.sources !== null && focus.sources !== undefined}
-      <StatTypeDropdown {statType} {setStatType} />
-    {/if}
+      <!--Type Dropdown for Stats-->
+      {#if focus.type == 'stat' && focus.sources !== null && focus.sources !== undefined}
+        <StatTypeDropdown {statType} {setStatType} />
+      {/if}
 
-    <!--Table Controls-->
-    {#if focus.type == 'table'}
-      <TableControls
-        {title}
-        {setTitle}
-        {addColumn}
-        {delColumn}
-        {addRow}
-        {delRow}
-        {csvFiles}
-        {getFromCSV}
-        {hasHeaders}
-        {toggleHeaders}
-        {visible}
-        {toggleVisible}
-        {dataType}
-        {setDataType}
-      />
-    {/if}
+      <!--Table Controls-->
+      {#if focus.type == 'table'}
+        <TableControls
+          {title}
+          {setTitle}
+          {addColumn}
+          {delColumn}
+          {addRow}
+          {delRow}
+          {csvFiles}
+          {getFromCSV}
+          {hasHeaders}
+          {toggleHeaders}
+          {visible}
+          {toggleVisible}
+          {dataType}
+          {setDataType}
+        />
+      {/if}
 
-    <!--Chart Controls-->
-    {#if focus.type == 'chart'}
-      <ChartControls
-        {chartType}
-        {setChartType}
-        {setChartTitle}
-        {xCol}
-        {setXCol}
-        {sourceTable}
-        {title}
-      />
-    {/if}
+      <!--Chart Controls-->
+      {#if focus.type == 'chart'}
+        <ChartControls
+          {chartType}
+          {setChartType}
+          {setChartTitle}
+          {xCol}
+          {setXCol}
+          {sourceTable}
+          {title}
+        />
+      {/if}
 
-    <!--Source Dropdown-->
-    {#if focus.type == 'chart' || focus.type == 'stat' || focus.type == 'test' || focus.type == 'interval'}
-      <SourceControl
-        {source}
-        {setSource}
-        {tableBlocks}
-        {sourceTable}
-        {focus}
-        {col}
-        {col2}
-        {cols}
-        {setCol}
-        {setCols}
-      />
-    {/if}
+      <!--Source Dropdown-->
+      {#if focus.type == 'chart' || focus.type == 'stat' || focus.type == 'test' || focus.type == 'interval'}
+        <SourceControl
+          {source}
+          {setSource}
+          {tableBlocks}
+          {sourceTable}
+          {focus}
+          {col}
+          {col2}
+          {cols}
+          {setCol}
+          {setCols}
+        />
+      {/if}
 
-    <!--Swap Block-->
-    {#if focus.type !== null}
-      <SwapControl {moveUp} {moveDown} />
-    {/if}
+      <!--Swap Block-->
+      {#if focus.type !== null}
+        <SwapControl {moveUp} {moveDown} />
+      {/if}
 
-    <!--Delete Block-->
-    {#if focus.type !== null}
-      <Button
-        add={null}
-        iconSrc="./delete.png"
-        iconAlt="Delete This Block"
-        handleClick={delBlock}
-      /> |
-    {/if}
+      <!--Delete Block-->
+      {#if focus.type !== null}
+        <Button
+          add={null}
+          iconSrc="./delete.png"
+          iconAlt="Delete This Block"
+          handleClick={delBlock}
+        /> |
+      {/if}
+    </div>
   </span>
 </nav>
 
@@ -292,9 +295,16 @@
     padding: 5px;
     font-size: 15px;
     border-bottom: 1px solid grey;
-    position: fixed;
+    position: -webkit-sticky;
+    position: sticky;
+    top: 0px;
     width: 100%;
     z-index: 2;
+  }
+
+  div {
+    display: inline-block;
+    text-align: center;
   }
 
   nav > span {

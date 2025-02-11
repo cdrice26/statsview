@@ -28,14 +28,14 @@
 
 <style>
   div {
-    position: absolute;
+    position: relative;
     min-height: 1100px;
     width: 850px;
     background-color: white;
     border: none;
     filter: drop-shadow(3px 3px 3px grey);
     border-radius: 3px;
-    top: 60px;
+    top: 30px;
     left: 50%;
     transform: translateX(-50%);
     z-index: 1;

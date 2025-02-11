@@ -1109,5 +1109,8 @@
 <style>
   main {
     margin: 0px;
+    height: 100vh;
+    overflow: auto;
+    position: relative;
   }
 </style>
