@@ -34,7 +34,9 @@ export const getColumnData = (props, sourceBlock, column) =>
           (props.testType !== undefined || props.intervalType !== undefined)
           ? props?.testType?.includes('TTest') ||
             props?.intervalType?.includes('TInterval') ||
-            props?.intervalType?.includes('VarInterval')
+            props?.intervalType?.includes('VarInterval') ||
+            props?.testType?.includes('Regression') ||
+            props?.testType?.includes('ANOVA')
             ? 'Quantitative'
             : props?.testType?.includes('ZTest') ||
               props?.intervalType?.includes('ZInterval')
@@ -64,7 +66,7 @@ export const getTestResults = (data, data2, props, sourceBlock) => {
         return X2GOFTest(data, props.testData.expCounts, props.testData.alpha);
       } else if (props.testType === 'X2IndTest') {
         return X2IndTest(
-          getFullData(sourceBlock.content, sourceBlock.hasHeaders),
+          props.cols.map((col) => getColumnData(props, sourceBlock, col)),
           props.testData.alpha
         );
       } else if (props.testType === '2SampTTest') {
@@ -115,11 +117,7 @@ export const getTestResults = (data, data2, props, sourceBlock) => {
         return MPTTest(data, data2, props.testData.tails, props.testData.alpha);
       } else if (props.testType === '1WayANOVATest') {
         return ANOVATest(
-          getFullData(
-            sourceBlock.content,
-            sourceBlock.hasHeaders,
-            'Quantitative'
-          )
+          props.cols.map((col) => getColumnData(props, sourceBlock, col))
         );
       } else if (props.testType === 'RegressionTest') {
         return LinearRegressionTest(data, data2);

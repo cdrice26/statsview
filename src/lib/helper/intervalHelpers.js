@@ -23,28 +23,34 @@ export const getInterval = (intervalType, data, data2, confidenceLevel) => {
     alpha !== null &&
     alpha !== undefined
   ) {
-    if (intervalType === '1SampTInterval') return oneSampTInterval(data, alpha);
-    else if (
-      intervalType === '2SampTInterval' &&
-      data2 !== null &&
-      data2 !== undefined
-    )
-      return twoSampTInterval(data, data2, alpha);
-    else if (
-      intervalType === '2SampZInterval' &&
-      data2 !== null &&
-      data2 !== undefined
-    )
-      return twoSampZInterval(data, data2, alpha);
-    else if (intervalType === '1SampZInterval')
-      return oneSampZInterval(data, alpha);
-    else if (
-      intervalType === '2SampVarInterval' &&
-      data2 !== null &&
-      data2 !== undefined
-    )
-      return twoSampVarInterval(data, data2, alpha);
-    else return null;
+    try {
+      if (intervalType === '1SampTInterval')
+        return oneSampTInterval(data, alpha);
+      else if (
+        intervalType === '2SampTInterval' &&
+        data2 !== null &&
+        data2 !== undefined
+      )
+        return twoSampTInterval(data, data2, alpha);
+      else if (
+        intervalType === '2SampZInterval' &&
+        data2 !== null &&
+        data2 !== undefined
+      )
+        return twoSampZInterval(data, data2, alpha);
+      else if (intervalType === '1SampZInterval')
+        return oneSampZInterval(data, alpha);
+      else if (
+        intervalType === '2SampVarInterval' &&
+        data2 !== null &&
+        data2 !== undefined
+      )
+        return twoSampVarInterval(data, data2, alpha);
+      else return null;
+    } catch (error) {
+      console.log(error);
+      return null;
+    }
   } else {
     return null;
   }

@@ -57,7 +57,7 @@
 
 <!--Column Dropdown-->
 {#if focus.sources !== null}
-  {#if focus.type === 'chart'}
+  {#if focus.type === 'chart' || (focus.type === 'test' && (focus.testType?.includes('ANOVA') || focus.testType?.includes('X2Ind')))}
     <ColumnSelectMulti
       selected={cols ?? []}
       setter={setCols}
