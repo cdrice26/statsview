@@ -211,150 +211,143 @@
   };
 
   /**
+   * Create a new block
+   */
+  const newBlock = (newBlock) => {
+    addToUndoStack(blocks);
+    const id = focusedId ?? (blocks.length > 0 ? blocks.length - 1 : -1);
+    blocks = [
+      ...blocks.slice(0, id + 1),
+      { ...newBlock, id: id + 1 },
+      ...blocks.slice(id + 1).map((b, index) => ({
+        ...b,
+        id: id + index + 2 // Subsequent blocks get incremented IDs
+      }))
+    ];
+  };
+
+  /**
    * Create a new text block
    */
   const newText = () => {
-    addToUndoStack(blocks);
-    blocks = [
-      ...blocks,
-      {
-        id: blocks.length,
-        type: 'text',
-        sources: null,
-        col: null,
-        content: 'Type here...',
-        settings: {
-          fontFamily: 'Times New Roman',
-          fontSize: 12,
-          color: '#000000',
-          textAlign: 'left',
-          bold: false,
-          italic: false,
-          underline: false
-        }
+    newBlock({
+      type: 'text',
+      sources: null,
+      col: null,
+      content: 'Type here...',
+      settings: {
+        fontFamily: 'Times New Roman',
+        fontSize: 12,
+        color: '#000000',
+        textAlign: 'left',
+        bold: false,
+        italic: false,
+        underline: false
       }
-    ];
+    });
   };
 
   /**
    * Create a new table block
    */
   const newTable = () => {
-    addToUndoStack(blocks);
-    blocks = [
-      ...blocks,
-      {
-        id: blocks.length,
-        title: 'Table' + blocks.length,
-        type: 'table',
-        sources: null,
-        col: null,
-        content: [
-          ['Column 1', 'Column 2'],
-          ['0', '0'],
-          ['0', '0']
-        ],
-        hasHeaders: true,
-        visible: true,
-        dataType: ['Categorical', 'Categorical'],
-        settings: {
-          fontFamily: 'Times New Roman',
-          fontSize: 12,
-          color: '#000000',
-          textAlign: 'left',
-          bold: false,
-          italic: false,
-          underline: false
-        }
+    newBlock({
+      title: 'Table' + blocks.length,
+      type: 'table',
+      sources: null,
+      col: null,
+      content: [
+        ['Column 1', 'Column 2'],
+        ['0', '0'],
+        ['0', '0']
+      ],
+      hasHeaders: true,
+      visible: true,
+      dataType: ['Categorical', 'Categorical'],
+      settings: {
+        fontFamily: 'Times New Roman',
+        fontSize: 12,
+        color: '#000000',
+        textAlign: 'left',
+        bold: false,
+        italic: false,
+        underline: false
       }
-    ];
+    });
   };
 
   /**
    * Create a new chart block
    */
   const newChart = () => {
-    addToUndoStack(blocks);
-    blocks = [
-      ...blocks,
-      {
-        id: blocks.length,
-        type: 'chart',
-        chartType: null,
-        sources: null,
-        col: null,
-        cols: null,
-        content: null,
-        title: 'New Chart',
-        xCol: null,
-        settings: {
-          types: []
-        }
+    newBlock({
+      type: 'chart',
+      chartType: null,
+      sources: null,
+      col: null,
+      cols: null,
+      content: null,
+      title: 'New Chart',
+      xCol: null,
+      settings: {
+        types: []
       }
-    ];
+    });
   };
 
   /**
    * Create a new stat block
    */
   const newStat = () => {
-    addToUndoStack(blocks);
-    blocks = [
-      ...blocks,
-      {
-        id: blocks.length,
-        type: 'stat',
-        statType: null,
-        sources: null,
-        col: null,
-        content: 'Source configuration required.',
-        settings: {
-          fontFamily: 'Times New Roman',
-          fontSize: 12,
-          color: '#000000',
-          textAlign: 'left',
-          bold: false,
-          italic: false,
-          underline: false
-        }
+    newBlock({
+      id: blocks.length,
+      type: 'stat',
+      statType: null,
+      sources: null,
+      col: null,
+      content: 'Source configuration required.',
+      settings: {
+        fontFamily: 'Times New Roman',
+        fontSize: 12,
+        color: '#000000',
+        textAlign: 'left',
+        bold: false,
+        italic: false,
+        underline: false
       }
-    ];
+    });
   };
 
   /**
    * Create a new test block
    */
   const newTest = () => {
-    addToUndoStack(blocks);
-    blocks = [
-      ...blocks,
-      {
-        id: blocks.length,
-        type: 'test',
-        sources: null,
-        col: null,
-        content: 'Source configuration required.',
-        settings: {
-          fontFamily: 'Times New Roman',
-          fontSize: 12,
-          color: '#000000',
-          textAlign: 'left',
-          bold: false,
-          italic: false,
-          underline: false
-        },
-        testType: null,
-        testData: {
-          testAgainst: null,
-          expCounts: null,
-          h0: 'Null Hypothesis',
-          ha: 'Alt Hypothesis',
-          showConclusion: false,
-          tails: 'two-sided',
-          alpha: 0.05
-        }
+    newBlock({
+      id: blocks.length,
+      type: 'test',
+      sources: null,
+      col: null,
+      content: 'Source configuration required.',
+      settings: {
+        fontFamily: 'Times New Roman',
+        fontSize: 12,
+        color: '#000000',
+        textAlign: 'left',
+        bold: false,
+        italic: false,
+        underline: false
+      },
+      testType: null,
+      testData: {
+        testAgainst: null,
+        expCounts: null,
+        h0: 'Null Hypothesis',
+        ha: 'Alt Hypothesis',
+        showConclusion: false,
+        tails: 'two-sided',
+        alpha: 0.05
       }
-    ];
+    });
   };
 
   /**
