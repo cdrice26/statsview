@@ -76,14 +76,10 @@ export const getFullData = (sourceTable, hasHeaders, type = 'Categorical') => {
  */
 export const bitVal = (str) => {
   if (
-    str == 'Yes' ||
-    str == 'yes' ||
-    str == 'True' ||
-    str == 'true' ||
-    str == 'Y' ||
-    str == 'y' ||
-    str == 'T' ||
-    str == 't' ||
+    str.toLowerCase() == 'yes' ||
+    str.toLowerCase() == 'true' ||
+    str.toLowerCase() == 'y' ||
+    str.toLowerCase() == 't' ||
     str == '1'
   )
     return 1;
