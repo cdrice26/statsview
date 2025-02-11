@@ -17,9 +17,7 @@
   });
 
   const createChart = () => {
-    const data =
-      generateChartData(sourceBlock, properties?.chartType, rotatedData, x) ||
-      [];
+    const data = generateChartData(properties?.chartType, rotatedData, x) || [];
 
     const layout = generateChartLayout(
       properties?.title,

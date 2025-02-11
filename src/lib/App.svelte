@@ -45,10 +45,10 @@
   /**
    * Coordinates of the focused cell in a table
    */
-  let focusedCell = {
+  let focusedCell = $state({
     row: null,
     col: null
-  };
+  });
 
   /**
    * Reference to the currently focused block
@@ -256,7 +256,7 @@
         ],
         hasHeaders: true,
         visible: true,
-        dataType: 'Categorical',
+        dataType: ['Categorical', 'Categorical'],
         settings: {
           fontFamily: 'Times New Roman',
           fontSize: 12,
@@ -689,6 +689,7 @@
       blocks = blocks.map((block) => {
         if (block.id == focusedId) {
           block.content = data;
+          block.dataType = new Array(data[0].length).fill('Categorical');
         }
         return block;
       });
@@ -761,8 +762,13 @@
     addToUndoStack(blocks);
     blocks = blocks.map((block) => {
       if (block.id == focusedId) {
-        block.dataType = dataType;
+        block.dataType = [
+          ...block.dataType.slice(0, focusedCell.col),
+          dataType,
+          ...block.dataType.slice(focusedCell.col + 1)
+        ];
       }
+
       return block;
     });
   };
@@ -1057,7 +1063,8 @@
     {toggleHeaders}
     visible={focusedBlock.visible}
     {toggleVisible}
-    dataType={focusedBlock.dataType}
+    dataType={focusedBlock.dataType[focusedCell.col]}
+    dataTypes={focusedBlock.dataType}
     {setDataType}
     source={focusedBlock.sources}
     {setSource}
@@ -1075,7 +1082,7 @@
     {setupTest}
   />
 
-  <!--Render the pagesx-->
+  <!--Render the page-->
   <Page {updateBlock} {blocks} {setFocus} {forceUpdate} />
 
   <!--Render the window, if there is one-->

@@ -3,7 +3,6 @@
 
   /**
    * @typedef {Object} Props
-   * @property {any} currentType - The current type of table that the block we are editing is attached to
    * @property {any} intervalType
    * @property {any} [setIntervalType]
    * @property {any} [setupTest]
@@ -13,7 +12,6 @@
 
   /** @type {Props} */
   let {
-    currentType,
     intervalType,
     setIntervalType = (testType) => {},
     confidenceLevel = 0.95,
@@ -23,14 +21,11 @@
 
 <!--Type Dropdown for Tests-->
 <Select value={intervalType} setter={setIntervalType}>
-  {#if currentType == 'Quantitative'}
-    <option value="1SampTInterval">1-Sample T-Interval</option>
-    <option value="2SampTInterval">2-Sample T-Interval</option>
-    <option value="2SampVarInterval">2-Sample Variance Interval</option>
-  {:else if currentType == 'Binary'}
-    <option value="1SampZInterval">1-Sample Z-Interval</option>
-    <option value="2SampZInterval">2-Sample Z-Interval</option>
-  {/if}
+  <option value="1SampTInterval">1-Sample T-Interval</option>
+  <option value="2SampTInterval">2-Sample T-Interval</option>
+  <option value="2SampVarInterval">2-Sample Variance Interval</option>
+  <option value="1SampZInterval">1-Sample Z-Interval</option>
+  <option value="2SampZInterval">2-Sample Z-Interval</option>
 </Select>
 
 <!--Input for confidence level-->

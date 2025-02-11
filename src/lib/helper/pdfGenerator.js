@@ -129,12 +129,7 @@ const preGenerateCharts = async (blocks) => {
       }
       const rotatedData = rotateData(sourceData, block?.cols, sourceBlock);
       const x = getXCol(sourceData, block?.hasHeaders, block?.xCol);
-      const chartData = generateChartData(
-        sourceBlock,
-        block?.chartType,
-        rotatedData,
-        x
-      );
+      const chartData = generateChartData(block?.chartType, rotatedData, x);
       const chartLayout = generateChartLayout(
         block?.title,
         block?.chartType,

@@ -62,6 +62,7 @@
    * @property {any} visible
    * @property {any} [toggleVisible]
    * @property {any} dataType
+   * @property {any} dataTypes
    * @property {any} [setDataType]
    * @property {any} source
    * @property {any} [setSource]
@@ -128,6 +129,7 @@
     visible,
     toggleVisible = (visible) => {},
     dataType,
+    dataTypes,
     setDataType = (dataType) => {},
     source,
     setSource = (source) => {},
@@ -185,12 +187,7 @@
 
     <!--Test Controls-->
     {#if focus.type == 'test' && focus.sources !== null && focus.sources !== undefined}
-      <TestControls
-        {testType}
-        {setTestType}
-        {setupTest}
-        currentType={sourceTable?.dataType}
-      />
+      <TestControls {testType} {setTestType} {setupTest} />
     {/if}
 
     <!--Interval Controls-->
@@ -200,15 +197,12 @@
         {setIntervalType}
         {confidenceLevel}
         {setConfidenceLevel}
-        currentType={sourceTable?.dataType}
       />
     {/if}
 
     <!--Type Dropdown for Stats-->
     {#if focus.type == 'stat' && focus.sources !== null && focus.sources !== undefined}
-      {#if sourceTable?.dataType == 'Quantitative'}
-        <StatTypeDropdown {statType} {setStatType} />
-      {/if}
+      <StatTypeDropdown {statType} {setStatType} />
     {/if}
 
     <!--Table Controls-->
@@ -234,7 +228,6 @@
     <!--Chart Controls-->
     {#if focus.type == 'chart'}
       <ChartControls
-        dataType={sourceTable?.dataType}
         {chartType}
         {setChartType}
         {setChartTitle}

@@ -40,48 +40,58 @@ export const getXCol = (sourceData, hasHeaders, xCol) =>
   xCol != null ? getData(sourceData, xCol, hasHeaders, 'Quantitative') : null;
 
 /**
- * Generates chart data based on the source block, chart type, and rotated data.
+ * Generates chart data based on the chart type, and rotated data.
  *
- * @param {Object} sourceBlock - Configuration object for the data source.
- * @param {string} sourceBlock.dataType - Type of data ('Quantitative', 'Categorical', 'Binary').
  * @param {string} chartType - Type of chart to generate ('scatter', 'line', 'pie', 'bar', 'histogram').
  * @param {Object} rotatedData - Rotated data object with columns as keys.
  * @param {Array<Object>} x - X-axis data (used for scatter and line charts).
  * @returns {Array<Object>|Object} An array of chart data configurations.
  */
-export const generateChartData = (sourceBlock, chartType, rotatedData, x) =>
-  sourceBlock?.dataType === 'Quantitative'
-    ? chartType === 'scatter' || chartType === 'line'
-      ? Object.entries(rotatedData).map((d) => ({
-          x: x,
-          y: d[1],
-          name: d[0],
-          type: 'scatter',
-          mode: chartType === 'line' ? 'lines' : 'markers'
-        }))
-      : Object.entries(rotatedData).map((x) => ({
-          x: x[1],
-          name: x[0],
-          type: chartType ?? 'histogram'
-        }))
-    : sourceBlock?.dataType === 'Categorical' ||
-      sourceBlock?.dataType === 'Binary'
-    ? Object.entries(rotatedData).map((d, idx) => ({
-        [chartType === 'pie' ? 'labels' : 'x']: getUnique(d[1]),
-        [chartType === 'pie' ? 'values' : 'y']: getUnique(d[1]).map((x) =>
-          occurrencesOf(d[1], x)
-        ),
+export const generateChartData = (chartType, rotatedData, x) => {
+  // Scatter and Line charts for non-categorical data
+  if (chartType === null || rotatedData === null) return {};
+
+  if (chartType !== 'pie' && chartType !== 'bar') {
+    if (chartType === 'scatter' || chartType === 'line') {
+      return Object.entries(rotatedData).map((d) => ({
+        x: x,
+        y: d[1],
         name: d[0],
-        type: chartType ?? 'bar',
-        domain:
-          chartType === 'pie'
-            ? calculateRowAndColumn(
-                idx,
-                calculateGridSize(Object.keys(rotatedData).length).columns
-              )
-            : {}
-      }))
-    : {};
+        type: 'scatter',
+        mode: chartType === 'line' ? 'lines' : 'markers'
+      }));
+    }
+
+    // Default to histogram
+    return Object.entries(rotatedData).map((x) => ({
+      x: x[1],
+      name: x[0],
+      type: chartType ?? 'histogram'
+    }));
+  }
+
+  // Pie and Bar charts for categorical data
+  if (chartType !== null) {
+    return Object.entries(rotatedData).map((d, idx) => ({
+      [chartType === 'pie' ? 'labels' : 'x']: getUnique(d[1]),
+      [chartType === 'pie' ? 'values' : 'y']: getUnique(d[1]).map((x) =>
+        occurrencesOf(d[1], x)
+      ),
+      name: d[0],
+      type: chartType ?? 'bar',
+      domain:
+        chartType === 'pie'
+          ? calculateRowAndColumn(
+              idx,
+              calculateGridSize(Object.keys(rotatedData).length).columns
+            )
+          : {}
+    }));
+  }
+
+  // Fallback
+  return {};
+};
 
 /**
  * Generates a layout configuration for a chart.
