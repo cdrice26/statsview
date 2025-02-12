@@ -589,7 +589,10 @@
     blocks = blocks.map((block) => {
       if (block.id == focusedId) {
         block.content.forEach((row) => {
-          row.push(0);
+          // Use focusedCell.col if available, otherwise add at the end
+          const insertIndex =
+            focusedCell?.col !== undefined ? focusedCell.col + 1 : row.length;
+          row.splice(insertIndex, 0, 0);
         });
       }
       return block;
@@ -621,7 +624,15 @@
     addToUndoStack(blocks);
     blocks = blocks.map((block) => {
       if (block.id == focusedId) {
-        block.content.push(new Array(block.content[0].length).fill(0));
+        const insertIndex =
+          focusedCell?.row !== undefined
+            ? focusedCell.row + 1
+            : block.content.length;
+        block.content.splice(
+          insertIndex,
+          0,
+          new Array(block.content[0].length).fill(0)
+        );
       }
       return block;
     });
