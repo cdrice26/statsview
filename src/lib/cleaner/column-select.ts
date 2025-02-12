@@ -17,9 +17,9 @@ export class StatSelect extends LitElement {
   static get styles() {
     return css`
       select {
-        background-color: darkgrey;
-        border: none;
-        color: white;
+        background-color: white;
+        border: 1px solid black;
+        color: black;
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         border-radius: 5px;
         font-size: 15px;
@@ -35,12 +35,12 @@ export class StatSelect extends LitElement {
   }
 
   /**
-   * Called when the element is updated, initializes default value if it doesn't already have a value and there are columns
+   * Called when the element is updated, initializes default value if it doesn't already
+   * have a value and there are columns
    *
    * @param {Map<string | number | symbol, unknown>} changedProperties The properties that have changed
    */
-  updated(changedProperties: Map<string | number | symbol, unknown>) {
-    super.updated(changedProperties);
+  willUpdate(changedProperties: Map<string | number | symbol, unknown>) {
     if (changedProperties.has('columns') && this.value === '') {
       this._initializeDefaultValue();
     }

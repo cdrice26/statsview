@@ -8,9 +8,9 @@ export class StatSelect extends LitElement {
   static get styles() {
     return css`
       select {
-        background-color: darkgrey;
-        border: none;
-        color: white;
+        background-color: white;
+        border: 1px solid black;
+        color: black;
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         border-radius: 5px;
         font-size: 15px;

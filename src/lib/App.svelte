@@ -1126,7 +1126,7 @@
 
   {#if currentWin !== null && focusedBlock.type === 'table'}
     <Window>
-      <Cleaner {closeWin} />
+      <Cleaner {closeWin} table={focusedBlock} {updateBlock} />
     </Window>
   {/if}
 </main>

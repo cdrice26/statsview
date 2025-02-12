@@ -27,7 +27,6 @@ export class DataTable extends LitElement {
     }
 
     table {
-      float: left;
       margin-right: 20px;
       margin-left: 20px;
     }
