@@ -5,6 +5,7 @@
   import Page from './Page.svelte';
   import TestSetup from './TestSetup.svelte';
   import Window from './Window.svelte';
+  import Cleaner from './cleaner/Cleaner.svelte';
 
   /**
    * The list of all blocks
@@ -730,6 +731,13 @@
   };
 
   /**
+   * Table cleaner dialog
+   */
+  const cleanTable = () => {
+    currentWin = true;
+  };
+
+  /**
    * Toggle whether the table has headers
    *
    * @param hasHeaders - whether the table should have headers
@@ -1068,7 +1076,7 @@
     visible={focusedBlock.visible}
     {toggleVisible}
     dataType={focusedBlock.dataType[focusedCell.col]}
-    dataTypes={focusedBlock.dataType}
+    {cleanTable}
     {setDataType}
     source={focusedBlock.sources}
     {setSource}
@@ -1113,6 +1121,12 @@
         alpha={focusedBlock.testData.alpha}
         {setAlpha}
       />
+    </Window>
+  {/if}
+
+  {#if currentWin !== null && focusedBlock.type === 'table'}
+    <Window>
+      <Cleaner {closeWin} />
     </Window>
   {/if}
 </main>

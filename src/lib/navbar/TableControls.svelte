@@ -4,6 +4,7 @@
   import TableCSVLoader from './tableControls/TableCSVLoader.svelte';
   import CheckInput from './tableControls/CheckInput.svelte';
   import DataTypeDropdown from './tableControls/DataTypeDropdown.svelte';
+  import Button from './Button.svelte';
 
   let {
     title,
@@ -19,7 +20,8 @@
     visible,
     toggleVisible = (visible) => {},
     dataType,
-    setDataType = (dataType) => {}
+    setDataType = (dataType) => {},
+    cleanTable = () => {}
   } = $props();
 </script>
 
@@ -27,6 +29,13 @@
 <TableTitleInput {title} {setTitle} />
 <TableDimensionEditor {addColumn} {delColumn} {addRow} {delRow} />
 <TableCSVLoader {csvFiles} {getFromCSV} />
+<Button
+  add={null}
+  iconSrc="./clean.png"
+  iconAlt="Clean Table"
+  handleClick={cleanTable}
+  tooltip="Clean Table"
+/>
 <CheckInput bool={hasHeaders} toggle={toggleHeaders} title="Use Headers?" />
 <DataTypeDropdown {dataType} {setDataType} />
-<CheckInput bool={visible} toggle={toggleVisible} title="Visible?" />
+<CheckInput bool={visible} toggle={toggleVisible} title="Visible?" /> |

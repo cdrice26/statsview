@@ -62,7 +62,7 @@
    * @property {any} visible
    * @property {any} [toggleVisible]
    * @property {any} dataType
-   * @property {any} dataTypes
+   * @property {any} [cleanTable]
    * @property {any} [setDataType]
    * @property {any} source
    * @property {any} [setSource]
@@ -129,7 +129,7 @@
     visible,
     toggleVisible = (visible) => {},
     dataType,
-    dataTypes,
+    cleanTable = () => {},
     setDataType = (dataType) => {},
     source,
     setSource = (source) => {},
@@ -224,6 +224,7 @@
           {toggleVisible}
           {dataType}
           {setDataType}
+          {cleanTable}
         />
       {/if}
 
