@@ -3,13 +3,14 @@
     value = $bindable(),
     num,
     setter = (value, num) => {},
-    children
+    children,
+    tooltip = ''
   } = $props();
 </script>
 
 <!--Same as the select component, except for columns where the setter has 2 arguments-->
 
-<select bind:value onchange={() => setter(value, num)}>
+<select bind:value onchange={() => setter(value, num)} title={tooltip}>
   {@render children?.()}
 </select>
 

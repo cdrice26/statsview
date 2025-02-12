@@ -1,10 +1,15 @@
 <script>
-  let { value = $bindable(), setter = (value) => {}, children } = $props();
+  let {
+    value = $bindable(),
+    setter = (value) => {},
+    tooltip = '',
+    children
+  } = $props();
 </script>
 
 <!--A simple dropdown menu, styled to match the app-->
 
-<select bind:value onchange={() => setter(value)}>
+<select bind:value onchange={() => setter(value)} title={tooltip}>
   {@render children?.()}
 </select>
 

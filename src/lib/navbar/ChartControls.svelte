@@ -15,7 +15,7 @@
 
 <!--Chart Controls-->
 <TableTitleInput {title} setTitle={setChartTitle} />
-<Select value={chartType} setter={setChartType}>
+<Select value={chartType} setter={setChartType} tooltip="Chart Type">
   <option value="bar" selected>Bar Chart</option>
   <option value="pie">Pie Chart</option>
   <option value="histogram" selected>Histogram</option>
@@ -25,7 +25,7 @@
 </Select>
 {#if chartType === 'scatter' || chartType === 'line'}
   x:
-  <Select value={xCol} setter={setXCol}>
+  <Select value={xCol} setter={setXCol} tooltip="X-Axis Column">
     {#each sourceTable.content[0].map( (col, idx) => (sourceTable.hasHeaders ? col : 'Column ' + idx) ) ?? [] as title, index}
       <option value={sourceTable.hasHeaders ? title : 'Column ' + index}
         >{sourceTable.hasHeaders ? title : 'Column ' + index}</option

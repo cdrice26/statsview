@@ -9,6 +9,7 @@
   type="text"
   bind:value={title}
   oninput={() => setTitle(title)}
+  title="Block Name"
 />
 
 <style>

@@ -8,6 +8,7 @@
   type="number"
   bind:value={fontSize}
   onchange={() => setFontSize(fontSize)}
+  title="Font Size"
 />
 
 <style>

@@ -49,7 +49,7 @@
 
 <!--Source Dropdown-->
 <img src="source.png" alt="Data Source" />:
-<Select value={source} setter={setSource}>
+<Select value={source} setter={setSource} tooltip="Data Source (Table Name)">
   {#each tableBlocks as table}
     <option value={table.title}>{table.title}</option>
   {/each}
@@ -73,7 +73,7 @@
           }) ?? []}
       />
     {:else}
-      <ColumnSelect value={col ?? ''} setter={setCol} num="1">
+      <ColumnSelect value={col ?? ''} setter={setCol} num="1" tooltip="Column">
         {#each (sourceTable.content[0] ?? []).filter((_, index) => {
           try {
             return filterDataType(_, index);
@@ -89,7 +89,12 @@
 
       {#if (focus?.sources && focus.type === 'test' && focus?.testType) || focus.type === 'stat' || focus.type === 'interval'}
         {#if (focus?.testType && (focus.testType.includes('2Samp') || focus.testType.includes('MP') || focus.testType.includes('Regression'))) || (focus?.statType && (focus.statType.includes('Correlation Coefficient') || focus.statType.includes('R-Squared'))) || (focus?.intervalType && focus.intervalType.includes('2Samp'))}
-          vs. <ColumnSelect value={col2 ?? ''} setter={setCol} num="2">
+          vs. <ColumnSelect
+            value={col2 ?? ''}
+            setter={setCol}
+            num="2"
+            tooltip="Second Column"
+          >
             {#each (sourceTable.content[0] ?? []).filter((_, index) => {
               try {
                 return filterDataType(_, index);

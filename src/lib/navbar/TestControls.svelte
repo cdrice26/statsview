@@ -18,7 +18,7 @@
 </script>
 
 <!--Type Dropdown for Tests-->
-<Select value={testType} setter={setTestType}>
+<Select value={testType} setter={setTestType} tooltip="Test Type">
   <option value="1SampTTest">1-Sample T-Test</option>
   <option value="2SampTTest">2-Sample T-Test</option>
   <option value="MPTTest">Matched Pairs T-Test</option>
@@ -37,4 +37,5 @@
   iconSrc="./tune_test.png"
   iconAlt="Statistical Test Setup"
   handleClick={setupTest}
+  tooltip="Statistical Test Setup"
 /> |

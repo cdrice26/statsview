@@ -1,11 +1,11 @@
 <!--A basic button component, with built-in styling and support for +/- before a specified image-->
 <script>
-  
   /**
    * @typedef {Object} Props
    * @property {any} iconSrc
    * @property {any} iconAlt
    * @property {any} add - If add = true, a + is rendered. If it's false, a - is rendered. If it's null, only the image is rendered.
+   * @property {any} [tooltip]
    * @property {any} [handleClick]
    */
 
@@ -14,13 +14,14 @@
     iconSrc,
     iconAlt,
     add,
-    handleClick = () => {}
+    handleClick = () => {},
+    tooltip = ''
   } = $props();
 </script>
 
 <!--When a button is clicked, it triggers handleClick() which reports back to the main App
     component which creates a new element-->
-<button onclick={handleClick}
+<button onclick={handleClick} title={tooltip}
   ><span
     >{#if add}+{:else if add == false}-{/if}</span
   ><img src={iconSrc} alt={iconAlt} /></button

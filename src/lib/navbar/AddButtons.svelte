@@ -17,6 +17,7 @@
   iconSrc="./text.png"
   iconAlt="Add Text"
   handleClick={newText}
+  tooltip="Add Text Block"
 />
 <!--Add table block-->
 <Button
@@ -24,6 +25,7 @@
   iconSrc="./table.png"
   iconAlt="Add Table"
   handleClick={newTable}
+  tooltip="Add Table Block"
 />
 <!--Add chart block-->
 <Button
@@ -31,6 +33,7 @@
   iconSrc="./chart.png"
   iconAlt="Add Chart"
   handleClick={newChart}
+  tooltip="Add Chart Block"
 />
 <!--Add stat block-->
 <Button
@@ -38,6 +41,7 @@
   iconSrc="./stat.png"
   iconAlt="Add Chart"
   handleClick={newStat}
+  tooltip="Add Stat Block"
 />
 <!--Add test block-->
 <Button
@@ -45,6 +49,7 @@
   iconSrc="./test.png"
   iconAlt="Add Text"
   handleClick={newTest}
+  tooltip="Add Test Block"
 />
 <!--Add interval block-->
 <Button
@@ -52,4 +57,5 @@
   iconSrc="./interval.png"
   iconAlt="Add Interval"
   handleClick={newInterval}
+  tooltip="Add Interval Block"
 /> |

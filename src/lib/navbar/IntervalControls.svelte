@@ -20,7 +20,7 @@
 </script>
 
 <!--Type Dropdown for Tests-->
-<Select value={intervalType} setter={setIntervalType}>
+<Select value={intervalType} setter={setIntervalType} tooltip="Interval Type">
   <option value="1SampTInterval">1-Sample T-Interval</option>
   <option value="2SampTInterval">2-Sample T-Interval</option>
   <option value="2SampVarInterval">2-Sample Variance Interval</option>

@@ -5,7 +5,7 @@
 </script>
 
 <!--A dropdown with various statistics as options-->
-<Select value={statType} setter={setStatType}>
+<Select value={statType} setter={setStatType} tooltip="Statistic Type">
   <option value="Mean">Mean</option>
   <option value="StDev">StDev</option>
   <option value="Median">Median</option>

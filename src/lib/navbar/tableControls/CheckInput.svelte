@@ -9,6 +9,7 @@
   id={title.replace(' ', '-') + '-checkbox'}
   bind:checked={bool}
   onchange={() => toggle(bool)}
+  {title}
 />
 
 <style>
