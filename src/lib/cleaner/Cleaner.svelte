@@ -15,6 +15,29 @@
   let data = $derived(
     table.hasHeaders ? table.content.slice(1) : table.content
   );
+
+  let fillEmptyValColSelect;
+  let fillEmptyValInput;
+
+  let fillEmptyStatColSelect;
+  let fillEmptyStatSelect;
+
+  let replaceValueColSelect;
+  let replaceValueComparisonSelect;
+  let replaceValueThresholdInput;
+  let replaceValueInput;
+
+  let replaceStatColSelect;
+  let replaceStatComparisonSelect;
+  let replaceStatThresholdInput;
+  let replaceStatInput;
+
+  let removeCompareColSelect;
+  let removeCompareComparisonSelect;
+  let removeCompareThresholdInput;
+
+  let roundColSelect;
+  let roundInput;
 </script>
 
 <div class="container">
@@ -26,71 +49,112 @@
       Remove duplicates
       <button class="go-button" id="remove-duplicates-go">Go</button>
     </div>
+
     <div id="remove-empty">
       Remove all rows with empty values
       <button class="go-button" id="remove-empty-go">Go</button>
     </div>
+
     <div id="fill-empty-value">
       Fill all empty cells in
-      <column-select id="fill-empty-value-col-select" {columns}></column-select>
+      <column-select
+        id="fill-empty-value-col-select"
+        {columns}
+        bind:this={fillEmptyValColSelect}
+      ></column-select>
       with
-      <input id="fill-empty-value-input" />
+      <input id="fill-empty-value-input" bind:this={fillEmptyValInput} />
       <button class="go-button" id="fill-empty-value-go">Go</button>
     </div>
+
     <div id="fill-empty-stat">
       Fill all empty cells in
-      <column-select id="fill-empty-stat-col-select" {columns}></column-select>
+      <column-select
+        id="fill-empty-stat-col-select"
+        {columns}
+        bind:this={fillEmptyStatColSelect}
+      ></column-select>
       with
-      <stat-select id="fill-empty-stat-select"></stat-select>
+      <stat-select id="fill-empty-stat-select" bind:this={fillEmptyStatSelect}
+      ></stat-select>
       <button class="go-button" id="fill-empty-stat-go">Go</button>
     </div>
-    <div id="convert">
-      Convert all values in
-      <column-select id="convert-col-select" {columns}></column-select>
-      to numbers
-      <button class="go-button" id="convert-go">Go</button>
-    </div>
+
     <div id="replace-value">
       Replace all values in
-      <column-select id="replace-value-col-select" {columns}></column-select>
+      <column-select
+        id="replace-value-col-select"
+        {columns}
+        bind:this={replaceValueColSelect}
+      ></column-select>
       that are
-      <comparison-select id="replace-value-comparison-select"
+      <comparison-select
+        id="replace-value-comparison-select"
+        bind:this={replaceValueComparisonSelect}
       ></comparison-select>
       than
-      <input id="replace-value-threshold-input" />
+      <input
+        id="replace-value-threshold-input"
+        bind:this={replaceValueThresholdInput}
+      />
       with
-      <input id="replace-value-input" />
+      <input id="replace-value-input" bind:this={replaceValueInput} />
       <button class="go-button" id="replace-value-go">Go</button>
     </div>
+
     <div id="replace-stat">
       Replace all values in
-      <column-select id="replace-stat-col-select" {columns}></column-select>
+      <column-select
+        id="replace-stat-col-select"
+        {columns}
+        bind:this={replaceStatColSelect}
+      ></column-select>
       that are
-      <comparison-select id="replace-stat-comparison-select"
+      <comparison-select
+        id="replace-stat-comparison-select"
+        bind:this={replaceStatComparisonSelect}
       ></comparison-select>
       than
-      <input id="replace-stat-threshold-input" />
+      <input
+        id="replace-stat-threshold-input"
+        bind:this={replaceStatThresholdInput}
+      />
       with
-      <stat-select id="replace-stat-select"></stat-select>
+      <stat-select id="replace-stat-select" bind:this={replaceStatInput}
+      ></stat-select>
       <button class="go-button" id="replace-stat-go">Go</button>
     </div>
+
     <div id="remove-compare">
       Remove all rows where the value of
-      <column-select id="remove-compare-col-select" {columns}></column-select>
+      <column-select
+        id="remove-compare-col-select"
+        {columns}
+        bind:this={removeCompareColSelect}
+      ></column-select>
       is
-      <comparison-select id="remove-compare-select"></comparison-select>
+      <comparison-select
+        id="remove-compare-select"
+        bind:this={removeCompareComparisonSelect}
+      ></comparison-select>
       than
-      <input id="remove-compare-threshold-input" />
+      <input
+        id="remove-compare-threshold-input"
+        bind:this={removeCompareThresholdInput}
+      />
       <button class="go-button" id="remove-compare-go">Go</button>
     </div>
+
     <div id="round">
       Round all values in
-      <column-select id="round-col-select" {columns}></column-select>
+      <column-select id="round-col-select" {columns} bind:this={roundColSelect}
+      ></column-select>
       to
-      <input id="round-input" />
+      <input id="round-input" bind:this={roundInput} />
       decimal places
       <button class="go-button" id="round-go">Go</button>
     </div>
+
     <button class="exit-button" id="exit" onclick={closeWin}>Exit</button>
   </div>
 </div>
@@ -107,7 +171,10 @@
   #controls-container {
     flex: 1;
     overflow: auto;
-    min-height: 0; /* Critical for flex containment */
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
   }
 
   #table-container {
