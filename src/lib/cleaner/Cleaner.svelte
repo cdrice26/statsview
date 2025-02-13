@@ -7,20 +7,35 @@
 
   let { closeWin, table, updateBlock = (id, updates) => {} } = $props();
 
+  /**
+   * @type {string[]}
+   * @description A list of column names in the current table
+   */
   let columns = $derived(
     table.hasHeaders
       ? table.content[0]
       : table.content[0].map((_, index) => `Column ${index + 1}`)
   );
 
+  /**
+   * @type {string[][]}
+   * @description A 2D array of the table data
+   */
   let data = $derived(
     table.hasHeaders
       ? table.content.slice(1).map((row) => row.map((cell) => cell.toString()))
       : table.content.map((row) => row.map((cell) => cell.toString()))
   );
 
+  /**
+   * @type {DataFrame}
+   * @description A DataFrame object representing the table data
+   */
   let df = $derived(new DataFrame(data, columns));
 
+  // The following are references to various inputs and selects, some are
+  // custom elements so we have to use bind:this and it's easier to use
+  // it for everything for consistency
   let fillEmptyValColSelect;
   let fillEmptyValInput;
 
