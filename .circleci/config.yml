@@ -40,7 +40,7 @@ jobs:
           command: npx vitest run
       - run:
           name: Build
-    command: NODE_OPTIONS=--max_old_space_size=4096 npm run build
+          command: NODE_OPTIONS=--max_old_space_size=4096 npm run build
       - store_artifacts:
           path: dist
       - store_test_results:
