@@ -37,7 +37,7 @@ jobs:
           command: npm link statmaster
       - run:
           name: Run Tests
-          command: npm run test
+          command: npx vitest run
       - run:
           name: Build
           command: npm run build
