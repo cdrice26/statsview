@@ -3,6 +3,7 @@
   import './stat-select.ts';
   import './column-select.ts';
   import './comparison-select.ts';
+  import { DataFrame } from './DataFrame';
 
   let { closeWin, table, updateBlock = (id, updates) => {} } = $props();
 
@@ -13,8 +14,12 @@
   );
 
   let data = $derived(
-    table.hasHeaders ? table.content.slice(1) : table.content
+    table.hasHeaders
+      ? table.content.slice(1).map((row) => row.map((cell) => cell.toString()))
+      : table.content.map((row) => row.map((cell) => cell.toString()))
   );
+
+  let df = $derived(new DataFrame(data, columns));
 
   let fillEmptyValColSelect;
   let fillEmptyValInput;
@@ -38,6 +43,67 @@
 
   let roundColSelect;
   let roundInput;
+
+  const replaceTableContent = (newData) => {
+    updateBlock(table.id, {
+      content: [columns, ...newData]
+    });
+  };
+
+  const removeDuplicates = () => {
+    replaceTableContent(df.removeDuplicates().data);
+  };
+
+  const removeRowsWithEmptyValues = () => {
+    replaceTableContent(df.removeRowsWithEmptyValues().data);
+  };
+
+  const fillEmpty = () => {
+    replaceTableContent(
+      df.fillEmpty(fillEmptyValColSelect.value, fillEmptyValInput.value).data
+    );
+  };
+
+  const fillEmptyStat = () => {
+    replaceTableContent(
+      df.fillEmptyStat(fillEmptyStatColSelect.value, fillEmptyStatSelect.value)
+        .data
+    );
+  };
+
+  const replaceWithValue = () => {
+    replaceTableContent(
+      df.replaceWithValue(
+        replaceValueColSelect.value,
+        replaceValueComparisonSelect.value,
+        replaceValueInput.value
+      ).data
+    );
+  };
+
+  const replaceWithStat = () => {
+    replaceTableContent(
+      df.replaceWithStat(
+        replaceStatColSelect.value,
+        replaceStatComparisonSelect.value,
+        replaceStatInput.value
+      ).data
+    );
+  };
+
+  const removeRowsWhere = () => {
+    replaceTableContent(
+      df.removeRowsWhere(
+        removeCompareColSelect.value,
+        removeCompareComparisonSelect.value,
+        removeCompareThresholdInput.value
+      ).data
+    );
+  };
+
+  const round = () => {
+    replaceTableContent(df.round(roundColSelect.value, roundInput.value).data);
+  };
 </script>
 
 <div class="container">
@@ -47,12 +113,20 @@
   <div id="controls-container">
     <div id="remove-duplicates">
       Remove duplicates
-      <button class="go-button" id="remove-duplicates-go">Go</button>
+      <button
+        class="go-button"
+        id="remove-duplicates-go"
+        onclick={removeDuplicates}>Go</button
+      >
     </div>
 
     <div id="remove-empty">
       Remove all rows with empty values
-      <button class="go-button" id="remove-empty-go">Go</button>
+      <button
+        class="go-button"
+        id="remove-empty-go"
+        onclick={removeRowsWithEmptyValues}>Go</button
+      >
     </div>
 
     <div id="fill-empty-value">
@@ -64,7 +138,9 @@
       ></column-select>
       with
       <input id="fill-empty-value-input" bind:this={fillEmptyValInput} />
-      <button class="go-button" id="fill-empty-value-go">Go</button>
+      <button class="go-button" id="fill-empty-value-go" onclick={fillEmpty}
+        >Go</button
+      >
     </div>
 
     <div id="fill-empty-stat">
@@ -77,7 +153,9 @@
       with
       <stat-select id="fill-empty-stat-select" bind:this={fillEmptyStatSelect}
       ></stat-select>
-      <button class="go-button" id="fill-empty-stat-go">Go</button>
+      <button class="go-button" id="fill-empty-stat-go" onclick={fillEmptyStat}
+        >Go</button
+      >
     </div>
 
     <div id="replace-value">
@@ -99,7 +177,9 @@
       />
       with
       <input id="replace-value-input" bind:this={replaceValueInput} />
-      <button class="go-button" id="replace-value-go">Go</button>
+      <button class="go-button" id="replace-value-go" onclick={replaceWithValue}
+        >Go</button
+      >
     </div>
 
     <div id="replace-stat">
@@ -122,7 +202,9 @@
       with
       <stat-select id="replace-stat-select" bind:this={replaceStatInput}
       ></stat-select>
-      <button class="go-button" id="replace-stat-go">Go</button>
+      <button class="go-button" id="replace-stat-go" onclick={replaceWithStat}
+        >Go</button
+      >
     </div>
 
     <div id="remove-compare">
@@ -142,7 +224,9 @@
         id="remove-compare-threshold-input"
         bind:this={removeCompareThresholdInput}
       />
-      <button class="go-button" id="remove-compare-go">Go</button>
+      <button class="go-button" id="remove-compare-go" onclick={removeRowsWhere}
+        >Go</button
+      >
     </div>
 
     <div id="round">
@@ -150,9 +234,15 @@
       <column-select id="round-col-select" {columns} bind:this={roundColSelect}
       ></column-select>
       to
-      <input id="round-input" bind:this={roundInput} />
+      <input
+        id="round-input"
+        bind:this={roundInput}
+        type="number"
+        min="0"
+        max="20"
+      />
       decimal places
-      <button class="go-button" id="round-go">Go</button>
+      <button class="go-button" id="round-go" onclick={round}>Go</button>
     </div>
 
     <button class="exit-button" id="exit" onclick={closeWin}>Exit</button>

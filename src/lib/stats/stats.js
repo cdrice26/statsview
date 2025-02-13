@@ -38,6 +38,25 @@ export const median = (list) => {
 };
 
 /**
+ * Calculates the mode (most frequently occurring value) of a list of numbers.
+ * @param {number[]} list - An array of numbers to find the mode from.
+ * @returns {number} The mode value of the input list.
+ * @throws {Error} If the input list is empty.
+ */
+export const mode = (list) => {
+  const values = [...list];
+  const counts = {};
+  values.forEach((item) => {
+    counts[item] = (counts[item] || 0) + 1;
+  });
+  const maxCount = Math.max(...Object.values(counts));
+  const modeKeys = Object.keys(counts).filter(
+    (key) => counts[key] === maxCount
+  );
+  return Number(modeKeys[0]);
+};
+
+/**
  * Finds the minimum value in a list of numbers.
  * @param {number[]} list - An array of numbers to find the minimum from.
  * @returns {number} The smallest number in the input list.
@@ -140,4 +159,27 @@ export const correlationCoefficient = (list1, list2) => {
 export const rSquared = (list1, list2) => {
   const r = correlationCoefficient(list1, list2);
   return r * r;
+};
+
+export const applyStatistic = (list, statName) => {
+  switch (statName.toLowerCase()) {
+    case 'mean':
+      return mean(list);
+    case 'stdev':
+      return std(list);
+    case 'median':
+      return median(list);
+    case 'mode':
+      return mode(list);
+    case 'iqr':
+      return iqr(list);
+    case 'range':
+      return range(list);
+    case 'min':
+      return min(list);
+    case 'max':
+      return max(list);
+    default:
+      return null;
+  }
 };

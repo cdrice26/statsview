@@ -35,7 +35,7 @@ export class StatSelect extends LitElement {
     return html`<select @change=${(e: any) => (this.value = e.target.value)}>
       <option value="&lt;">&lt;</option>
       <option value="&lt;=">&lt;=</option>
-      <option value="=">=</option>
+      <option value="=" selected>=</option>
       <option value="!=">!=</option>
       <option value="&gt;=">&gt;=</option>
       <option value="&gt;">&gt;</option>

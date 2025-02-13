@@ -593,7 +593,7 @@
           // Use focusedCell.col if available, otherwise add at the end
           const insertIndex =
             focusedCell?.col !== undefined ? focusedCell.col + 1 : row.length;
-          row.splice(insertIndex, 0, 0);
+          row.splice(insertIndex, 0, '');
         });
       }
       return block;
@@ -632,7 +632,7 @@
         block.content.splice(
           insertIndex,
           0,
-          new Array(block.content[0].length).fill(0)
+          new Array(block.content[0].length).fill('')
         );
       }
       return block;
