@@ -271,6 +271,16 @@
           handleClick={delBlock}
         /> |
       {/if}
+
+      <Button
+        add={null}
+        iconSrc="./github.png"
+        iconAlt="Visit on GitHub"
+        tooltip="Visit on GitHub"
+        handleClick={() => {
+          window.open('https://github.com/cdrice26/statsview', '_blank');
+        }}
+      />
     </div>
   </span>
 </nav>
