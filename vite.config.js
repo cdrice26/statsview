@@ -16,7 +16,8 @@ export default defineConfig({
           return 'assets/[name].[hash][extname]';
         }
       }
-    }
+    },
+    target: 'esnext'
   },
   server: {
     open: true,
