@@ -91,6 +91,7 @@
       df.replaceWithValue(
         replaceValueColSelect.value,
         replaceValueComparisonSelect.value,
+        replaceValueThresholdInput.value,
         replaceValueInput.value
       ).data
     );
@@ -101,6 +102,7 @@
       df.replaceWithStat(
         replaceStatColSelect.value,
         replaceStatComparisonSelect.value,
+        replaceStatThresholdInput.value,
         replaceStatInput.value
       ).data
     );

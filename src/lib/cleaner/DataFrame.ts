@@ -4,13 +4,25 @@ type StatisticName = 'mean' | 'median' | 'mode';
 type ComparisonOperator = '=' | '!=' | '>' | '<' | '>=' | '<=';
 
 /**
- * Performs a dynamic comparison between two numbers.
- * @param a - The first number to compare.
- * @param b - The second number to compare.
+ * Performs a dynamic comparison between two numbers or strings.
+ * @param a - The first number or string to compare.
+ * @param b - The second number or string to compare.
  * @param comp - The comparison operator.
  * @returns True if the comparison is true, false otherwise.
  */
-const dynamicCompare = (a: number, b: number, comp: ComparisonOperator) => {
+const dynamicCompare = (
+  a: number | string,
+  b: number | string,
+  comp: ComparisonOperator
+) => {
+  const numA = typeof a === 'string' ? parseFloat(a) : a;
+  const numB = typeof b === 'string' ? parseFloat(b) : b;
+
+  if (!isNaN(numA as number) && !isNaN(numB as number)) {
+    a = numA;
+    b = numB;
+  }
+
   try {
     switch (comp) {
       case '=':
@@ -152,24 +164,20 @@ export class DataFrame {
    * Replaces values in a column with a specified value if a condition is met.
    * @param columnName - The name of the column to replace.
    * @param comparisonOperator - The comparison operator to use.
-   * @param value - The value to replace the cells with.
+   * @param value - The value to compare the cells to.
+   * @param replaceWith - The value to replace the cells with.
    * @returns A new data frame with the cells replaced.
    */
   public replaceWithValue(
     columnName: string,
     comparisonOperator: ComparisonOperator,
-    value: string
+    value: string,
+    replaceWith: string
   ): DataFrame {
     const columnIndex = this._labels.indexOf(columnName);
     this._data = this._data.map((row) => {
-      if (
-        dynamicCompare(
-          parseFloat(row[columnIndex]),
-          parseFloat(value),
-          comparisonOperator
-        )
-      ) {
-        row[columnIndex] = value;
+      if (dynamicCompare(row[columnIndex], value, comparisonOperator)) {
+        row[columnIndex] = replaceWith;
       }
       return row;
     });
@@ -180,12 +188,14 @@ export class DataFrame {
    * Replaces values in a column with the specified statistic if a condition is met.
    * @param columnName - The name of the column to replace.
    * @param comparisonOperator - The comparison operator to use.
+   * @param value - The value to compare the cells to.
    * @param statName - The name of the statistic to use.
    * @returns A new data frame with the cells replaced.
    */
   public replaceWithStat(
     columnName: string,
     comparisonOperator: ComparisonOperator,
+    value: string,
     statName: StatisticName
   ): DataFrame {
     const columnIndex = this._labels.indexOf(columnName);
@@ -196,13 +206,7 @@ export class DataFrame {
       statName
     );
     this._data = this._data.map((row) => {
-      if (
-        dynamicCompare(
-          parseFloat(row[columnIndex]),
-          statistic ?? 0,
-          comparisonOperator
-        )
-      ) {
+      if (dynamicCompare(row[columnIndex], value, comparisonOperator)) {
         row[columnIndex] =
           statistic !== null && statistic !== undefined
             ? statistic.toString()
@@ -227,12 +231,7 @@ export class DataFrame {
   ): DataFrame {
     const columnIndex = this._labels.indexOf(columnName);
     this._data = this._data.filter(
-      (row) =>
-        !dynamicCompare(
-          parseFloat(row[columnIndex]),
-          parseFloat(value),
-          comparisonOperator
-        )
+      (row) => !dynamicCompare(row[columnIndex], value, comparisonOperator)
     );
     return this;
   }

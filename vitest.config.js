@@ -15,7 +15,11 @@ export default defineConfig({
   },
   test: {
     globals: true,
-    include: ['src/lib/helper/**/*.test.js', 'src/lib/stats/**/*.test.js'],
+    include: [
+      'src/lib/helper/**/*.test.js',
+      'src/lib/stats/**/*.test.js',
+      'src/lib/cleaner/**/*.test.ts'
+    ],
     coverage: {
       provider: 'v8',
       reporter: ['text', 'html']
