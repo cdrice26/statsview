@@ -137,6 +137,13 @@ export class DataFrame {
    */
   public fillEmptyStat(columnName: string, statName: StatisticName): DataFrame {
     const columnIndex = this._labels.indexOf(columnName);
+    const statistic =
+      applyStatistic(
+        this._data
+          .map((row) => parseFloat(row[columnIndex]))
+          .filter((x) => !isNaN(x) && x !== null && x !== undefined),
+        statName
+      )?.toString() ?? '#ERROR';
     this._data = this._data.map((row) => {
       if (
         row[columnIndex] === '' ||
@@ -144,13 +151,7 @@ export class DataFrame {
         row[columnIndex] === undefined
       ) {
         try {
-          row[columnIndex] =
-            applyStatistic(
-              this._data
-                .map((row) => parseFloat(row[columnIndex]))
-                .filter((x) => !isNaN(x) && x !== null && x !== undefined),
-              statName
-            )?.toString() ?? '#ERROR';
+          row[columnIndex] = statistic;
         } catch (e) {
           row[columnIndex] = '#ERROR';
         }
