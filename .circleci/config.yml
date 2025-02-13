@@ -6,25 +6,26 @@ orbs:
 jobs:
   build-and-test:
     docker:
-      - image: cimg/node:20.0.0
+      - image: cimg/rust:1.75-node
     steps:
       - checkout
-      # Checkout the local package as a sibling directory
       - run:
-          name: Checkout Local Package
+          name: Install wasm-pack
+          command: curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh
+      - run:
+          name: Build WASM Package
           command: |
-            cd ..
-            git clone https://github.com/cdrice26/statmaster
+            cd ../statmaster  # adjust path as needed
+            wasm-pack build --platform web
+            npm link
+      - run:
+          name: Return to project directory
+          command: cd statsview
       - node/install-packages:
           pkg-manager: npm
       - run:
-          name: Link Local Package
-          command: |
-            cd ../statmaster
-            npm install
-            npm link
-            cd ../statsview
-            npm link statmaster
+          name: Link WASM Package
+          command: npm link statmaster
       - run:
           name: Typecheck
           command: npm run dev
