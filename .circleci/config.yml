@@ -10,6 +10,13 @@ jobs:
     steps:
       - checkout
       - run:
+          name: Update Rust and Cargo
+          command: |
+            rustup self update
+            rustup update stable
+            rustc --version
+            cargo --version
+      - run:
           name: Install wasm-pack
           command: curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh
       - run:
