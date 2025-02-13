@@ -34,6 +34,7 @@ jobs:
           name: Return to project directory
           command: |
             pwd
+            ls -la
             cd /home/circleci/project/statsview
       - node/install-packages:
           pkg-manager: npm
