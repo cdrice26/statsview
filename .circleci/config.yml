@@ -12,8 +12,10 @@ jobs:
       - run:
           name: Update Rust and Cargo
           command: |
-            rustup self update
-            rustup update stable
+            curl https://sh.rustup.rs -sSf | sh -s -- -y
+            source "$HOME/.cargo/env"
+            rustup default stable
+            rustup update
             rustc --version
             cargo --version
       - run:
