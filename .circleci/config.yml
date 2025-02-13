@@ -32,7 +32,7 @@ jobs:
             npm link
       - run:
           name: Return to project directory
-          command: cd ../../statsview
+          command: cd home/circleci/project/statsview
       - node/install-packages:
           pkg-manager: npm
       - run:
