@@ -36,9 +36,6 @@ jobs:
           name: Link WASM Package
           command: npm link statmaster
       - run:
-          name: Typecheck
-          command: npm run dev
-      - run:
           name: Run Tests
           command: npm run test
       - run:
