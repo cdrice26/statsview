@@ -6,6 +6,13 @@
   import TestSetup from './TestSetup.svelte';
   import Window from './Window.svelte';
   import Cleaner from './cleaner/Cleaner.svelte';
+  import { onMount } from 'svelte';
+
+  onMount(() => {
+    alert(
+      "StatsView is in early development. Don't use it for anything critical."
+    );
+  });
 
   /**
    * The list of all blocks
