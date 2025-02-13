@@ -1,6 +1,9 @@
 # StatsView
 This is a web app for visualizing and analyzing data, and creating statistical reports. It supports charts, descriptive statistics, hypothesis tests, and confidence intervals, and can export to Word. It is built with Svelte and Vite.
 
+## Disclaimer
+StatsView is in early development and may contain bugs. Don't use it for anything critical without checking its results!
+
 ## Getting Started
 
 1. Clone the repository: `git clone https://github.com/cdrice26/statsview.git`
