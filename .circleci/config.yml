@@ -15,7 +15,9 @@ jobs:
       - run:
           name: Build WASM Package
           command: |
-            cd ../statmaster  # adjust path as needed
+            cd ..  # adjust path as needed
+            git clone https://github.com/cdrice26/statmaster.git
+            cd statmaster
             wasm-pack build --platform web
             npm link
       - run:
