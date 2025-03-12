@@ -1,6 +1,6 @@
 <script>
   import generateDocx, { saveDocx } from './helper/docxGenerator';
-  import generatePDF, { savePDF } from './helper/pdfGenerator';
+  // import generatePDF, { savePDF } from './helper/pdfGenerator';
   import Navbar from './Navbar.svelte';
   import Page from './Page.svelte';
   import TestSetup from './TestSetup.svelte';
