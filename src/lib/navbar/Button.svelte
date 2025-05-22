@@ -7,25 +7,31 @@
    * @property {any} add - If add = true, a + is rendered. If it's false, a - is rendered. If it's null, only the image is rendered.
    * @property {any} [tooltip]
    * @property {any} [handleClick]
+   * @property {function} [ref] - Optional ref forwarding function
    */
 
-  /** @type {Props} */
   let {
     iconSrc,
     iconAlt,
     add,
     handleClick = () => {},
-    tooltip = ''
+    tooltip = '',
+    ref = null
   } = $props();
+
+  function forwardRef(node) {
+    if (ref && typeof ref === 'function') ref(node);
+  }
 </script>
 
 <!--When a button is clicked, it triggers handleClick() which reports back to the main App
     component which creates a new element-->
-<button onclick={handleClick} title={tooltip} tabindex="0"
-  ><span
+<button onclick={handleClick} title={tooltip} tabindex="0" use:forwardRef>
+  <span
     >{#if add}+{:else if add == false}-{/if}</span
-  ><img src={iconSrc} alt={iconAlt} /></button
->
+  >
+  <img src={iconSrc} alt={iconAlt} />
+</button>
 
 <style>
   button {
