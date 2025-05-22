@@ -21,7 +21,7 @@
 
 <!--When a button is clicked, it triggers handleClick() which reports back to the main App
     component which creates a new element-->
-<button onclick={handleClick} title={tooltip}
+<button onclick={handleClick} title={tooltip} tabindex="0"
   ><span
     >{#if add}+{:else if add == false}-{/if}</span
   ><img src={iconSrc} alt={iconAlt} /></button
