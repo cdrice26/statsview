@@ -14,74 +14,6 @@
 
   let csvFiles;
 
-  /**
-   * @typedef {Object} Props
-   * @property {any} focus - This is a reference to the block the user is currently editing
-   * @property {any} [undo] - The following keep track of and update various editor state stuff
-   * @property {any} [redo]
-   * @property {any} [save]
-   * @property {any} [load]
-   * @property {any} [exp]
-   * @property {any} [expPdf]
-   * @property {any} [newText]
-   * @property {any} [newTable]
-   * @property {any} [newChart]
-   * @property {any} [newStat]
-   * @property {any} [newTest]
-   * @property {any} [newInterval]
-   * @property {any} font
-   * @property {any} [setFont]
-   * @property {any} fontSize
-   * @property {any} [setFontSize]
-   * @property {any} color
-   * @property {any} [setColor]
-   * @property {any} [align]
-   * @property {any} [bold]
-   * @property {any} [italic]
-   * @property {any} [underline]
-   * @property {any} testType
-   * @property {any} [setTestType]
-   * @property {any} intervalType
-   * @property {any} [setIntervalType]
-   * @property {any} confidenceLevel
-   * @property {any} [setConfidenceLevel]
-   * @property {any} statType
-   * @property {any} [setStatType]
-   * @property {any} chartType
-   * @property {any} [setChartType]
-   * @property {any} [addColumn]
-   * @property {any} [delColumn]
-   * @property {any} [addRow]
-   * @property {any} [delRow]
-   * @property {any} title
-   * @property {any} [setTitle]
-   * @property {any} [setChartTitle]
-   * @property {any} [getFromCSV]
-   * @property {any} hasHeaders
-   * @property {any} [toggleHeaders]
-   * @property {any} visible
-   * @property {any} [toggleVisible]
-   * @property {any} dataType
-   * @property {any} [cleanTable]
-   * @property {any} [setDataType]
-   * @property {any} source
-   * @property {any} [setSource]
-   * @property {any} col
-   * @property {any} col2
-   * @property {any} cols
-   * @property {any} xCol
-   * @property {any} [setCols]
-   * @property {any} [setCol]
-   * @property {any} [setXCol]
-   * @property {any} [moveUp]
-   * @property {any} [moveDown]
-   * @property {any} [delBlock]
-   * @property {any} [setupTest]
-   * @property {any} tableBlocks
-   * @property {any} sourceTable
-   */
-
-  /** @type {Props} */
   let {
     focus,
     undo = () => {},
@@ -145,7 +77,8 @@
     delBlock = () => {},
     setupTest = () => {},
     tableBlocks,
-    sourceTable
+    sourceTable,
+    onLicenseClick = () => {}
   } = $props();
 </script>
 
@@ -280,6 +213,14 @@
         handleClick={() => {
           window.open('https://github.com/cdrice26/statsview', '_blank');
         }}
+      />
+
+      <Button
+        add={null}
+        iconSrc="./license.png"
+        iconAlt="View Licenses"
+        tooltip="View Licenses"
+        handleClick={onLicenseClick}
       />
     </div>
   </span>

@@ -7,6 +7,8 @@
   import Window from './Window.svelte';
   import Cleaner from './cleaner/Cleaner.svelte';
   import { onMount } from 'svelte';
+  import Legal from './Legal.svelte';
+  import Button from './navbar/Button.svelte';
 
   onMount(() => {
     alert(
@@ -1031,6 +1033,13 @@
   const closeWin = () => {
     currentWin = null;
   };
+
+  /**
+   * Open license window
+   */
+  const onLicenseClick = () => {
+    currentWin = 'license';
+  };
 </script>
 
 <main>
@@ -1099,6 +1108,7 @@
     {moveDown}
     {delBlock}
     {setupTest}
+    {onLicenseClick}
   />
 
   <!--Render the page-->
@@ -1136,6 +1146,16 @@
       <Cleaner {closeWin} table={focusedBlock} {updateBlock} />
     </Window>
   {/if}
+
+  {#if currentWin === 'license'}
+    <Window>
+      <div class="scrollable">
+        <button onclick={closeWin}>Close</button>
+        <Legal />
+        <button onclick={closeWin}>Close</button>
+      </div>
+    </Window>
+  {/if}
 </main>
 
 <style>
@@ -1144,5 +1164,9 @@
     height: 100vh;
     overflow: auto;
     position: relative;
+  }
+
+  .scrollable {
+    overflow-y: auto;
   }
 </style>
