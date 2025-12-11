@@ -375,7 +375,7 @@ THE SOFTWARE.
 
 The following npm package may be included in this product:
 
- - debug@4.4.0
+ - debug@4.4.3
 
 This package contains the following license:
 
@@ -5495,7 +5495,7 @@ SOFTWARE.
 The following npm packages may be included in this product:
 
  - @sveltejs/vite-plugin-svelte-inspector@4.0.1
- - @sveltejs/vite-plugin-svelte@5.0.3
+ - @sveltejs/vite-plugin-svelte@5.1.1
 
 These packages each contain the following license:
 
@@ -5675,7 +5675,7 @@ SOFTWARE.
 
 The following npm package may be included in this product:
 
- - vitefu@1.0.5
+ - vitefu@1.1.1
 
 This package contains the following license:
 
