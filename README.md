@@ -1,3 +1,6 @@
+> # NOTICE
+> It was recently observed on 12/13/25 that charting is broken due to the multi-select failing to retain state. This issue will hopefully be resolved shortly.
+
 # StatsView
 This is a web app for visualizing and analyzing data, and creating statistical reports. It supports charts, descriptive statistics, hypothesis tests, and confidence intervals, and can export to Word. It is built with Svelte and Vite.
 
